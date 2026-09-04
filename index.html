@@ -1,137 +1,72 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SENTINEL V3.1 — VEROLIS × CVMH — INFRA INTELLIGENTE</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SENTINEL V3.3 CLEAN - VEROLIS × CVMH</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
-:root{--bg:#06162f;--panel:#0d2854;--line:#2b5da8;--gold:#ffd54a;--green:#00ff88;--orange:#ffb020;--red:#ff4d4d;--cyan:#35d9ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#163f86 0,#06162f 45%);color:#fff;font-family:Arial}
-.header{position:sticky;top:0;z-index:20;background:linear-gradient(90deg,#06162f,#174bc5,#06162f);padding:10px;text-align:center;border-bottom:2px solid var(--gold)}
-.live{color:var(--green);font-weight:bold}.blink{animation:blink 1s infinite}@keyframes blink{50%{opacity:.35}}
-.badge{display:inline-block;background:var(--green);color:#001b0d;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:bold}
-.demo{background:#261f05;color:#ffd85c;padding:6px;text-align:center;font-size:11px;border-bottom:1px solid #765d12}
-.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px;background:#081c3d}.tabs button{padding:9px 14px;border-radius:22px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-weight:bold;cursor:pointer}.tabs button.active{background:var(--gold);color:#06162f}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;padding:14px;max-width:1500px;margin:auto}.card{background:linear-gradient(145deg,#0d2854,#0a2146);border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 8px 25px #0005}.val{font-size:32px;font-weight:bold;color:var(--green)}.warn{color:var(--orange)}.danger{color:var(--red)}.cyan{color:var(--cyan)}.muted{color:#a9bad6;font-size:12px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:8px 0}.metric{padding:10px;border-radius:10px;background:#061a38;border:1px solid #244d88;margin:8px 0}.btn{border:0;border-radius:22px;padding:9px 14px;margin:4px;background:var(--gold);color:#06162f;font-weight:bold;cursor:pointer}.btn.green{background:var(--green)}.btn.wa{background:#25D366;color:#fff}.hidden{display:none!important}
-.progress{height:9px;background:#06152e;border-radius:9px;overflow:hidden}.progress>i{display:block;height:100%;background:var(--green);width:50%;transition:.5s}
-.log{height:170px;overflow:auto;background:#041126;border-radius:10px;padding:9px;font-family:monospace;font-size:12px}
-#qrcode{background:#fff;padding:12px;width:max-content;border-radius:8px;margin:10px auto}
+:root{--bg:#06162f;--panel:#0d2854;--panel2:#091e40;--line:#2b5da8;--gold:#ffd54a;--green:#00ff88;--orange:#ffb020;--red:#ff4d4d;--cyan:#35d9ff;--muted:#a9bad6}
+*{box-sizing:border-box}body{margin:0;color:#fff;font-family:Arial;background:radial-gradient(circle at 50% -10%,#163f86 0,#06162f 45%),var(--bg)}
+.header{position:sticky;top:0;z-index:50;text-align:center;padding:11px;background:linear-gradient(90deg,#06162f,#174bc5,#06162f);border-bottom:2px solid var(--gold)}
+.live{color:var(--green);font-weight:bold}.blink{animation:blink 1s infinite}@keyframes blink{50%{opacity:.3}}
+.badge{display:inline-block;background:var(--green);color:#001b0d;padding:4px 9px;border-radius:15px;font-size:10px;font-weight:bold}
+.demo{background:#261f05;color:#ffd85c;padding:7px;text-align:center;font-size:11px;border-bottom:1px solid #765d12}
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px;background:#081c3d;border-bottom:1px solid #234b87}.tabs button{padding:9px 14px;border-radius:22px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-weight:bold;transition:.2s}.tabs button.active{background:var(--gold);color:#06162f}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;padding:14px;max-width:1500px;margin:auto}.card{background:linear-gradient(145deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 10px 30px #0005}.val{font-size:32px;font-weight:bold;color:var(--green)}.warn{color:var(--orange)}.danger{color:var(--red)!important}.cyan{color:var(--cyan)}.muted{color:var(--muted);font-size:12px}.green{color:var(--green)}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:8px 0}.metric{padding:10px;border-radius:10px;background:#061a38;border:1px solid #244d88;margin:8px 0}.btn{border:0;border-radius:22px;padding:9px 14px;margin:4px;background:var(--gold);color:#06162f;font-weight:bold;cursor:pointer}.btn.green{background:var(--green)}.btn.red{background:var(--red);color:#fff}.btn.wa{background:#25D366;color:#fff}.btn.voix{background:#555;color:#fff;position:fixed;top:68px;right:10px;z-index:99;padding:12px 16px;box-shadow:0 4px 15px #000}.btn.voix.on{background:var(--green);color:#000;animation:pulse 1s infinite}@keyframes pulse{50%{transform:scale(1.05)}}.hidden{display:none!important}
+.progress{height:9px;background:#06152e;border-radius:9px;overflow:hidden;border:1px solid #193c70}.progress>i{display:block;height:100%;background:var(--green);width:50%;transition:.7s}
+.riskBox{text-align:center;padding:14px;border-radius:14px;background:#061a38;border:1px solid #244d88}.riskNumber{font-size:48px;font-weight:bold;margin:5px}.riskBar{height:15px;background:#06152e;border-radius:20px;overflow:hidden;margin:12px 0}.riskBar i{display:block;height:100%;width:12%;background:var(--green);transition:.8s}
+.decision{border:1px solid var(--green);background:radial-gradient(circle at 50% 0,#123e70,#06162f 65%);text-align:center}.decisionState{font-size:30px;font-weight:bold;color:var(--green);margin:10px 0}.decisionSource{color:var(--cyan);font-size:14px}.actionBox{padding:12px;margin-top:10px;border-radius:10px;background:#061a38;border:1px solid #244d88}
+.flow{display:flex;justify-content:center;align-items:center;gap:7px;flex-wrap:wrap;margin:10px 0}.flowNode{padding:8px 11px;border-radius:20px;background:#061a38;border:1px solid var(--cyan);color:var(--cyan);font-size:11px;font-weight:bold}.flowArrow{color:var(--gold);font-weight:bold}
+.sentinel.active{box-shadow:0 0 0 1px var(--green),0 0 22px #00ff8822}.sentinel.alert{box-shadow:0 0 0 1px var(--red),0 0 22px #ff4d4d33}.statusDot{width:9px;height:9px;display:inline-block;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}.statusDot.red{background:var(--red);box-shadow:0 0 10px var(--red)}
+.log{height:210px;overflow:auto;background:#041126;border-radius:10px;padding:9px;font-family:monospace;font-size:12px;border:1px solid #163761}#qrcode{background:#fff;padding:12px;width:max-content;border-radius:8px;margin:10px auto}
+@media(max-width:650px){.btn.voix{top:auto;bottom:15px;right:15px}.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header class="header">
-<h2>VEROLIS × CVMH — SENTINEL V3.1 <span class="badge">INFRA INTELLIGENTE</span></h2>
-<div><span class="live blink">● GRAND CERVEAU EN LIGNE</span> · <span id="clock">--:--:--</span> · Lot <b>GOMBE-452</b> · TTD: E/t × t/E = 1</div>
-</header>
-<div class="demo">⚠️ MODE DÉMONSTRATION — DONNÉES SIMULÉES INTELLIGENTES. Architecture VEROLIS × CVMH prête pour capteurs REGIDESO/SNEL réels.</div>
-
+<header class="header"><h2>VEROLIS × CVMH — SENTINEL V3.3 <span class="badge">CLEAN & VOCAL</span></h2><div><span class="live blink">● GRAND CERVEAU EN LIGNE</span> · <span id="clock">--:--:--</span> · Lot <b>GOMBE-452</b> · TTD: E/t × t/E = 1</div></header>
+<div class="demo">⚠️ MODE DÉMONSTRATION — Données simulées • Architecture VEROLIS × CVMH CLEAN</div>
+<button id="btnVoix" class="btn voix" onclick="toggleVoix()">🔇 ACTIVER VOIX TTD</button>
 <nav class="tabs">
-<button class="active" onclick="show('overview',this)">🧠 GRAND CERVEAU</button>
-<button onclick="show('agri',this)">🌱 AGRI IA</button>
-<button onclick="show('regideso',this)">💧 REGIDESO</button>
-<button onclick="show('snel',this)">⚡ SNEL</button>
-<button onclick="show('qr',this)">🔗 TRAÇABILITÉ</button>
+<button class="active" onclick="show('overview',this)">🧠 GRAND CERVEAU</button><button onclick="show('agri',this)">🌱 AGRI IA</button><button onclick="show('regideso',this)">💧 REGIDESO</button><button onclick="show('snel',this)">⚡ SNEL</button><button onclick="show('qr',this)">🔗 TRAÇABILITÉ</button>
 </nav>
 
 <section id="overview" class="grid">
-<div class="card">
-<h3>🧠 CENTRE DE DÉCISION TTD</h3>
-<div class="row"><span>État global</span><strong id="globalState" class="val" style="font-size:22px">OPTIMAL</strong></div>
-<div class="row"><span>Sentinelles actives</span><strong class="cyan">5 / 5 (AGRI 3 + EAU 1 + SNEL 1)</strong></div>
-<div class="row"><span>Niveau de risque</span><strong id="risk" class="val" style="font-size:22px">FAIBLE</strong></div>
-<div class="row"><span>Événements</span><strong id="events" class="cyan">0</strong></div>
-<hr><div class="muted">CHAÎNE INTELLIGENTE : MESURE → ANALYSE → PRÉDICTION → DÉCISION → ACTION → TRAÇABILITÉ</div>
-<button class="btn green" onclick="runScenario()">▶ LANCER SCÉNARIO TERRAIN GOMBE</button>
-<button class="btn" style="background:#ff4d4d;color:#fff" onclick="stopScenario()">■ STOP</button>
-</div>
-<div class="card">
-<h3>📡 MATRICE 5 SENTINELLES</h3>
-<div class="metric"><b>01 · SOL TTD</b><div class="row"><span>Humidité</span><strong id="mSol">52%</strong></div><div class="progress"><i id="pSol" style="width:52%"></i></div></div>
-<div class="metric"><b>02 · ENTROPIA IA</b><div class="row"><span>État</span><strong id="mPlant" style="color:var(--green)">NORMAL</strong></div><div class="progress"><i id="pPlant" style="width:80%;background:var(--green)"></i></div></div>
-<div class="metric"><b>06 · REGIDESO</b><div class="row"><span>Débit</span><strong id="mEau">1.8 L/min</strong></div><div class="progress"><i id="pEau" style="width:30%"></i></div></div>
-<div class="metric"><b>07 · SNEL CABINE</b><div class="row"><span>Entrée / Sortie</span><strong id="mSnel">172V → 220V</strong></div><div class="progress"><i id="pSnel" style="width:78%"></i></div></div>
-</div>
-<div class="card"><h3>⚡ JOURNAL TEMPS RÉEL INTELLIGENT</h3><div id="log" class="log"><div style="color:var(--green)">[SYSTEM] Grand Cerveau V3.1 initialisé. 5 Sentinelles synchronisées.</div><div>[TTD] E/t x t/E = 1 - Equilibre.</div></div></div>
+<div class="card decision" style="grid-column:1/-1"><h3>🧠 GRAND CERVEAU TTD</h3><div class="flow"><span class="flowNode">CAPTEURS</span><span class="flowArrow">→</span><span class="flowNode">ANALYSE</span><span class="flowArrow">→</span><span class="flowNode">RISQUE</span><span class="flowArrow">→</span><span class="flowNode">DÉCISION</span><span class="flowArrow">→</span><span class="flowNode">ACTION</span><span class="flowArrow">→</span><span class="flowNode">VOIX</span></div><div id="decisionState" class="decisionState">SYSTÈME OPTIMAL</div><div id="decisionSource" class="decisionSource">Surveillance multi-sentinelles active</div><div class="actionBox"><div class="row"><span>Événement</span><b id="decisionEvent">Aucun événement critique</b></div><div class="row"><span>Décision</span><b id="decisionAction">Surveillance continue</b></div><div class="row"><span>Action</span><b id="decisionExecuted" class="green">OUI — système stable</b></div></div></div>
+<div class="card"><h3>🌐 ÉTAT GLOBAL</h3><div class="row"><span>État</span><strong id="globalState" class="val" style="font-size:22px">OPTIMAL</strong></div><div class="row"><span>Sentinelles</span><strong class="cyan">5 / 5 + VOIX</strong></div><div class="row"><span>Voix</span><strong id="voiceState" class="muted">INACTIVE</strong></div><div class="row"><span>Événements</span><strong id="events" class="cyan">0</strong></div><button class="btn green" onclick="runScenario()">▶ LANCER SCÉNARIO PARLANT</button><button class="btn red" onclick="stopScenario()">■ STOP</button></div>
+<div class="card"><h3>⚠️ SCORE RISQUE</h3><div class="riskBox"><div id="riskNumber" class="riskNumber">12%</div><div id="riskLabel" class="green">FAIBLE</div><div class="riskBar"><i id="riskBar" style="width:12%"></i></div><div class="muted">Calcul multi-sentinelles</div></div></div>
+<div class="card" style="grid-column:1/-1"><h3>📡 MATRICE</h3><div class="grid" style="padding:0"><div id="sentinelSol" class="metric sentinel active"><h4><span class="statusDot"></span> 01 · SOL</h4><div class="row"><span>Humidité</span><strong id="mSol">52%</strong></div><div class="progress"><i id="pSol" style="width:52%"></i></div></div><div id="sentinelPlant" class="metric sentinel active"><h4><span class="statusDot"></span> 02 · ENTROPIA</h4><div class="row"><span>État</span><strong id="mPlant" class="green">NORMAL</strong></div><div class="progress"><i id="pPlant" style="width:80%"></i></div></div><div id="sentinelEau" class="metric sentinel active"><h4><span class="statusDot"></span> 06 · REGIDESO</h4><div class="row"><span>Débit</span><strong id="mEau">1.8 L/min</strong></div><div class="progress"><i id="pEau" style="width:18%"></i></div></div><div id="sentinelSnel" class="metric sentinel active"><h4><span class="statusDot"></span> 07 · SNEL</h4><div class="row"><span>Entrée</span><strong id="mSnel">172V → 220V</strong></div><div class="progress"><i id="pSnel" style="width:78%"></i></div></div></div></div>
+<div class="card" style="grid-column:1/-1"><h3>🔊 JOURNAL TEMPS RÉEL</h3><div id="log" class="log"><div style="color:var(--green)">[SYSTEM] V3.3 CLEAN initialisée - Zero Bug</div></div></div>
 </section>
 
-<section id="agri" class="grid hidden">
-<div class="card"><h3>🌱 SENTINELLE 02 — ENTROPIA IA VISION</h3>
-<input type="file" accept="image/*" id="photo" onchange="diagnose()" style="width:100%;padding:8px;background:#06162f;border-radius:8px">
-<div id="diagRes" class="val" style="font-size:18px;margin:12px 0">📸 Prenez photo feuille</div>
-<div class="metric"><div class="row"><span>Confiance</span><b id="confidence">—</b></div><div class="row"><span>Action TTD</span><b id="plantAction">—</b></div></div>
-<canvas id="chartAgri" height="110"></canvas></div>
-<div class="card"><h3>🌍 SENTINELLE 01 — PRÉDICTION SOL</h3>
-<div>Actuel: <span id="soilNow" class="val">52%</span> | Prévu +3h: <span id="soilPred" class="warn" style="font-size:22px">45%</span></div>
-<div>Décision Auto: <b id="soilDecision" class="warn">SURVEILLANCE</b></div>
-<canvas id="chartSol" height="110"></canvas></div>
-</section>
-
-<section id="regideso" class="grid hidden">
-<div class="card"><h3>💧 SENTINELLE 06 — REGIDESO COMPTEUR INTELLIGENT</h3>
-<div>Consommation: <span id="eauVal" class="val">452 L</span></div>
-<div>Débit Temps Réel: <span id="debitVal" class="warn" style="font-size:24px">1.8 L/min</span> <span class="badge">SOLAIRE 5W</span></div>
-<div id="alerteEau" style="margin:12px 0;color:var(--green)">✅ IA Surveillance fuite active - Modèle E/t</div>
-<a id="waEau" class="btn wa hidden" target="_blank">📱 Envoyer Alerte WhatsApp REGIDESO</a>
-<canvas id="chartEau" height="120"></canvas>
-</div>
-<div class="card"><h3>💰 ACTION INTELLIGENTE</h3><div class="metric">Si débit > 10 L/min pendant 15s → <b>Fermeture vanne auto + SMS + Facture</b></div><div>Facture GOMBE-452: 452L x 0.02$ = <b>9.04$</b></div><button class="btn wa" onclick="window.open('https://wa.me/243810000000?text=Facture%20REGIDESO%20GOMBE-452%3A%209.04%24%20-%20Orange%20Money','_blank')">Payer Orange Money</button></div>
-</section>
-
-<section id="snel" class="grid hidden">
-<div class="card"><h3>⚡ SENTINELLE 07 — SNEL STABILISATEUR INTELLIGENT 5KVA</h3>
-<div>ENTRÉE RÉSEAU: <span id="vIn" class="warn" style="font-size:34px">172V</span> → SORTIE: <span class="val">220V</span> STABILIZED</div>
-<div>Charge: <span id="powerVal" class="val" style="font-size:22px">3.8 kW</span> - 5 Congélateurs protégés</div>
-<div id="alerteSnel" style="margin:12px 0;color:var(--green)">✅ Torsion corrigée RC 220V / RO 172V</div>
-<canvas id="chartVolt" height="120"></canvas>
-</div>
-<div class="card"><h3>🛡️ PROTECTION AUTO</h3><div class="metric">Si V < 140V → Déconnexion auto frigos pour éviter cramage</div><button class="btn wa" onclick="window.open('https://wa.me/243810000000?text=🚨%20ALERTE%20SNEL%20GOMBE-452%20Tension%20'+document.getElementById('vIn').innerText,'_blank')">Alerte WhatsApp SNEL</button></div>
-</section>
-
-<section id="qr" class="grid hidden">
-<div class="card" style="text-align:center"><h3>🔗 TRAÇABILITÉ BLOCKCHAIN DEMO</h3><div id="qrcode"></div><p>LOT: <b>GOMBE-452</b><br>VEROLIS × CVMH V3.1<br><span id="hash" style="font-family:monospace;font-size:10px">—</span></p><button class="btn" onclick="newQR()">↻ Générer Nouveau Hash</button></div>
-<div class="card"><h3>🔐 PREUVE D'INTÉGRITÉ</h3><div class="metric"><b>ID Lot</b><p id="lotId">VEROLIS-GOMBE-452-V31</p></div><div class="muted">Le QR démontre la couche traçabilité. Prêt à migrer vers blockchain publique pour REGIDESO/SNEL facturation.</div></div>
-</section>
-
-<footer>VEROLIS × CVMH · SENTINEL V3.1 INTELLIGENTE · Demo navigateur - Architecture prête pour ESP32 + API réelles</footer>
+<section id="agri" class="grid hidden"><div class="card"><h3>🌱 SENTINELLE 02 IA</h3><input type="file" accept="image/*" id="photo" style="width:100%;padding:10px;background:#06162f;border-radius:8px" onchange="diagnose()"><div id="diagRes" class="val" style="font-size:18px;margin:12px 0">📸 Photo feuille</div><div class="metric"><div class="row"><span>Confiance</span><b id="confidence">—</b></div><div class="row"><span>Action</span><b id="plantAction">—</b></div></div><canvas id="chartAgri" height="110"></canvas></div><div class="card"><h3>🌍 SOL</h3><div>Actuel: <span id="soilNow" class="val">52%</span> | Prévu: <span id="soilPred" class="warn" style="font-size:22px">45%</span></div><div>Décision: <b id="soilDecision" class="warn">SURVEILLANCE</b></div><canvas id="chartSol" height="110"></canvas></div></section>
+<section id="regideso" class="grid hidden"><div class="card"><h3>💧 REGIDESO VOIX</h3><div>Conso: <span id="eauVal" class="val">452 L</span></div><div>Débit: <span id="debitVal" class="warn" style="font-size:24px">1.8 L/min</span></div><div id="alerteEau" style="margin:12px 0;color:var(--green)">✅ Surveillance active</div><a id="waEau" class="btn wa hidden" target="_blank">📱 WhatsApp</a><canvas id="chartEau" height="120"></canvas></div><div class="card"><h3>💰 ACTION</h3><div class="metric">Fuite >10 L/min → Vanne + Voix "Maji ezo kima!"</div><button class="btn" onclick="parler('Facture Régideso Gombe quatre cinq deux: neuf dollars zéro quatre.')">🔊 Lire Facture</button></div></section>
+<section id="snel" class="grid hidden"><div class="card"><h3>⚡ SNEL VOIX</h3><div>ENTRÉE: <span id="vIn" class="warn" style="font-size:34px">172V</span> → SORTIE: <span class="val">220V</span></div><div>Charge: <span id="powerVal" class="val" style="font-size:22px">3.8 kW</span></div><div id="alerteSnel" style="margin:12px 0;color:var(--green)">✅ Torsion corrigée</div><canvas id="chartVolt" height="120"></canvas></div><div class="card"><h3>🛡️ PROTECTION</h3><div class="metric">V <140V → Déconnexion + Voix "Courant mabe!"</div><button class="btn" onclick="parler('Tension Snel '+document.getElementById('vIn').innerText+'. Stabilisé à deux cent vingt volts.')">🔊 État Snel</button></div></section>
+<section id="qr" class="grid hidden"><div class="card" style="text-align:center"><h3>🔗 TRAÇABILITÉ</h3><div id="qrcode"></div><div class="metric"><div class="row"><span>Statut:</span><strong class="green">VALIDÉ</strong></div><div class="row"><span>Mode:</span><strong>DÉMONSTRATEUR</strong></div></div><button class="btn green" onclick="genererQR()">🔄 Actualiser Sceau + Voix</button></div></section>
 
 <script>
-const $=id=>document.getElementById(id);
-function clock(){ $('clock').textContent=new Date().toLocaleString('fr-CD',{timeZone:'Africa/Kinshasa'}); } setInterval(clock,1000);clock();
-function show(id,btn){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-function log(msg,c=''){let d=document.createElement('div');d.textContent='['+new Date().toLocaleTimeString('fr-FR')+'] '+msg; if(c) d.style.color=c; $('log').appendChild(d); $('log').scrollTop=$('log').scrollHeight; }
-function randomHash(){return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(x=>x.toString(16).padStart(2,'0')).join('');}
-function newQR(){ $('qrcode').innerHTML=''; let h=randomHash(); $('hash').textContent=h; let data=JSON.stringify({lot:'GOMBE-452',v:'3.1',hash:h,ts:Date.now()}); new QRCode($('qrcode'),{text:data,width:160,height:160}); }
-newQR();
-function diagnose(){let f=$('photo').files[0]; if(!f)return; $('diagRes').textContent='🔍 Analyse TensorFlow.js...'; setTimeout(()=>{let o=[['MILDIOU 87%','Traitement Neem 2$','warn'],['NORMAL 94%','Maintien','ok'],['STRESS HYDRIQUE 82%','Arrosage','warn']][Math.floor(Math.random()*3)]; $('diagRes').innerHTML=o[0]+'<br><span style=font-size:14px;color:#ffd54a>'+o[1]+'</span>'; $('confidence').textContent=o[0].split(' ')[1]; $('plantAction').textContent=o[1]; $('mPlant').textContent=o[0]; $('mPlant').style.color=o[2]=='ok'?'#00ff88':'#ffb020'; log('ENTROPIA: '+o[0],o[2]=='ok'?'#00ff88':'#ffb020');},1500);}
-
-let timer=null, step=0;
-const scenario=[
-{soil:52,pred:45,power:3.8,flow:1.8,water:452,vIn:172,state:'OPTIMAL',risk:'FAIBLE'},
-{soil:48,pred:41,power:4.3,flow:2.0,water:470,vIn:165,state:'ANALYSE',risk:'MODÉRÉ'},
-{soil:42,pred:36,power:5.8,flow:4.5,water:518,vIn:148,state:'ANOMALIE EAU',risk:'ÉLEVÉ'},
-{soil:37,pred:31,power:7.2,flow:12.5,water:574,vIn:132,state:'CRITIQUE',risk:'CRITIQUE'},
-{soil:44,pred:40,power:4.0,flow:0,water:574,vIn:172,state:'SÉCURISÉ',risk:'MODÉRÉ'}
-];
-function updateUI(s){
- $('mSol').textContent=s.soil+'%'; $('soilNow').textContent=s.soil+'%'; $('soilPred').textContent=s.pred+'%'; $('pSol').style.width=s.soil+'%';
- $('mEau').textContent=s.flow+' L/min'; $('debitVal').textContent=s.flow+' L/min'; $('eauVal').textContent=s.water+' L'; $('pEau').style.width=Math.min(100,s.flow*8)+'%';
- $('mSnel').textContent=s.vIn+'V → 220V'; $('vIn').textContent=s.vIn+'V'; $('powerVal').textContent=s.power+' kW'; $('pSnel').style.width=Math.min(100, s.vIn/2.5)+'%';
- $('globalState').textContent=s.state; $('risk').textContent=s.risk; $('risk').style.color=s.risk=='CRITIQUE'?'#ff4d4d':s.risk=='ÉLEVÉ'?'#ffb020':'#00ff88';
- if(s.flow>10){ $('alerteEau').innerHTML='<span style=color:#ff4d4d>🚨 FUITE DÉTECTÉE '+s.flow+'L/min - VANNE FERMÉE AUTO - SMS ENVOYÉ</span>'; $('waEau').classList.remove('hidden'); $('waEau').href='https://wa.me/243810000452?text=🚨FUITE%20GOMBE-452%20'+s.flow+'L/min%20Vanne%20fermée'; log('REGIDESO: Fuite auto-détectée','orange');}
- else if(s.flow==0 && step==4){ $('alerteEau').innerHTML='<span style=color:#00ff88>✅ Fuite stoppée par Sentinelle 06</span>';}
- if(s.vIn<140){ $('alerteSnel').innerHTML='<span style=color:#ff4d4d>⚠️ CHUTE CRITIQUE '+s.vIn+'V - FRIGOS DÉCONNECTÉS AUTO</span>'; log('SNEL: Protection surtension activée','orange');}
- else {$('alerteSnel').innerHTML='✅ Torsion corrigée RC 220V / RO '+s.vIn+'V → 220V stable';}
-}
-function runScenario(){stopScenario(); step=0; log('▶ SCÉNARIO TERRAIN GOMBE LANCÉ - Corrélation 5 Sentinelles','gold'); updateUI(scenario[0]); timer=setInterval(()=>{step++; if(step>=scenario.length){stopScenario(); $('globalState').textContent='SURVEILLANCE ACTIVE'; log('Grand Cerveau: Décision consolidée - Mode surveillance',' #00ff88'); return;} updateUI(scenario[step]);},2500);}
-function stopScenario(){if(timer){clearInterval(timer);timer=null;log('■ Scénario stoppé');}}
-
-const mk=(id,lbl,data,col)=>new Chart($(id),{type:'line',data:{labels:data.map((_,i)=>i+'h'),datasets:[{label:lbl,data,borderColor:col,backgroundColor:col+'33',tension:.4,fill:true,borderWidth:2}]},options:{plugins:{legend:{labels:{color:'#fff'}}},scales:{x:{ticks:{color:'#9fb3d3'}},y:{ticks:{color:'#9fb3d3'}}}}});
-mk('chartAgri','Vision', [62,65,71,68,78,82,76], '#00ff88');
-mk('chartSol','Sol %', [58,55,53,52,49,47,45], '#ffd54a');
-mk('chartEau','Débit L/min', [1.8,2.0,2.8,12.5,0,1.9], '#35d9ff');
-mk('chartVolt','Volt Entrée', [172,165,148,132,172,175], '#ffb020');
+const $=id=>document.getElementById(id); let synth=window.speechSynthesis; let frVoice=null;
+function updateClock(){ const d=new Date(); if($('clock')) $('clock').innerText=d.toTimeString().split(' ')[0]; } setInterval(updateClock,1000); updateClock();
+function show(id,btn){ document.querySelectorAll('section').forEach(s=>s.classList.add('hidden')); $(id).classList.remove('hidden'); document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); Object.values(state.charts).forEach(c=>{ try{ c.resize(); }catch(e){} }); }
+function loguer(msg,type=""){ const log=$('log'); if(!log) return; const div=document.createElement('div'); div.innerText="["+new Date().toTimeString().split(' ')[0]+"] "+msg; if(type=='critical') div.style.color='var(--red)'; else if(type=='warning') div.style.color='var(--orange)'; else if(type=='event') div.style.color='var(--cyan)'; else if(type=='success') div.style.color='var(--green)'; log.appendChild(div); log.scrollTop=log.scrollHeight; }
+const state={voix:false,scenario:null,step:0,events:0,actions:0,risk:12,charts:{}};
+function loadVoices(){ const v=synth.getVoices(); frVoice=v.find(x=>x.lang.includes('fr-FR'))||v.find(x=>x.lang.includes('fr'))||null; } if(synth){ synth.onvoiceschanged=loadVoices; loadVoices(); setTimeout(loadVoices,500); }
+function parler(texte){ loguer("VOIX: "+texte,"event"); if(!state.voix) return; if(!synth) return; synth.cancel(); const u=new SpeechSynthesisUtterance(texte); u.lang='fr-FR'; u.rate=0.95; if(frVoice) u.voice=frVoice; synth.speak(u); }
+function toggleVoix(){ state.voix=!state.voix; const btn=$('btnVoix'), st=$('voiceState'); if(state.voix){ btn.classList.add('on'); btn.innerText='🔊 VOIX ON'; if(st){st.innerText='ACTIVE'; st.className='green';} parler('Grand Cerveau Verolis activé. Cinq sentinelles plus voix intelligente opérationnelles à Gombe quatre cinq deux.'); loguer('🔊 Voix activée','success'); } else { btn.classList.remove('on'); btn.innerText='🔇 ACTIVER VOIX'; if(st){st.innerText='INACTIVE'; st.className='muted';} synth.cancel(); loguer('Voix désactivée','warning'); } }
+function setRisk(v,label){ state.risk=Math.max(0,Math.min(100,v)); if(!$('riskNumber')) return; $('riskNumber').innerText=v+'%'; $('riskBar').style.width=v+'%'; $('riskLabel').innerText=label; if(v<35){ $('riskNumber').style.color='var(--green)'; $('riskBar').style.background='var(--green)'; } else if(v<70){ $('riskNumber').style.color='var(--orange)'; $('riskBar').style.background='var(--orange)'; } else { $('riskNumber').style.color='var(--red)'; $('riskBar').style.background='var(--red)'; } }
+function decision(stateText,source,event,action,executed,risk,riskLabel){ if($('decisionState')) $('decisionState').innerText=stateText; if($('decisionSource')) $('decisionSource').innerText=source; if($('decisionEvent')) $('decisionEvent').innerText=event; if($('decisionAction')) $('decisionAction').innerText=action; if($('decisionExecuted')) $('decisionExecuted').innerText=executed; setRisk(risk,riskLabel); }
+function setGlobal(t,r){ if(!$('globalState')) return; $('globalState').innerText=t; $('globalState').className=r>=70?'val danger':r>=35?'val warn':'val'; }
+function diagnose(){ if(!$('photo').files[0]) return; $('diagRes').innerText='🔄 Analyse IA...'; parler('Analyse feuille en cours.'); setTimeout(()=>{ $('diagRes').innerText='🌿 Feuille saine - 98.4%'; if($('confidence')) $('confidence').innerText='98.4%'; if($('plantAction')) $('plantAction').innerText='Aucun traitement'; if($('mPlant')){ $('mPlant').innerText='NORMAL'; $('mPlant').className='green'; } if($('pPlant')) $('pPlant').style.width='98%'; loguer('VISION: 98.4%','success'); parler('Analyse terminée. Indice optimal quatre vingt dix huit virgule quatre pour cent.'); },1500); }
+function genererQR(){ const c=$('qrcode'); if(!c) return; c.innerHTML=''; const payload="SENTINEL-DEMO|GOMBE-452|V3.3-CLEAN|"+Date.now(); new QRCode(c,{text:payload,width:150,height:150,colorDark:"#06162f",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H}); parler('Sceau numérique actualisé. Lot Gombe quatre cinq deux sécurisé.'); loguer('QR actualisé','success'); } genererQR();
+function createChart(id,labels,data,label){ const canvas=$(id); if(!canvas) return null; return new Chart(canvas.getContext('2d'),{type:'line',data:{labels:labels,datasets:[{label:label,data:data,tension:.35,borderWidth:2,pointRadius:3}]},options:{responsive:true,plugins:{legend:{labels:{color:"#fff"}}},scales:{x:{ticks:{color:"#a9bad6"}},y:{ticks:{color:"#a9bad6"}}}}}); }
+state.charts.volt=createChart("chartVolt",["T-4","T-3","T-2","T-1","NOW"],[220,218,217,172,172],"Tension V");
+state.charts.water=createChart("chartEau",["T-4","T-3","T-2","T-1","NOW"],[1.7,1.8,1.9,2.0,1.8],"Débit L/min");
+state.charts.sol=createChart("chartSol",["J-4","J-3","J-2","J-1","NOW"],[58,56,54,53,52],"Humidité %");
+state.charts.agri=createChart("chartAgri",["S1","S2","S3","S4"],[91,94,96,98.4],"Confiance %");
+function addChartData(type,value){ const chart=state.charts[type]; if(!chart) return; chart.data.labels.push(new Date().toTimeString().split(' ')[0]); chart.data.datasets[0].data.push(value); if(chart.data.labels.length>8){ chart.data.labels.shift(); chart.data.datasets[0].data.shift(); } chart.update(); }
+function runScenario(){ stopScenario(); state.step=0; loguer('▶ SCÉNARIO PARLANT LANCÉ','event'); decision("SURVEILLANCE ACTIVE","Grand Cerveau","Initialisation","Mesure et analyse","OUI - surveillance",12,"FAIBLE"); parler("Lancement scénario terrain Gombe. Corrélation cinq sentinelles."); state.scenario=setInterval(scenarioStep,3500); }
+function scenarioStep(){ state.step++; if(state.step===1){ $('vIn').innerText='135V'; $('mSnel').innerText='135V ⚠️'; $('pSnel').style.width='38%'; $('pSnel').style.background='var(--red)'; $('sentinelSnel').classList.add('alert'); $('alerteSnel').innerText='🚨 Chute tension!'; $('alerteSnel').className='danger'; setGlobal('ALERTE',78); decision("ANOMALIE DÉTECTÉE","SNEL-07","Tension 135V","Protection équipements","OUI - protection",78,"ÉLEVÉ"); loguer('SNEL: 135V','critical'); state.actions++; parler('Attention. Chute tension à cent trente cinq volts. Protection activée.'); addChartData('volt',135); } else if(state.step===2){ decision("DÉCISION EN COURS","Grand Cerveau","Corrélation","Stabilisation","EN COURS",65,"MODÉRÉ"); loguer('Grand Cerveau analyse','event'); parler('Le Grand Cerveau analyse et stabilise.'); } else if(state.step===3){ $('vIn').innerText='220V'; $('mSnel').innerText='220V → 220V'; $('pSnel').style.width='92%'; $('pSnel').style.background='var(--green)'; $('sentinelSnel').classList.remove('alert'); $('alerteSnel').innerText='✅ Stabilisé 220V'; $('alerteSnel').className='green'; setGlobal('OPTIMAL',18); decision("NORMALISÉ","SNEL-07","220V stabilisé","Surveillance","OUI - confirmé",18,"FAIBLE"); loguer('SNEL stabilisé 220V','success'); parler('Réseau stabilisé à deux cent vingt volts.'); addChartData('volt',220); } else if(state.step===4){ if($('debitVal')) $('debitVal').innerText='11.2 L/min'; if($('mEau')) $('mEau').innerText='11.2 L/min ⚠️'; if($('pEau')){ $('pEau').style.width='82%'; $('pEau').style.background='var(--orange)'; } decision("ANOMALIE HYDRIQUE","REGIDESO-06","Débit 11.2 L/min","Isolement fuite","PRÉPARÉ",82,"CRITIQUE"); loguer('REGIDESO débit 11.2','warning'); parler('Alerte Régideso. Débit anormal détecté.'); addChartData('water',11.2); } else if(state.step===5){ if($('alerteEau')){ $('alerteEau').innerText='🚨 FUITE MAJEURE - VANNE ISOLÉE'; $('alerteEau').className='danger'; } if($('sentinelEau')) $('sentinelEau').classList.add('alert'); if($('pEau')) $('pEau').style.background='var(--red)'; if($('waEau')){ $('waEau').classList.remove('hidden'); $('waEau').href='https://wa.me/?text='+encodeURIComponent('ALERTE REGIDESO GOMBE-452 fuite majeure'); } setGlobal('ALERTE HYDRIQUE',91); decision("ACTION AUTOMATIQUE","REGIDESO-06","Fuite confirmée","Fermeture vanne","OUI - VANNE ISOLÉE",91,"CRITIQUE"); loguer('ACTION: vanne isolée','critical'); parler('Alerte Régideso! Maji ezo kima na Gombe! Fuite majeure, vanne isolée automatiquement.'); state.events++; if($('events')) $('events').innerText=state.events; } else if(state.step===6){ if($('debitVal')) $('debitVal').innerText='1.6 L/min'; if($('mEau')) $('mEau').innerText='1.6 L/min'; if($('pEau')){ $('pEau').style.width='16%'; $('pEau').style.background='var(--green)'; } if($('alerteEau')){ $('alerteEau').innerText='✅ Flux normalisé'; $('alerteEau').className='green'; } if($('sentinelEau')) $('sentinelEau').classList.remove('alert'); setGlobal('OPTIMAL',15); decision("NORMALISÉ","REGIDESO-06","1.6 L/min","Surveillance","OUI - sécurisé",15,"FAIBLE"); loguer('REGIDESO normalisé','success'); parler('Débit revenu à la normale. Réseau sécurisé.'); addChartData('water',1.6); } else if(state.step>=7){ decision("SCÉNARIO TERMINÉ","Grand Cerveau","Tout traité","Surveillance","OUI - opérationnel",10,"FAIBLE"); setGlobal('OPTIMAL',10); loguer('✔ SCÉNARIO TERMINÉ','success'); parler('Scénario terminé. Toutes les anomalies traitées. Surveillance normale. Image et voix complètent le visuel.'); stopScenario(); } }
+function stopScenario(){ if(state.scenario){ clearInterval(state.scenario); state.scenario=null; } loguer('■ Scénario arrêté','warning'); if(synth) synth.cancel(); }
 </script>
 </body>
 </html>
