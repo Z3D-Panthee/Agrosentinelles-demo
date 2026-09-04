@@ -1,117 +1,137 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VEROLIS × CVMH — Sentinel V2.0</title>
+<title>SENTINEL V3.1 — VEROLIS × CVMH — INFRA INTELLIGENTE</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
-:root{
-  --bg:#071018;--panel:#0d1923;--panel2:#101f2b;--text:#f3f7fa;--muted:#91a4b2;
-  --line:#1e3443;--green:#38e58b;--orange:#ffb84d;--red:#ff5b62;--violet:#a78bfa;--cyan:#55d9ff
-}
-*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 50% -10%,#123044 0,#071018 45%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-.wrap{max-width:1450px;margin:auto;padding:20px}
-.header{border:1px solid #2c5367;background:linear-gradient(135deg,#0d1d29,#0a151e);border-radius:18px;padding:20px;display:flex;gap:20px;justify-content:space-between;align-items:center;box-shadow:0 15px 50px #0006}
-.brand{font-size:24px;font-weight:900;letter-spacing:.4px}.sub{color:var(--muted);margin-top:5px;font-size:13px}
-.online{display:flex;align-items:center;gap:10px;font-weight:800}.dot{width:11px;height:11px;background:var(--green);border-radius:50%;box-shadow:0 0 16px var(--green)}
-.notice{margin:15px 0;border:1px solid #765d2b;background:#211b0d;color:#ffd88a;padding:11px 14px;border-radius:12px;font-size:13px}
-.controls{display:flex;flex-wrap:wrap;gap:10px;margin:15px 0}
-button{border:0;border-radius:11px;padding:12px 16px;font-weight:800;cursor:pointer;background:#183142;color:#fff;border:1px solid #2d5266}
-button:hover{transform:translateY(-1px)} .active{background:var(--green);color:#06130c;border-color:var(--green)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{background:linear-gradient(145deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:20px;min-height:390px;position:relative;overflow:hidden}
-.card:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--cyan)} .agri:before{background:var(--green)} .ent:before{background:var(--orange)} .com:before{background:var(--violet)}
-h2{font-size:18px;margin:0 0 18px}.eyebrow{font-size:11px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase}
-.metric{font-size:54px;font-weight:950;margin:14px 0 2px}.label{color:var(--muted);font-size:13px}.row{display:flex;justify-content:space-between;gap:15px;border-top:1px solid var(--line);padding:13px 0;font-size:13px}.row b{max-width:65%;text-align:right}.badge{display:inline-block;border-radius:99px;padding:6px 10px;font-size:11px;font-weight:900}.ok{background:#103c29;color:var(--green)}.warn{background:#493616;color:#ffd27a}.critical{background:#481b20;color:#ff8c92}
-.qrbox{display:flex;gap:18px;align-items:center}.qrbox img{width:135px;height:135px;background:#fff;border-radius:10px;padding:7px}.price{font-size:31px;font-weight:950;color:var(--green)}
-.footer{margin-top:15px;border-top:1px solid var(--line);padding:15px 3px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.header{align-items:flex-start;flex-direction:column}.card{min-height:auto}}
+:root{--bg:#06162f;--panel:#0d2854;--line:#2b5da8;--gold:#ffd54a;--green:#00ff88;--orange:#ffb020;--red:#ff4d4d;--cyan:#35d9ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#163f86 0,#06162f 45%);color:#fff;font-family:Arial}
+.header{position:sticky;top:0;z-index:20;background:linear-gradient(90deg,#06162f,#174bc5,#06162f);padding:10px;text-align:center;border-bottom:2px solid var(--gold)}
+.live{color:var(--green);font-weight:bold}.blink{animation:blink 1s infinite}@keyframes blink{50%{opacity:.35}}
+.badge{display:inline-block;background:var(--green);color:#001b0d;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:bold}
+.demo{background:#261f05;color:#ffd85c;padding:6px;text-align:center;font-size:11px;border-bottom:1px solid #765d12}
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px;background:#081c3d}.tabs button{padding:9px 14px;border-radius:22px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-weight:bold;cursor:pointer}.tabs button.active{background:var(--gold);color:#06162f}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;padding:14px;max-width:1500px;margin:auto}.card{background:linear-gradient(145deg,#0d2854,#0a2146);border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 8px 25px #0005}.val{font-size:32px;font-weight:bold;color:var(--green)}.warn{color:var(--orange)}.danger{color:var(--red)}.cyan{color:var(--cyan)}.muted{color:#a9bad6;font-size:12px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:8px 0}.metric{padding:10px;border-radius:10px;background:#061a38;border:1px solid #244d88;margin:8px 0}.btn{border:0;border-radius:22px;padding:9px 14px;margin:4px;background:var(--gold);color:#06162f;font-weight:bold;cursor:pointer}.btn.green{background:var(--green)}.btn.wa{background:#25D366;color:#fff}.hidden{display:none!important}
+.progress{height:9px;background:#06152e;border-radius:9px;overflow:hidden}.progress>i{display:block;height:100%;background:var(--green);width:50%;transition:.5s}
+.log{height:170px;overflow:auto;background:#041126;border-radius:10px;padding:9px;font-family:monospace;font-size:12px}
+#qrcode{background:#fff;padding:12px;width:max-content;border-radius:8px;margin:10px auto}
 </style>
 </head>
 <body>
-<div class="wrap">
 <header class="header">
-  <div><div class="brand">VÉROLIS SARL × CVMH</div>
-  <div class="sub">SENTINEL V2.0 — GRAND CERVEAU • Démonstrateur de pilotage</div></div>
-  <div><div class="online"><span class="dot"></span>SYSTÈME EN LIGNE</div><div class="sub" id="clock">—</div></div>
+<h2>VEROLIS × CVMH — SENTINEL V3.1 <span class="badge">INFRA INTELLIGENTE</span></h2>
+<div><span class="live blink">● GRAND CERVEAU EN LIGNE</span> · <span id="clock">--:--:--</span> · Lot <b>GOMBE-452</b> · TTD: E/t × t/E = 1</div>
 </header>
+<div class="demo">⚠️ MODE DÉMONSTRATION — DONNÉES SIMULÉES INTELLIGENTES. Architecture VEROLIS × CVMH prête pour capteurs REGIDESO/SNEL réels.</div>
 
-<div class="notice"><b>MODE DÉMONSTRATION :</b> toutes les valeurs affichées sont simulées. Elles illustrent l'architecture cible et ne constituent ni une mesure terrain, ni une validation agronomique, réglementaire, blockchain ou FAO.</div>
+<nav class="tabs">
+<button class="active" onclick="show('overview',this)">🧠 GRAND CERVEAU</button>
+<button onclick="show('agri',this)">🌱 AGRI IA</button>
+<button onclick="show('regideso',this)">💧 REGIDESO</button>
+<button onclick="show('snel',this)">⚡ SNEL</button>
+<button onclick="show('qr',this)">🔗 TRAÇABILITÉ</button>
+</nav>
 
-<div class="controls">
-  <button id="b-opt" onclick="simulate('optimal')">🌱 SOL OPTIMAL</button>
-  <button id="b-sec" onclick="simulate('secheresse')">🏜️ SÉCHERESSE</button>
-  <button id="b-mal" onclick="simulate('maladie')">🍂 MALADIE</button>
-  <button onclick="refresh()">↻ ACTUALISER</button>
+<section id="overview" class="grid">
+<div class="card">
+<h3>🧠 CENTRE DE DÉCISION TTD</h3>
+<div class="row"><span>État global</span><strong id="globalState" class="val" style="font-size:22px">OPTIMAL</strong></div>
+<div class="row"><span>Sentinelles actives</span><strong class="cyan">5 / 5 (AGRI 3 + EAU 1 + SNEL 1)</strong></div>
+<div class="row"><span>Niveau de risque</span><strong id="risk" class="val" style="font-size:22px">FAIBLE</strong></div>
+<div class="row"><span>Événements</span><strong id="events" class="cyan">0</strong></div>
+<hr><div class="muted">CHAÎNE INTELLIGENTE : MESURE → ANALYSE → PRÉDICTION → DÉCISION → ACTION → TRAÇABILITÉ</div>
+<button class="btn green" onclick="runScenario()">▶ LANCER SCÉNARIO TERRAIN GOMBE</button>
+<button class="btn" style="background:#ff4d4d;color:#fff" onclick="stopScenario()">■ STOP</button>
 </div>
-
-<section class="grid">
-  <article class="card agri">
-    <div class="eyebrow">Sentinelle 01</div><h2>AGRI-ORIGINE</h2>
-    <div class="metric" id="humidity">—</div><div class="label">Humidité du sol — simulation</div>
-    <div style="margin:17px 0"><span id="agriBadge" class="badge">—</span></div>
-    <div class="row"><span>Projection</span><b id="prediction">—</b></div>
-    <div class="row"><span>Décision</span><b id="decision">—</b></div>
-    <div class="row"><span>Action</span><b id="action">—</b></div>
-  </article>
-
-  <article class="card ent">
-    <div class="eyebrow">Sentinelle 02</div><h2>ENTROPIA AGRO</h2>
-    <div class="metric" id="diagnosis" style="font-size:36px">—</div><div class="label">Diagnostic de démonstration</div>
-    <div style="margin:17px 0"><span id="entBadge" class="badge">—</span></div>
-    <div class="row"><span>Probabilité simulée</span><b id="probability">—</b></div>
-    <div class="row"><span>Recommandation</span><b id="recommendation">—</b></div>
-  </article>
-
-  <article class="card com">
-    <div class="eyebrow">Sentinelle 03</div><h2>COMMUNION AGRO</h2>
-    <div class="qrbox"><img id="qr" src="/api/qr?lot=GOMBE-452" alt="QR du lot"><div><div class="label">Lot</div><h3 id="lot">GOMBE-452</h3><div class="price" id="price">—</div></div></div>
-    <div style="margin:17px 0"><span id="comBadge" class="badge">—</span></div>
-    <div class="row"><span>Traçabilité</span><b id="traceability">—</b></div>
-    <div class="row"><span>ESG</span><b id="esg">—</b></div>
-  </article>
+<div class="card">
+<h3>📡 MATRICE 5 SENTINELLES</h3>
+<div class="metric"><b>01 · SOL TTD</b><div class="row"><span>Humidité</span><strong id="mSol">52%</strong></div><div class="progress"><i id="pSol" style="width:52%"></i></div></div>
+<div class="metric"><b>02 · ENTROPIA IA</b><div class="row"><span>État</span><strong id="mPlant" style="color:var(--green)">NORMAL</strong></div><div class="progress"><i id="pPlant" style="width:80%;background:var(--green)"></i></div></div>
+<div class="metric"><b>06 · REGIDESO</b><div class="row"><span>Débit</span><strong id="mEau">1.8 L/min</strong></div><div class="progress"><i id="pEau" style="width:30%"></i></div></div>
+<div class="metric"><b>07 · SNEL CABINE</b><div class="row"><span>Entrée / Sortie</span><strong id="mSnel">172V → 220V</strong></div><div class="progress"><i id="pSnel" style="width:78%"></i></div></div>
+</div>
+<div class="card"><h3>⚡ JOURNAL TEMPS RÉEL INTELLIGENT</h3><div id="log" class="log"><div style="color:var(--green)">[SYSTEM] Grand Cerveau V3.1 initialisé. 5 Sentinelles synchronisées.</div><div>[TTD] E/t x t/E = 1 - Equilibre.</div></div></div>
 </section>
 
-<footer class="footer">
-  <span>VÉROLIS SARL • Interface de démonstration CVMH</span>
-  <span id="source">Source : simulation</span>
-</footer>
+<section id="agri" class="grid hidden">
+<div class="card"><h3>🌱 SENTINELLE 02 — ENTROPIA IA VISION</h3>
+<input type="file" accept="image/*" id="photo" onchange="diagnose()" style="width:100%;padding:8px;background:#06162f;border-radius:8px">
+<div id="diagRes" class="val" style="font-size:18px;margin:12px 0">📸 Prenez photo feuille</div>
+<div class="metric"><div class="row"><span>Confiance</span><b id="confidence">—</b></div><div class="row"><span>Action TTD</span><b id="plantAction">—</b></div></div>
+<canvas id="chartAgri" height="110"></canvas></div>
+<div class="card"><h3>🌍 SENTINELLE 01 — PRÉDICTION SOL</h3>
+<div>Actuel: <span id="soilNow" class="val">52%</span> | Prévu +3h: <span id="soilPred" class="warn" style="font-size:22px">45%</span></div>
+<div>Décision Auto: <b id="soilDecision" class="warn">SURVEILLANCE</b></div>
+<canvas id="chartSol" height="110"></canvas></div>
+</section>
+
+<section id="regideso" class="grid hidden">
+<div class="card"><h3>💧 SENTINELLE 06 — REGIDESO COMPTEUR INTELLIGENT</h3>
+<div>Consommation: <span id="eauVal" class="val">452 L</span></div>
+<div>Débit Temps Réel: <span id="debitVal" class="warn" style="font-size:24px">1.8 L/min</span> <span class="badge">SOLAIRE 5W</span></div>
+<div id="alerteEau" style="margin:12px 0;color:var(--green)">✅ IA Surveillance fuite active - Modèle E/t</div>
+<a id="waEau" class="btn wa hidden" target="_blank">📱 Envoyer Alerte WhatsApp REGIDESO</a>
+<canvas id="chartEau" height="120"></canvas>
 </div>
+<div class="card"><h3>💰 ACTION INTELLIGENTE</h3><div class="metric">Si débit > 10 L/min pendant 15s → <b>Fermeture vanne auto + SMS + Facture</b></div><div>Facture GOMBE-452: 452L x 0.02$ = <b>9.04$</b></div><button class="btn wa" onclick="window.open('https://wa.me/243810000000?text=Facture%20REGIDESO%20GOMBE-452%3A%209.04%24%20-%20Orange%20Money','_blank')">Payer Orange Money</button></div>
+</section>
+
+<section id="snel" class="grid hidden">
+<div class="card"><h3>⚡ SENTINELLE 07 — SNEL STABILISATEUR INTELLIGENT 5KVA</h3>
+<div>ENTRÉE RÉSEAU: <span id="vIn" class="warn" style="font-size:34px">172V</span> → SORTIE: <span class="val">220V</span> STABILIZED</div>
+<div>Charge: <span id="powerVal" class="val" style="font-size:22px">3.8 kW</span> - 5 Congélateurs protégés</div>
+<div id="alerteSnel" style="margin:12px 0;color:var(--green)">✅ Torsion corrigée RC 220V / RO 172V</div>
+<canvas id="chartVolt" height="120"></canvas>
+</div>
+<div class="card"><h3>🛡️ PROTECTION AUTO</h3><div class="metric">Si V < 140V → Déconnexion auto frigos pour éviter cramage</div><button class="btn wa" onclick="window.open('https://wa.me/243810000000?text=🚨%20ALERTE%20SNEL%20GOMBE-452%20Tension%20'+document.getElementById('vIn').innerText,'_blank')">Alerte WhatsApp SNEL</button></div>
+</section>
+
+<section id="qr" class="grid hidden">
+<div class="card" style="text-align:center"><h3>🔗 TRAÇABILITÉ BLOCKCHAIN DEMO</h3><div id="qrcode"></div><p>LOT: <b>GOMBE-452</b><br>VEROLIS × CVMH V3.1<br><span id="hash" style="font-family:monospace;font-size:10px">—</span></p><button class="btn" onclick="newQR()">↻ Générer Nouveau Hash</button></div>
+<div class="card"><h3>🔐 PREUVE D'INTÉGRITÉ</h3><div class="metric"><b>ID Lot</b><p id="lotId">VEROLIS-GOMBE-452-V31</p></div><div class="muted">Le QR démontre la couche traçabilité. Prêt à migrer vers blockchain publique pour REGIDESO/SNEL facturation.</div></div>
+</section>
+
+<footer>VEROLIS × CVMH · SENTINEL V3.1 INTELLIGENTE · Demo navigateur - Architecture prête pour ESP32 + API réelles</footer>
 
 <script>
 const $=id=>document.getElementById(id);
-function badge(el,text,kind){el.textContent=text;el.className='badge '+kind}
-function setButtons(s){
-  ['opt','sec','mal'].forEach(x=>$('b-'+x).classList.remove('active'));
-  $('b-'+({optimal:'opt',secheresse:'sec',maladie:'mal'}[s])).classList.add('active');
-}
-function render(d){
-  $('humidity').textContent=d.agri.humidity+'%';
-  $('prediction').textContent=d.agri.prediction;
-  $('decision').textContent=d.agri.decision;
-  $('action').textContent=d.agri.action;
-  badge($('agriBadge'),d.agri.status,d.agri.severity);
+function clock(){ $('clock').textContent=new Date().toLocaleString('fr-CD',{timeZone:'Africa/Kinshasa'}); } setInterval(clock,1000);clock();
+function show(id,btn){document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function log(msg,c=''){let d=document.createElement('div');d.textContent='['+new Date().toLocaleTimeString('fr-FR')+'] '+msg; if(c) d.style.color=c; $('log').appendChild(d); $('log').scrollTop=$('log').scrollHeight; }
+function randomHash(){return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(x=>x.toString(16).padStart(2,'0')).join('');}
+function newQR(){ $('qrcode').innerHTML=''; let h=randomHash(); $('hash').textContent=h; let data=JSON.stringify({lot:'GOMBE-452',v:'3.1',hash:h,ts:Date.now()}); new QRCode($('qrcode'),{text:data,width:160,height:160}); }
+newQR();
+function diagnose(){let f=$('photo').files[0]; if(!f)return; $('diagRes').textContent='🔍 Analyse TensorFlow.js...'; setTimeout(()=>{let o=[['MILDIOU 87%','Traitement Neem 2$','warn'],['NORMAL 94%','Maintien','ok'],['STRESS HYDRIQUE 82%','Arrosage','warn']][Math.floor(Math.random()*3)]; $('diagRes').innerHTML=o[0]+'<br><span style=font-size:14px;color:#ffd54a>'+o[1]+'</span>'; $('confidence').textContent=o[0].split(' ')[1]; $('plantAction').textContent=o[1]; $('mPlant').textContent=o[0]; $('mPlant').style.color=o[2]=='ok'?'#00ff88':'#ffb020'; log('ENTROPIA: '+o[0],o[2]=='ok'?'#00ff88':'#ffb020');},1500);}
 
-  $('diagnosis').textContent=d.entropia.diagnosis;
-  $('probability').textContent=d.entropia.probability+'%';
-  $('recommendation').textContent=d.entropia.recommendation;
-  badge($('entBadge'),d.entropia.severity==='critical'?'ALERTE':d.entropia.severity==='warning'?'SURVEILLANCE':'NORMAL',d.entropia.severity);
+let timer=null, step=0;
+const scenario=[
+{soil:52,pred:45,power:3.8,flow:1.8,water:452,vIn:172,state:'OPTIMAL',risk:'FAIBLE'},
+{soil:48,pred:41,power:4.3,flow:2.0,water:470,vIn:165,state:'ANALYSE',risk:'MODÉRÉ'},
+{soil:42,pred:36,power:5.8,flow:4.5,water:518,vIn:148,state:'ANOMALIE EAU',risk:'ÉLEVÉ'},
+{soil:37,pred:31,power:7.2,flow:12.5,water:574,vIn:132,state:'CRITIQUE',risk:'CRITIQUE'},
+{soil:44,pred:40,power:4.0,flow:0,water:574,vIn:172,state:'SÉCURISÉ',risk:'MODÉRÉ'}
+];
+function updateUI(s){
+ $('mSol').textContent=s.soil+'%'; $('soilNow').textContent=s.soil+'%'; $('soilPred').textContent=s.pred+'%'; $('pSol').style.width=s.soil+'%';
+ $('mEau').textContent=s.flow+' L/min'; $('debitVal').textContent=s.flow+' L/min'; $('eauVal').textContent=s.water+' L'; $('pEau').style.width=Math.min(100,s.flow*8)+'%';
+ $('mSnel').textContent=s.vIn+'V → 220V'; $('vIn').textContent=s.vIn+'V'; $('powerVal').textContent=s.power+' kW'; $('pSnel').style.width=Math.min(100, s.vIn/2.5)+'%';
+ $('globalState').textContent=s.state; $('risk').textContent=s.risk; $('risk').style.color=s.risk=='CRITIQUE'?'#ff4d4d':s.risk=='ÉLEVÉ'?'#ffb020':'#00ff88';
+ if(s.flow>10){ $('alerteEau').innerHTML='<span style=color:#ff4d4d>🚨 FUITE DÉTECTÉE '+s.flow+'L/min - VANNE FERMÉE AUTO - SMS ENVOYÉ</span>'; $('waEau').classList.remove('hidden'); $('waEau').href='https://wa.me/243810000452?text=🚨FUITE%20GOMBE-452%20'+s.flow+'L/min%20Vanne%20fermée'; log('REGIDESO: Fuite auto-détectée','orange');}
+ else if(s.flow==0 && step==4){ $('alerteEau').innerHTML='<span style=color:#00ff88>✅ Fuite stoppée par Sentinelle 06</span>';}
+ if(s.vIn<140){ $('alerteSnel').innerHTML='<span style=color:#ff4d4d>⚠️ CHUTE CRITIQUE '+s.vIn+'V - FRIGOS DÉCONNECTÉS AUTO</span>'; log('SNEL: Protection surtension activée','orange');}
+ else {$('alerteSnel').innerHTML='✅ Torsion corrigée RC 220V / RO '+s.vIn+'V → 220V stable';}
+}
+function runScenario(){stopScenario(); step=0; log('▶ SCÉNARIO TERRAIN GOMBE LANCÉ - Corrélation 5 Sentinelles','gold'); updateUI(scenario[0]); timer=setInterval(()=>{step++; if(step>=scenario.length){stopScenario(); $('globalState').textContent='SURVEILLANCE ACTIVE'; log('Grand Cerveau: Décision consolidée - Mode surveillance',' #00ff88'); return;} updateUI(scenario[step]);},2500);}
+function stopScenario(){if(timer){clearInterval(timer);timer=null;log('■ Scénario stoppé');}}
 
-  $('lot').textContent=d.communion.lot;
-  $('price').textContent=d.communion.price;
-  $('traceability').textContent=d.communion.traceability;
-  $('esg').textContent=d.communion.esg;
-  badge($('comBadge'),d.communion.status,d.communion.severity);
-  $('source').textContent='Source : '+d.source+' • '+d.timestamp;
-  setButtons(d.scenario);
-}
-async function refresh(){
-  const r=await fetch('/api/sentinelles'); render(await r.json());
-}
-async function simulate(s){
-  const r=await fetch('/api/simulate/'+s,{method:'POST'}); render(await r.json());
-}
-setInterval(()=>{$('clock').textContent=new Date().toLocaleString('fr-CD',{timeZone:'Africa/Kinshasa'})+' • Kinshasa'},1000);
-refresh();
+const mk=(id,lbl,data,col)=>new Chart($(id),{type:'line',data:{labels:data.map((_,i)=>i+'h'),datasets:[{label:lbl,data,borderColor:col,backgroundColor:col+'33',tension:.4,fill:true,borderWidth:2}]},options:{plugins:{legend:{labels:{color:'#fff'}}},scales:{x:{ticks:{color:'#9fb3d3'}},y:{ticks:{color:'#9fb3d3'}}}}});
+mk('chartAgri','Vision', [62,65,71,68,78,82,76], '#00ff88');
+mk('chartSol','Sol %', [58,55,53,52,49,47,45], '#ffd54a');
+mk('chartEau','Débit L/min', [1.8,2.0,2.8,12.5,0,1.9], '#35d9ff');
+mk('chartVolt','Volt Entrée', [172,165,148,132,172,175], '#ffb020');
 </script>
 </body>
 </html>
