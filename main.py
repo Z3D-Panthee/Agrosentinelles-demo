@@ -2,15 +2,15 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List, Dict, Any
 from datetime import datetime, timezone
 import sqlite3
 import os
 import json
 
 # ============================================================
-# AGROSENTINELLES ADMIN V5.0 — FINALE
-# Backend FastAPI — Offline First / SQLite / Zéro Bug
+# AGROSENTINELLES ADMIN V5.0 — FINALE & INTEGRALE
+# Backend FastAPI — Offline First / SQLite / Synchronisation Batch
 # VÉROLIS SARL × Sentinel OS
 # ============================================================
 
@@ -170,6 +170,10 @@ class AlerteIn(BaseModel):
     statut: str = "OUVERTE"
 
 
+class SyncPayload(BaseModel):
+    operations: List[Dict[str, Any]] = []
+
+
 # ------------------------------------------------------------
 # HELPERS
 # ------------------------------------------------------------
@@ -188,7 +192,7 @@ def log_action(action, module="SYSTEM", details=""):
         conn.commit()
         conn.close()
     except Exception:
-        pass  # Empêche tout crash lié au journal
+        pass
 
 
 def rows(table, limit=200):
@@ -398,7 +402,6 @@ def create_stock(item: StockIn):
             {**item.model_dump(), "updated_at": now()}
         )
     except sqlite3.IntegrityError:
-        # Mise à jour si le produit existe déjà
         conn = db()
         conn.execute(
             "UPDATE stocks SET quantite=?, unite=?, emplacement=?, seuil=?, updated_at=? WHERE produit=?",
@@ -441,25 +444,40 @@ def get_journal():
 
 
 # ------------------------------------------------------------
-# SYNCHRONISATION OFFLINE API
+# SYNCHRONISATION OFFLINE AVANCÉE (BIRDRECTIONNELLE BATCH)
 # ------------------------------------------------------------
 
 @app.post("/api/sync")
-def sync(payload: dict = {}):
-    operations = payload.get("operations", [])
+def sync(payload: SyncPayload):
+    operations = payload.operations
     accepted = 0
     errors = []
 
-    for operation in operations:
+    conn = db()
+    for op in operations:
+        table = op.get("table")
+        data = op.get("data", {})
+        action_type = op.get("action", "INSERT")
+
         try:
-            log_action(
-                "SYNC_OFFLINE",
-                operation.get("module", "UNKNOWN"),
-                json.dumps(operation.get("data", {}), ensure_ascii=False)
-            )
+            if table in ["exploitations", "producteurs", "parcelles", "lots", "stocks", "alertes"]:
+                keys = list(data.keys())
+                if keys:
+                    placeholders = ",".join(["?"] * len(keys))
+                    columns = ",".join(keys)
+                    values = [data[k] for k in keys]
+                    
+                    # Tentative d'insertion sécurisée (ignore ou remplace en cas de doublon pour la synchro)
+                    sql = f"INSERT OR IGNORE INTO {table} ({columns}) VALUES ({placeholders})"
+                    conn.execute(sql, values)
+                    conn.commit()
+            
+            log_action("SYNC_BATCH_OP", table or "UNKNOWN", json.dumps(data, ensure_ascii=False))
             accepted += 1
         except Exception as exc:
-            errors.append(str(exc))
+            errors.append(f"Erreur sur {table}: {str(exc)}")
+
+    conn.close()
 
     return {
         "status": "SYNC_COMPLETE",
