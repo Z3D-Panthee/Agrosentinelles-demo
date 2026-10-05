@@ -1,15 +1,25 @@
 {
-  "name": "Sentinel OS TTD Oracle",
-  "short_name": "SentinelOS",
+  "name": "AgroSentinelles Admin V5.0 — Sentinel OS",
+  "short_name": "AgroSentinelles",
+  "description": "Administration agricole, traçabilité et intelligence Sentinel OS par Vérolis SARL",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "background_color": "#030b18",
   "theme_color": "#2563eb",
   "icons": [
     {
       "src": "icon.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
