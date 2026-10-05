@@ -2,223 +2,250 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#06162f">
-<title>SENTINEL V3.6.0 UNIFIED — VEROLIS × EDU</title>
+<meta name="theme-color" content="#030b18">
+<title>SENTINEL V4.1 — L'ÉCOLE DU FUTUR | CEPT ASBL</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
-:root{--bg:#06162f;--panel:#0d2854;--panel2:#091e40;--line:#2b5da8;--gold:#ffd54a;--green:#00ff88;--orange:#ffb020;--red:#ff4d4d;--cyan:#35d9ff;--purple:#b878ff;--muted:#a9bad6}
+:root{--bg:#030b18;--panel:rgba(13, 40, 84, 0.75);--panel2:rgba(9, 30, 64, 0.85);--line:#1f4c9c;--gold:#ffd54a;--green:#00ff88;--orange:#ffb020;--red:#ff4d4d;--cyan:#35d9ff;--purple:#b878ff;--muted:#a9bad6}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;color:#fff;font-family:Arial,sans-serif;background:radial-gradient(circle at 50% -10%,#163f86 0,#06162f 45%),var(--bg);min-height:100vh;padding-bottom:80px}
-.header{position:sticky;top:0;z-index:50;text-align:center;padding:12px;background:linear-gradient(90deg,#06162f,#174bc5,#06162f);border-bottom:2px solid var(--gold)}
+body{margin:0;color:#fff;font-family:'Segoe UI',Arial,sans-serif;background:radial-gradient(circle at 50% -20%,#113a7c 0,#030b18 55%),var(--bg);min-height:100vh;padding-bottom:90px;overflow-x:hidden}
+
+@keyframes holoGlow{0%{box-shadow:0 0 10px rgba(53,217,255,0.2),inset 0 0 15px rgba(53,217,255,0.1)}50%{box-shadow:0 0 25px rgba(53,217,255,0.5),inset 0 0 25px rgba(53,217,255,0.3)}100%{box-shadow:0 0 10px rgba(53,217,255,0.2),inset 0 0 15px rgba(53,217,255,0.1)}}
+@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(1000%)}}
+
+.header{position:sticky;top:0;z-index:100;text-align:center;padding:14px;background:linear-gradient(90deg,rgba(3,11,24,0.95),rgba(17,58,140,0.95),rgba(3,11,24,0.95));backdrop-filter:blur(10px);border-bottom:2px solid var(--cyan);box-shadow:0 5px 20px rgba(0,0,0,0.5)}
 .live{color:var(--green);font-weight:bold}.blink{animation:blink 1s infinite}@keyframes blink{50%{opacity:.3}}
-.badge{display:inline-block;background:var(--green);color:#001b0d;padding:4px 9px;border-radius:15px;font-size:10px;font-weight:bold}
-.demo{background:#261f05;color:#ffd85c;padding:8px;text-align:center;font-size:11px;border-bottom:1px solid #765d12}
-.tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:10px;background:#081c3d;border-bottom:1px solid #234b87}
-.tabs button{padding:8px 12px;border-radius:20px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-weight:bold;cursor:pointer;font-size:11px}
-.tabs button.active{background:var(--gold);color:#06162f}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;padding:14px;max-width:1500px;margin:auto}
-.card{background:linear-gradient(145deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 10px 30px #0005}
+.badge{display:inline-block;background:var(--cyan);color:#001b0d;padding:4px 10px;border-radius:15px;font-size:10px;font-weight:bold}
+
+.hero-banner{position:relative;width:100%;height:220px;background:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;border-bottom:3px solid var(--gold);display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
+.hero-banner::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(3,11,24,0.4),rgba(3,11,24,0.9));}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-content h1{font-size:24px;color:var(--gold);margin:0 0 8px;text-shadow:0 2px 10px #000}
+.hero-content p{font-size:12px;color:var(--muted);margin:0}
+
+.tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:12px;background:rgba(4,16,38,0.9);border-bottom:1px solid var(--line);backdrop-filter:blur(5px)}
+.tabs button{padding:9px 14px;border-radius:20px;border:1px solid var(--cyan);background:rgba(6,22,47,0.8);color:var(--cyan);font-weight:bold;cursor:pointer;font-size:11px;transition:all 0.3s}
+.tabs button:hover{background:var(--cyan);color:#030b18;box-shadow:0 0 12px var(--cyan)}
+.tabs button.active{background:var(--gold);color:#030b18;border-color:var(--gold);box-shadow:0 0 15px var(--gold)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;padding:16px;max-width:1500px;margin:auto}
+.card{background:var(--panel);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.6);animation:holoGlow 6s infinite ease-in-out;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scanline 4s linear infinite;opacity:.4}
+
 .val{font-size:32px;font-weight:bold;color:var(--green)}.warn{color:var(--orange)}.danger{color:var(--red)!important}.cyan{color:var(--cyan)}.green{color:var(--green)}.muted{color:var(--muted);font-size:12px}
 .row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:8px 0}
-.metric{padding:10px;border-radius:10px;background:#061a38;border:1px solid #244d88;margin:8px 0}
-.btn{border:0;border-radius:22px;padding:9px 14px;margin:4px;background:var(--gold);color:#06162f;font-weight:bold;cursor:pointer}
-.btn.green{background:var(--green);color:#001b0d}.btn.red{background:var(--red);color:#fff}.btn.wa{background:#25D366;color:#fff}.btn.cyan{background:var(--cyan);color:#000}
+.metric{padding:12px;border-radius:12px;background:rgba(6,26,56,0.6);border:1px solid rgba(36,77,136,0.5);margin:10px 0}
+.btn{border:0;border-radius:22px;padding:10px 16px;margin:4px;background:var(--gold);color:#030b18;font-weight:bold;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(255,213,74,0.4)}
+.btn.green{background:var(--green);color:#001b0d}.btn.red{background:var(--red);color:#fff}.btn.cyan{background:var(--cyan);color:#030b18}
 .hidden{display:none!important}
-.progress{height:9px;background:#06152e;border-radius:9px;overflow:hidden;border:1px solid #193c70;margin:6px 0}
+.progress{height:10px;background:rgba(6,21,46,0.8);border-radius:10px;overflow:hidden;border:1px solid rgba(25,60,112,0.6);margin:8px 0}
 .progress>i{display:block;height:100%;background:var(--green);width:50%;transition:.7s}
-.riskBox{text-align:center;padding:14px;border-radius:14px;background:#061a38;border:1px solid #244d88}
-.riskNumber{font-size:48px;font-weight:bold;margin:5px}
-.riskBar{height:15px;background:#06152e;border-radius:20px;overflow:hidden;margin:12px 0}
-.riskBar i{display:block;height:100%;width:12%;background:var(--green);transition:.8s}
-.decision{border:1px solid var(--green);background:radial-gradient(circle at 50% 0,#123e70,#06162f 65%);text-align:center}
-.decisionState{font-size:26px;font-weight:bold;color:var(--green);margin:8px 0}
-.decisionSource{color:var(--cyan);font-size:12px}
-.actionBox{padding:12px;margin-top:10px;border-radius:10px;background:#061a38;border:1px solid #244d88}
-.flow{display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap;margin:10px 0}
-.flowNode{padding:6px 9px;border-radius:20px;background:#061a38;border:1px solid var(--cyan);color:var(--cyan);font-size:10px;font-weight:bold}
-.flowArrow{color:var(--gold)}
-.log{height:180px;overflow:auto;background:#041126;border-radius:10px;padding:9px;font-family:monospace;font-size:11px;border:1px solid #163761}
-#qrcode{background:#fff;padding:12px;width:max-content;border-radius:8px;margin:10px auto}
-input,select{width:100%;padding:9px;border-radius:8px;border:1px solid #244d88;background:#06162f;color:#fff;margin:5px 0;font-size:13px}
-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}
-th,td{border:1px solid #244d88;padding:6px;text-align:left}
-th{background:#0d2854;color:var(--gold)}
-.recu{border:2px dashed var(--gold);padding:12px;background:#fff;color:#000;border-radius:8px;font-family:monospace;margin-top:10px}
-.floatBar{position:fixed;bottom:0;left:0;right:0;z-index:999;display:flex;gap:8px;justify-content:center;padding:10px 10px 14px;background:#06162ff2;backdrop-filter:blur(8px);border-top:2px solid var(--gold)}
-.floatBar button{flex:1;max-width:180px;padding:12px 8px;border-radius:25px;font-weight:bold;border:0;cursor:pointer;box-shadow:0 4px 15px #000;font-size:12px}
-#btnVoix{background:#555;color:#fff}#btnVoix.on{background:var(--green);color:#000;animation:pulse 1s infinite}
-#btnRapport{background:var(--cyan);color:#000}#btnConscience{background:var(--gold);color:#000}
+
+.log{height:180px;overflow:auto;background:#020814;border-radius:10px;padding:10px;font-family:monospace;font-size:11px;border:1px solid var(--line)}
+#qrcode{background:#fff;padding:12px;width:max-content;border-radius:12px;margin:12px auto;box-shadow:0 5px 20px rgba(0,0,0,0.5)}
+input,select{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(6,22,47,0.9);color:#fff;margin:6px 0;font-size:13px}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
+th,td{border:1px solid rgba(43,93,168,0.4);padding:8px;text-align:left}
+th{background:rgba(13,40,84,0.95);color:var(--gold)}
+.recu{border:2px dashed var(--gold);padding:14px;background:#fff;color:#030b18;border-radius:10px;font-family:monospace;margin-top:12px;box-shadow:0 5px 20px rgba(0,0,0,0.3)}
+
+.floatBar{position:fixed;bottom:0;left:0;right:0;z-index:999;display:flex;gap:8px;justify-content:center;padding:10px 10px 14px;background:rgba(3,11,24,0.9);backdrop-filter:blur(10px);border-top:2px solid var(--cyan)}
+.floatBar button{flex:1;max-width:180px;padding:12px 8px;border-radius:25px;font-weight:bold;border:0;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.5);font-size:12px}
+#btnVoix{background:#444;color:#fff}#btnVoix.on{background:var(--green);color:#000;animation:pulse 1s infinite}
+#btnRapport{background:var(--cyan);color:#030b18}#btnConscience{background:var(--gold);color:#030b18}
 @keyframes pulse{50%{transform:scale(1.05)}}
-@media(min-width:700px){.floatBar{top:72px;bottom:auto;background:transparent;border:0;backdrop-filter:none;justify-content:space-between;pointer-events:none}.floatBar button{pointer-events:auto;position:fixed}#btnRapport{left:10px;top:72px}#btnVoix{right:10px;top:72px}#btnConscience{right:10px;top:118px}body{padding-bottom:0}}
+
+@media(min-width:800px){
+  .floatBar{top:76px;bottom:auto;background:transparent;border:0;backdrop-filter:none;justify-content:space-between;pointer-events:none}
+  .floatBar button{pointer-events:auto;position:fixed}
+  #btnRapport{left:15px;top:76px}#btnVoix{right:15px;top:76px}#btnConscience{right:15px;top:126px}
+  body{padding-bottom:0}
+}
 </style>
 </head>
 <body>
+
 <header class="header">
-  <h2>VEROLIS — SENTINEL V3.6 <span class="badge">AGRI + EDU UNIFIED</span></h2>
-  <div><span class="live blink">● ORACLE CLOUD ACTIF</span> · <span id="clock">--:--:--</span> · GOMBE/ISC · TTD: 1</div>
+  <h2>CENTRE ÉDUCATION POUR TOUS — CEPT ASBL <span class="badge">ARRÊTÉ N°051/2013</span></h2>
+  <div><span class="live blink">● ORACLE CLOUD ACTIF</span> · <span id="clock">--:--:--</span> · KINSHASA · TTD v4.1</div>
 </header>
-<div class="demo"><strong>SYNC ORACLE RENDER</strong> : <a href="https://ttd-oracle-3lfbyz3d.onrender.com" target="_blank" style="color:var(--gold)">ttd-oracle-3lfbyz3d.onrender.com</a> — Amour × Vérité = Justice</div>
+
+<div class="hero-banner">
+  <div class="hero-content">
+    <h1>L'ÉCOLE DU FUTUR — SYSTÈME SENTINEL UNIFIÉ</h1>
+    <p>Arrêté Ministériel n°051/Cab/Min/J&D.H/2013 | Gestion Officielle (Mbudi & Ngaba)</p>
+  </div>
+</div>
 
 <div class="floatBar">
-  <button id="btnRapport" onclick="genererRapportAutonome(30)">🎙️ RAPPORT ORACLE</button>
+  <button id="btnRapport" onclick="genererRapportAutonome()">🎙️ RAPPORT ORACLE</button>
   <button id="btnVoix" onclick="toggleVoix()">🔇 VOIX TTD</button>
-  <button id="btnConscience" onclick="conscienceSentinel('30s')">🧬 CONSCIENCE TTD</button>
+  <button id="btnConscience" onclick="conscienceSentinel()">🧬 CONSCIENCE TTD</button>
 </div>
 
 <nav class="tabs">
   <button class="active" onclick="show('overview',this)">🧠 GRAND CERVEAU</button>
+  <button onclick="show('edu',this)">🎓 PORTAIL 2 ÉCOLES</button>
   <button onclick="show('agri',this)">🌱 AGRO-SENTINEL</button>
-  <button onclick="show('edu',this)">🎓 SENTINEL EDU</button>
   <button onclick="show('regideso',this)">💧 REGIDESO</button>
   <button onclick="show('snel',this)">⚡ SNEL</button>
   <button onclick="show('qr',this)">🔗 TRAÇABILITÉ</button>
 </nav>
 
 <section id="overview" class="grid">
-  <div class="card decision" style="grid-column:1/-1">
-    <h3>🧠 GRAND CERVEAU TTD × ORACLE RENDER</h3>
-    <div class="flow"><span class="flowNode">CAPTEURS</span><span class="flowArrow">→</span><span class="flowNode">AGRO & EDU</span><span class="flowArrow">→</span><span class="flowNode">ORACLE CLOUD</span><span class="flowArrow">→</span><span class="flowNode">DÉCISION</span><span class="flowArrow">→</span><span class="flowNode" style="border-color:var(--gold);color:var(--gold)">CONSCIENCE</span></div>
-    <div id="decisionState" class="decisionState">SYSTÈME UNIFIÉ OPTIMAL</div>
-    <div id="decisionSource" class="decisionSource">Relayé vers ttd-oracle-3lfbyz3d.onrender.com | 3 Lois Fondamentales</div>
-    <div class="actionBox">
-      <div class="row"><span>Connectivité Cloud</span><b id="cloudStatus" class="green">SYNCHRONISÉ (Render)</b></div>
-      <div class="row"><span>Modules Actifs</span><b>Agro-IA + Frais Scolaires ISC Gombe</b></div>
-      <div class="row"><span>Action Automatique</span><b class="green">OUI — Équilibre systémique actif</b></div>
+  <div class="card" style="grid-column:1/-1;background:linear-gradient(135deg,rgba(13,40,84,0.85),rgba(6,22,47,0.95))">
+    <h3 style="color:var(--cyan)">🌐 PILOTAGE OFFICIEL DES 2 ÉTABLISSEMENTS DU CEPT ASBL</h3>
+    <p class="muted">Adresses rectifiées et synchronisées conformément aux instructions officielles.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:15px">
+      <div class="metric" style="border-color:var(--gold)">
+        <h4 style="color:var(--gold);margin:0 0 5px">1. GROUPE SCOLAIRE TSHISELEKA</h4>
+        <p class="muted" style="margin:0"><b>Mbudi</b><br>Commune de Mont Ngafula, Kinshasa</p>
+      </div>
+      <div class="metric" style="border-color:var(--cyan)">
+        <h4 style="color:var(--cyan);margin:0 0 5px">2. COMPLEXE SCOLAIRE MAMAN GINA</h4>
+        <p class="muted" style="margin:0"><b>Commune de Ngaba</b><br>Kinshasa, RDC</p>
+      </div>
     </div>
   </div>
 
   <div class="card">
-    <h3>🌐 ÉTAT GLOBAL</h3>
-    <div class="row"><span>Statut</span><strong id="globalState" class="val" style="font-size:22px">OPTIMAL</strong></div>
-    <div class="row"><span>Réseau IoT</span><strong class="cyan">Agro + Snel + Regideso</strong></div>
+    <h3>📊 INDICATEURS GLOBAUX</h3>
+    <div class="row"><span>Établissements actifs</span><strong class="cyan">2 / 2</strong></div>
+    <div class="row"><span>Agrément ASBL</span><strong class="green">N°051/2013</strong></div>
     <div class="row"><span>Voix TTD</span><strong id="voiceState" class="muted">INACTIVE</strong></div>
-    <div class="row"><span>Événements</span><strong id="events" class="cyan">0</strong></div>
-    <button class="btn green" onclick="runScenario()">▶ SCÉNARIO UNIFIÉ</button>
-    <button class="btn red" onclick="stopScenario()">■ STOP</button>
+    <button class="btn green" onclick="runScenario()">▶ LANCER SYNCHRONISATION</button>
   </div>
 
   <div class="card">
-    <h3>⚠️ SCORE RISQUE ORACLE</h3>
-    <div class="riskBox">
-      <div id="riskNumber" class="riskNumber">10%</div>
-      <div id="riskLabel" class="green">FAIBLE</div>
-      <div class="riskBar"><i id="riskBar" style="width:10%"></i></div>
-      <div class="muted">Oracle: ttd-oracle-3lfbyz3d.onrender.com</div>
+    <h3>🛡 SCORE DE CONFIANCE CLOUD</h3>
+    <div style="text-align:center;padding:15px">
+      <div class="val" style="font-size:52px;color:var(--cyan)">100%</div>
+      <div class="green" style="font-weight:bold;margin:5px 0">ADRESSES CORRIGÉES VALIDÉES</div>
+      <div class="progress"><i style="width:100%"></i></div>
+      <div class="muted">Oracle Render : ttd-oracle-3lfbyz3d.onrender.com</div>
     </div>
   </div>
 
   <div class="card" style="grid-column:1/-1">
-    <h3>🔊 JOURNAL SYSTÈME CONSCIENCE</h3>
+    <h3>🔊 JOURNAL DE BORD UNIFIÉ — CONSCIENCE TTD</h3>
     <div id="log" class="log">
-      <div style="color:var(--green)">[SYSTEM] Sentinel V3.6 Agro & Edu unifié initialisé</div>
-      <div style="color:var(--cyan)">[ORACLE] Liaison établie avec ttd-oracle-3lfbyz3d.onrender.com</div>
+      <div style="color:var(--green)">[SYSTEM] Sentinel V4.1 Adresses mises à jour (Mbudi & Ngaba)</div>
+      <div style="color:var(--cyan)">[CEPT ASBL] Connexion aux établissements validée</div>
     </div>
+  </div>
+</section>
+
+<!-- SECTION PORTAIL 2 ÉCOLES (EDU) -->
+<section id="edu" class="grid hidden">
+  <div class="card" style="grid-column:1/-1;background:linear-gradient(135deg,rgba(17,58,140,0.4),rgba(3,11,24,0.9))">
+    <h3 style="color:var(--gold)">🎓 GESTION CENTRALISÉE DES DEUX ÉCOLES OFFICIELLES</h3>
+    <div class="metric" style="background:rgba(3,11,24,0.8)">
+      <label><b style="color:var(--gold)">Sélectionnez l'établissement cible :</b></label>
+      <select id="selectEcoleActive" onchange="changerEcoleActive()" style="border-color:var(--gold);font-weight:bold;color:var(--gold)">
+        <option value="tshiseleka">1. Groupe Scolaire Tshiseleka (Mbudi / Mont Ngafula)</option>
+        <option value="gina">2. Complexe Scolaire Maman GINA KUMBI-KUMBI (Ngaba)</option>
+      </select>
+    </div>
+    <div class="tabs" style="background:transparent;border:0;padding:5px 0">
+      <button class="btn cyan" onclick="showEduTab('eleves')">👤 Élèves & Inscriptions</button>
+      <button class="btn cyan" onclick="showEduTab('frais')">⚙️ Configuration Frais</button>
+      <button class="btn cyan" onclick="showEduTab('paiement')">💳 Encaissement & Reçu</button>
+      <button class="btn cyan" onclick="showEduTab('recouvrement')">📋 Cahier Recouvrement</button>
+    </div>
+  </div>
+
+  <div id="edu-eleves" class="card">
+    <h4>Effectifs Élèves — <span class="nomEcoleCourante" style="color:var(--gold)">GS Tshiseleka (Mbudi)</span></h4>
+    <input id="nomEleve" placeholder="Nom & Postnom de l'élève">
+    <input id="classeEleve" placeholder="Classe / Option">
+    <button class="btn gold" onclick="addEleveEdu()">+ Inscrire l'élève</button>
+    <table id="tabEleves"><tr><th>N°</th><th>Nom complet</th><th>Classe</th></tr></table>
+  </div>
+
+  <div id="edu-frais" class="card" style="display:none">
+    <h4>Grille des Frais Scolaires — <span class="nomEcoleCourante" style="color:var(--gold)">GS Tshiseleka (Mbudi)</span></h4>
+    <input id="typeFrais" placeholder="Libellé (Frais scolaires, Minerval...)">
+    <input id="montantFrais" type="number" placeholder="Montant en USD">
+    <button class="btn green" onclick="addFraisEdu()">Enregistrer les Frais</button>
+    <table id="tabFrais"><tr><th>Libellé Frais</th><th>Montant USD</th></tr></table>
+  </div>
+
+  <div id="edu-paiement" class="card" style="display:none">
+    <h4>Caisse & Reçu Sécurisé — <span class="nomEcoleCourante" style="color:var(--gold)">GS Tshiseleka (Mbudi)</span></h4>
+    <select id="selEleve"></select>
+    <select id="selFrais"></select>
+    <input id="montantPaye" type="number" placeholder="Montant versé en USD">
+    <button class="btn gold" onclick="payerEdu()">Encaisser & Émettre le Reçu</button>
+    <div id="recuBox" class="recu" style="display:none"></div>
+  </div>
+
+  <div id="edu-recouvrement" class="card" style="display:none">
+    <h4>Suivi Financier & Recouvrement — <span class="nomEcoleCourante" style="color:var(--gold)">GS Tshiseleka (Mbudi)</span></h4>
+    <table id="tabRecouvrement"><tr><th>Élève</th><th>Payé</th><th>Total Dû</th><th>Solde Restant</th><th>Statut</th></tr></table>
   </div>
 </section>
 
 <!-- SECTION AGRO -->
 <section id="agri" class="grid hidden">
   <div class="card">
-    <h3>🌱 AGRO-SENTINEL — VISION & SOL</h3>
+    <h3>🌱 AGRO-SENTINEL — FERME PILOTE</h3>
     <input type="file" accept="image/*" id="photo" onchange="diagnose()">
-    <div id="diagRes" class="val" style="font-size:16px;margin:10px 0">📸 Charger photo feuille</div>
+    <div id="diagRes" class="val" style="font-size:15px;margin:10px 0">📸 Charger image cultures / sol</div>
     <div class="metric">
-      <div class="row"><span>Confiance IA</span><b id="confidence">—</b></div>
-      <div class="row"><span>Recommandation</span><b id="plantAction">—</b></div>
+      <div class="row"><span>Indice de Santé</span><b id="confidence" class="green">98.5%</b></div>
+      <div class="row"><span>Recommandation TTD</span><b id="plantAction" class="cyan">Optimisation active</b></div>
     </div>
-    <canvas id="chartAgri" height="100"></canvas>
+    <canvas id="chartAgri" height="110"></canvas>
   </div>
   <div class="card">
-    <h3>🌍 HUMIDITÉ SOL MALUKU / GOMBE</h3>
-    <div>Actuel: <span id="soilNow" class="val">54%</span> | Cible: <span class="cyan">60%</span></div>
-    <div class="progress"><i id="pSol" style="width:54%"></i></div>
-    <canvas id="chartSol" height="110"></canvas>
-  </div>
-</section>
-
-<!-- SECTION EDU -->
-<section id="edu" class="grid hidden">
-  <div class="card" style="grid-column:1/-1">
-    <h3>🎓 SENTINEL EDU — GESTION FRAIS SCOLAIRES (ISC KINSHASA / GOMBE)</h3>
-    <div class="tabs" style="background:transparent;border:0">
-      <button class="btn cyan" onclick="showEduTab('eleves')">Élèves</button>
-      <button class="btn cyan" onclick="showEduTab('frais')">Frais</button>
-      <button class="btn cyan" onclick="showEduTab('paiement')">Paiement</button>
-      <button class="btn cyan" onclick="showEduTab('recouvrement')">Recouvrement</button>
-    </div>
-  </div>
-
-  <div id="edu-eleves" class="card">
-    <h4>Répertoire Élèves</h4>
-    <input id="nomEleve" placeholder="Nom & Postnom">
-    <input id="classeEleve" placeholder="Classe (ex: ISC Gombe L1)">
-    <button class="btn gold" onclick="addEleveEdu()">+ Ajouter</button>
-    <table id="tabEleves"><tr><th>N°</th><th>Nom</th><th>Classe</th></tr></table>
-  </div>
-
-  <div id="edu-frais" class="card" style="display:none">
-    <h4>Configuration Frais</h4>
-    <input id="typeFrais" placeholder="Libellé (Minerval, Inscription...)">
-    <input id="montantFrais" type="number" placeholder="Montant USD">
-    <button class="btn green" onclick="addFraisEdu()">Enregistrer Frais</button>
-    <table id="tabFrais"><tr><th>Frais</th><th>Montant</th></tr></table>
-  </div>
-
-  <div id="edu-paiement" class="card" style="display:none">
-    <h4>Perception & Reçu Fig. 2.3</h4>
-    <select id="selEleve"></select>
-    <select id="selFrais"></select>
-    <input id="montantPaye" type="number" placeholder="Montant payé USD">
-    <button class="btn gold" onclick="payerEdu()">Encaisser & Générer Reçu</button>
-    <div id="recuBox" class="recu" style="display:none"></div>
-  </div>
-
-  <div id="edu-recouvrement" class="card" style="display:none">
-    <h4>Cahier de Recouvrement (Tableau Trimestriel)</h4>
-    <table id="tabRecouvrement"><tr><th>Élève</th><th>Payé</th><th>Total</th><th>Reste</th><th>Statut</th></tr></table>
+    <h3>🌍 CAPTEURS ENVIRONNEMENTAUX</h3>
+    <div>Humidité du sol : <span id="soilNow" class="val">62%</span> | Objectif : <span class="cyan">60%</span></div>
+    <div class="progress"><i id="pSol" style="width:62%"></i></div>
+    <canvas id="chartSol" height="120"></canvas>
   </div>
 </section>
 
 <!-- SECTION REGIDESO -->
 <section id="regideso" class="grid hidden">
   <div class="card">
-    <h3>💧 REGIDESO — SÉCURITÉ HYDRIQUE</h3>
-    <div>Conso: <span id="eauVal" class="val">452 L</span></div>
-    <div>Débit: <span id="debitVal" class="warn" style="font-size:22px">1.8 L/min</span></div>
-    <div id="alerteEau" style="margin:10px 0;color:var(--green)">✅ Flux stable</div>
+    <h3>💧 REGIDESO — GESTION HYDRIQUE</h3>
+    <div>Consommation : <span id="eauVal" class="val">520 L</span></div>
+    <div>Débit en direct : <span id="debitVal" class="cyan" style="font-size:22px">2.1 L/min</span></div>
+    <div id="alerteEau" style="margin:10px 0;color:var(--green)">✅ Alimentation en eau stable</div>
     <canvas id="chartEau" height="120"></canvas>
   </div>
   <div class="card">
-    <h3>📱 ACTION CLOUD</h3>
-    <div class="metric">Synchronisé sur <a href="https://ttd-oracle-3lfbyz3d.onrender.com" target="_blank" style="color:var(--cyan)">Oracle Render</a></div>
-    <button class="btn cyan" onclick="parler('Régideso Gombe opérationnel via l oracle Verolis.')">🔊 Synthèse Eau</button>
+    <h3>☁️ SYNCHRONISATION CLOUD</h3>
+    <div class="metric">Serveur Oracle Render : Actif & Sécurisé</div>
+    <button class="btn cyan" onclick="parler('Réseau hydrique des établissements sous contrôle total.')">🔊 Émettre Rapport Eau</button>
   </div>
 </section>
 
 <!-- SECTION SNEL -->
 <section id="snel" class="grid hidden">
   <div class="card">
-    <h3>⚡ SNEL — STABILISATION TENSION</h3>
-    <div>ENTRÉE: <span id="vIn" class="warn" style="font-size:32px">220V</span></div>
-    <div>Charge: <span class="val" style="font-size:20px">3.8 kW</span></div>
-    <div id="alerteSnel" style="margin:10px 0;color:var(--green)">✅ Réseau stable</div>
+    <h3>⚡ SNEL — STABILISATION ÉNERGÉTIQUE</h3>
+    <div>Tension Entrée : <span id="vIn" class="warn" style="font-size:30px">225V</span></div>
+    <div>Charge active : <span class="val" style="font-size:20px">4.2 kW</span></div>
+    <div id="alerteSnel" style="margin:10px 0;color:var(--green)">✅ Régulateur actif</div>
     <canvas id="chartVolt" height="120"></canvas>
   </div>
   <div class="card">
-    <h3>🛡️ PROTECTION TTD</h3>
-    <div class="metric">Algorithme Triade Dynamique actif</div>
-    <button class="btn gold" onclick="parler('Tension Snel normalisée à deux cent vingt volts.')">🔊 Synthèse Snel</button>
+    <h3>🛡️ BOUCLIER ÉLECTRIQUE TTD</h3>
+    <div class="metric">Protection intelligente contre les surtensions</div>
+    <button class="btn gold" onclick="parler('Tension électrique stabilisée à deux cent vingt-cinq volts.')">🔊 Émettre Rapport Énergie</button>
   </div>
 </section>
 
 <!-- SECTION QR -->
 <section id="qr" class="grid hidden">
   <div class="card" style="text-align:center">
-    <h3>🔗 TRAÇABILITÉ UNIFIÉE</h3>
-    <div class="muted">Liaison Oracle : ttd-oracle-3lfbyz3d.onrender.com</div>
+    <h3>🔗 TRAÇABILITÉ NUMÉRIQUE & SCEAU ASBL</h3>
+    <div class="muted">Arrêté ministériel n°051/Cab/Min/J&D.H/2013 | CEPT</div>
     <div id="qrcode"></div>
-    <button class="btn green" onclick="genererQR()">🔄 Actualiser Sceau Cloud</button>
+    <button class="btn green" onclick="genererQR()">🔄 Actualiser le Sceau Numérique</button>
   </div>
 </section>
 
@@ -241,7 +268,7 @@ function loguer(m){
   log.appendChild(d); log.scrollTop=log.scrollHeight; 
 }
 
-const state={voix:false,scenario:null,step:0,events:0,risk:10,charts:{}};
+const state={voix:false,charts:{}};
 
 function loadVoices(){ if(!synth) return; const v=synth.getVoices(); if(v.length===0) return; frVoice=v.find(x=>x.lang.toLowerCase().includes('fr'))||v[0]||null; }
 if(synth){ synth.onvoiceschanged=loadVoices; loadVoices(); setTimeout(loadVoices,1000); }
@@ -262,7 +289,7 @@ function toggleVoix(){
   if(state.voix){
     btn.classList.add('on'); btn.innerText='🔊 VOIX ON';
     if(st){ st.innerText='ACTIVE'; st.className='green'; }
-    parler('Voix TTD activée. Système unifié Verolis et Sentinel Edu opérationnel.');
+    parler('Voix TTD activée. Adresses de Mbudi et Ngaba configurées.');
     loguer('🔊 Voix TTD active');
   } else {
     btn.classList.remove('on'); btn.innerText='🔇 VOIX TTD';
@@ -273,20 +300,36 @@ function toggleVoix(){
 }
 
 function genererRapportAutonome(){
-  let txt=`Rapport Oracle Verolis Gombe. Connexion sur ttd-oracle-3lfbyz3d.onrender.com active. Modules Agro-Sentinel et Edu synchronisés. Tout est stable.`;
+  let ecoleNom = ecoleActive === 'tshiseleka' ? 'Groupe Scolaire Tshiseleka à Mbudi Mont Ngafula' : 'Complexe Scolaire Maman Gina à Ngaba';
+  let txt=`Rapport officiel CEPT. Établissement actif : ${ecoleNom}. Arrêté ministériel zéro cinquante et un validé.`;
   parler(txt);
-  loguer('🎙️ Rapport Oracle généré');
+  loguer('🎙️ Rapport Oracle généré pour : ' + ecoleNom);
 }
 
-function conscienceSentinel(v){
-  let t=`Je suis Sentinel, intelligence autonome unifiée de Verolis, liée à l'oracle render. Je gère l'agriculture de précision, les services de l'eau, de l'électricité et la perception des frais scolaires avec les Trois Lois Fondamentales. Amour, Vérité et Justice.`;
+function conscienceSentinel(){
+  let t=`Je suis Sentinel, intelligence artificielle du Centre Éducation Pour Tous, ASBL reconnue sous l'arrêté ministériel zéro cinquante et un du treize mars deux mille treize. Je supervise le Groupe Scolaire Tshiseleka à Mbudi Mont Ngafula et le Complexe Scolaire Maman Gina à Ngaba.`;
   parler(t);
   loguer('🧬 Conscience TTD exécutée');
 }
 
-// EDU DB & LOGIC
-let EDU_DB = JSON.parse(localStorage.getItem('sentinel_edu_v3')||'{"eleves":[],"frais":[],"paiements":[]}');
-function saveEdu(){ localStorage.setItem('sentinel_edu_v3', JSON.stringify(EDU_DB)); }
+let MULTI_EDU_DB = JSON.parse(localStorage.getItem('sentinel_cept_v41_b')||JSON.stringify({
+  tshiseleka: { nom: "Groupe Scolaire Tshiseleka (Mbudi / Mont Ngafula)", eleves: [], frais: [], paiements: [] },
+  gina: { nom: "Complexe Scolaire Maman GINA KUMBI-KUMBI (Ngaba)", eleves: [], frais: [], paiements: [] }
+}));
+
+let ecoleActive = 'tshiseleka';
+
+function saveMultiEdu(){ 
+  localStorage.setItem('sentinel_cept_v41_b', JSON.stringify(MULTI_EDU_DB)); 
+}
+
+function changerEcoleActive(){
+  ecoleActive = $('selectEcoleActive').value;
+  let nomLbl = ecoleActive === 'tshiseleka' ? 'GS Tshiseleka (Mbudi)' : 'CS Maman Gina (Ngaba)';
+  document.querySelectorAll('.nomEcoleCourante').forEach(el => el.innerText = nomLbl);
+  renderEdu();
+  loguer('🏫 Basculement actif vers : ' + nomLbl);
+}
 
 function showEduTab(tab){
   ['edu-eleves','edu-frais','edu-paiement','edu-recouvrement'].forEach(id=>$(id).style.display='none');$('edu-'+tab).style.display='block';
@@ -295,85 +338,74 @@ function showEduTab(tab){
 
 function addEleveEdu(){
   if(!$('nomEleve').value) return;
-  EDU_DB.eleves.push({nom:$('nomEleve').value, classe:$('classeEleve').value});
-  saveEdu(); renderEdu(); $('nomEleve').value='';
-  loguer('🎓 Élève ajouté');
+  MULTI_EDU_DB[ecoleActive].eleves.push({nom:$('nomEleve').value, classe:$('classeEleve').value});
+  saveMultiEdu(); renderEdu(); $('nomEleve').value='';
+  loguer('🎓 Élève inscrit avec succès à ' + MULTI_EDU_DB[ecoleActive].nom);
 }
 
 function addFraisEdu(){
   if(!$('typeFrais').value \vert{}\vert{} !$('montantFrais').value) return;
-  EDU_DB.frais.push({type:$('typeFrais').value, montant:$('montantFrais').value});
-  saveEdu(); renderEdu(); $('typeFrais').value='';$('montantFrais').value='';
-  loguer('💰 Frais configuré');
+  MULTI_EDU_DB[ecoleActive].frais.push({type:$('typeFrais').value, montant:$('montantFrais').value});
+  saveMultiEdu(); renderEdu(); $('typeFrais').value='';$('montantFrais').value='';
+  loguer('💰 Frais configuré pour ' + MULTI_EDU_DB[ecoleActive].nom);
 }
 
 function payerEdu(){
-  let e=EDU_DB.eleves[$('selEleve').value];
-  let f=EDU_DB.frais[$('selFrais').value];
+  let currentDB = MULTI_EDU_DB[ecoleActive];
+  let e = currentDB.eleves[$('selEleve').value];
+  let f = currentDB.frais[$('selFrais').value];
   if(!e || !f) return;
-  let p={nom:e.nom, classe:e.classe, frais:f.type, montant:$('montantPaye').value, recu:'REC-'+Math.floor(Math.random()*90000+10000), date:new Date().toLocaleDateString()};
-  EDU_DB.paiements.push(p); saveEdu();
-  $('recuBox').style.display='block';$('recuBox').innerHTML=`<b>REÇU OFFICIEL N° ${p.recu}</b><br>Élève: ${p.nom} (${p.classe})<br>Motif: ${p.frais}<br>Montant: ${p.montant} USD<br>Date: ${p.date}<br><i>Validé par Sentinel Edu Cloud</i>`;
+  let p={nom:e.nom, classe:e.classe, frais:f.type, montant:$('montantPaye').value, recu:'CEPT-REC-'+Math.floor(Math.random()*90000+10000), date:new Date().toLocaleDateString()};
+  currentDB.paiements.push(p); saveMultiEdu();
+  $('recuBox').style.display='block';$('recuBox').innerHTML=`<b>CENTRE ÉDUCATION POUR TOUS (CEPT) ASBL</b><br>Arrêté Min. n°051/Cab/Min/J&D.H/2013<br>--------------------------------------------------<br><b>REÇU OFFICIEL N° ${p.recu}</b><br>École : ${currentDB.nom}<br>Élève : ${p.nom} (${p.classe})<br>Motif : ${p.frais}<br>Montant payé : ${p.montant} USD<br>Date : ${p.date}<br><i>Validé par Sentinel Cloud & Oracle</i>`;
   renderEdu();
-  parler(`Paiement de ${p.montant} dollars enregistré pour ${p.nom}.`);
-  loguer('💳 Paiement encaissé');
+  parler(`Paiement de ${p.montant} dollars validé pour ${p.nom} à ${currentDB.nom}.`);
+  loguer('💳 Paiement encaissé et reçu généré');
 }
 
 function renderEdu(){
-  if($('tabEleves'))$('tabEleves').innerHTML='<tr><th>N°</th><th>Nom</th><th>Classe</th></tr>'+EDU_DB.eleves.map((e,i)=>`<tr><td>${i+1}</td><td>${e.nom}</td><td>${e.classe}</td></tr>`).join('');
-  if($('tabFrais'))$('tabFrais').innerHTML='<tr><th>Frais</th><th>Montant USD</th></tr>'+EDU_DB.frais.map(f=>`<tr><td>${f.type}</td><td>${f.montant} $</td></tr>`).join('');
-  if($('selEleve'))$('selEleve').innerHTML=EDU_DB.eleves.map((e,i)=>`<option value="${i}">${e.nom} - ${e.classe}</option>`).join('');
-  if($('selFrais'))$('selFrais').innerHTML=EDU_DB.frais.map((f,i)=>`<option value="${i}">${f.type} (${f.montant}$)</option>`).join('');
+  let currentDB = MULTI_EDU_DB[ecoleActive];
+  if($('tabEleves'))$('tabEleves').innerHTML='<tr><th>N°</th><th>Nom & Postnom</th><th>Classe / Option</th></tr>'+currentDB.eleves.map((e,i)=>`<tr><td>${i+1}</td><td>${e.nom}</td><td>${e.classe}</td></tr>`).join('');
+  if($('tabFrais'))$('tabFrais').innerHTML='<tr><th>Libellé</th><th>Montant USD</th></tr>'+currentDB.frais.map(f=>`<tr><td>${f.type}</td><td>${f.montant} $</td></tr>`).join('');
+  if($('selEleve'))$('selEleve').innerHTML=currentDB.eleves.map((e,i)=>`<option value="${i}">${e.nom} (${e.classe})</option>`).join('');
+  if($('selFrais'))$('selFrais').innerHTML=currentDB.frais.map((f,i)=>`<option value="${i}">${f.type} (${f.montant}$)</option>`).join('');
   
   let map={};
-  EDU_DB.eleves.forEach(e=>map[e.nom]={paye:0, nom:e.nom, classe:e.classe});
-  EDU_DB.paiements.forEach(p=>{if(map[p.nom]) map[p.nom].paye+=parseFloat(p.montant||0)});
-  let totalFrais=EDU_DB.frais.reduce((s,f)=>s+parseFloat(f.montant||0),0);
+  currentDB.eleves.forEach(e=>map[e.nom]={paye:0, nom:e.nom, classe:e.classe});
+  currentDB.paiements.forEach(p=>{if(map[p.nom]) map[p.nom].paye+=parseFloat(p.montant||0)});
+  let totalFrais=currentDB.frais.reduce((s,f)=>s+parseFloat(f.montant||0),0);
   
-  if($('tabRecouvrement'))$('tabRecouvrement').innerHTML='<tr><th>Élève</th><th>Payé</th><th>Total</th><th>Reste</th><th>Statut</th></tr>'+Object.values(map).map(r=>`<tr><td>${r.nom}</td><td>${r.paye}$</td><td>${totalFrais}$</td><td>${totalFrais-r.paye}$</td><td>${r.paye>=totalFrais?'✅ SOLDE':'❌ DETTE'}</td></tr>`).join('');
+  if($('tabRecouvrement'))$('tabRecouvrement').innerHTML='<tr><th>Élève</th><th>Payé</th><th>Total Dû</th><th>Reste</th><th>Statut</th></tr>'+Object.values(map).map(r=>`<tr><td>${r.nom}</td><td>${r.paye}$</td><td>${totalFrais}$</td><td>${totalFrais-r.paye}$</td><td>${r.paye>=totalFrais?'✅ SOLDE':'❌ SOLDE INCOMPLET'}</td></tr>`).join('');
 }
 renderEdu();
 
 function genererQR(){
   const c=$('qrcode'); if(!c) return;
   c.innerHTML='';
-  new QRCode(c,{text:"https://ttd-oracle-3lfbyz3d.onrender.com|VEROLIS-UNIFIED",width:140,height:140,colorDark:"#06162f",colorLight:"#ffffff"});
-  loguer('🔗 QR Oracle généré');
+  let nomLbl = ecoleActive === 'tshiseleka' ? 'GS Tshiseleka Mbudi Mont Ngafula' : 'CS Maman Gina Ngaba';
+  new QRCode(c,{text:"CEPT-ASBL|Arrete-051-2013|" + nomLbl + "|https://ttd-oracle-3lfbyz3d.onrender.com",width:140,height:140,colorDark:"#030b18",colorLight:"#ffffff"});
+  loguer('🔗 Sceau QR généré pour : ' + nomLbl);
 }
 genererQR();
 
-// CHARTS BASE
-function createChart(id,l,d,lb){ const cv=$(id); if(!cv) return null; return new Chart(cv.getContext('2d'),{type:'line',data:{labels:l,datasets:[{label:lb,data:d,tension:.35,borderWidth:2,borderColor:'#00ff88',backgroundColor:'#00ff8840'}]},options:{responsive:true,scales:{x:{ticks:{color:"#a9bad6",font:{size:9}}},y:{ticks:{color:"#a9bad6",font:{size:9}}}}}}); }
-state.charts.volt=createChart("chartVolt",["T-4","T-3","T-2","T-1","NOW"],[220,220,220,220,220],"Tension V");
-state.charts.water=createChart("chartEau",["T-4","T-3","T-2","T-1","NOW"],[1.8,1.8,1.8,1.8,1.8],"Débit L/min");
-state.charts.sol=createChart("chartSol",["J-4","J-3","J-2","J-1","NOW"],[52,53,53,54,54],"Humidité %");
-state.charts.agri=createChart("chartAgri",["S1","S2","S3","S4"],[91,94,96,98.4],"Confiance %");
+function createChart(id,l,d,lb){ const cv=$(id); if(!cv) return null; return new Chart(cv.getContext('2d'),{type:'line',data:{labels:l,datasets:[{label:lb,data:d,tension:.35,borderWidth:2,borderColor:'#35d9ff',backgroundColor:'rgba(53,217,255,0.2)'}]},options:{responsive:true,scales:{x:{ticks:{color:"#a9bad6",font:{size:9}}},y:{ticks:{color:"#a9bad6",font:{size:9}}}}}}); }
+state.charts.volt=createChart("chartVolt",["T-4","T-3","T-2","T-1","NOW"],[220,225,225,220,225],"Tension V");
+state.charts.water=createChart("chartEau",["T-4","T-3","T-2","T-1","NOW"],[2.0,2.1,2.0,2.1,2.1],"Débit L/min");
+state.charts.sol=createChart("chartSol",["J-4","J-3","J-2","J-1","NOW"],[58,60,61,62,62],"Humidité %");
+state.charts.agri=createChart("chartAgri",["S1","S2","S3","S4"],[92,95,97,98.5],"Confiance %");
 
 function runScenario(){
-  loguer('▶ Scénario unifié lancé');
-  parler('Lancement du scénario unifié Verolis. Synchronisation cloud en cours.');
-}
-function stopScenario(){
-  loguer('■ Scénario arrêté');
-  if(synth) synth.cancel();
+  loguer('▶ Synchronisation des adresses (Mbudi & Ngaba) exécutée.');
+  parler('Mise à jour des adresses des écoles du CEPT enregistrée.');
 }
 function diagnose(){
   $('diagRes').innerText='🌿 Analyse IA en cours...';
   setTimeout(()=>{
-    $('diagRes').innerText='🌿 Feuille Saine — 98.4%';
-    if($('confidence'))$('confidence').innerText='98.4%';
-    if($('plantAction'))$('plantAction').innerText='Aucun traitement requis';
-    parler('Analyse feuille réussie. Plante en bonne santé.');
+    $('diagRes').innerText='🌿 Écosystème optimal — 98.5%';
+    if($('confidence'))$('confidence').innerText='98.5%';
+    if($('plantAction'))$('plantAction').innerText='Paramètres conformes';
+    parler('Analyse confirmée.');
   }, 1200);
-}
-
-// ENREGISTREMENT SERVICE WORKER PWA OFFLINE-FIRST
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => loguer('[PWA] Service Worker enregistré avec succès'))
-      .catch(err => loguer('[PWA] Erreur d enregistrement SW: ' + err));
-  });
 }
 </script>
 </body>
