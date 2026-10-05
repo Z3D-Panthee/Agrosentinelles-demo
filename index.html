@@ -366,6 +366,15 @@ function diagnose(){
     parler('Analyse feuille réussie. Plante en bonne santé.');
   }, 1200);
 }
+
+// ENREGISTREMENT SERVICE WORKER PWA OFFLINE-FIRST
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => loguer('[PWA] Service Worker enregistré avec succès'))
+      .catch(err => loguer('[PWA] Erreur d enregistrement SW: ' + err));
+  });
+}
 </script>
 </body>
 </html>
