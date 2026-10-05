@@ -4,9 +4,140 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#030b18">
-<title>SENTINEL OS GRAND CERVEAU V10 — FRANCOTECH EDITION</title>
+<title>SENTINEL OS GRAND CERVEAU V10 — HARDWARE LINK</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#030b18;--panel:rgba(13, 40, 84, 0.88);--line:#1f4c9c;--gold:#ffd54a;--green:#00ff88;--orange:#ffb020;--red:#ff4d4d;--cyan:#35d9ff;--muted:#a9bad6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:#fff;font-family:'Segoe UI',Arial,sans-serif;background:radial-gradient(circle at 50% -20%,#113a7c 0,#030b18 55%),var(--bg);min-height:100vh;padding-bottom:90px;overflow-x:hidden}
+
+.header{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(3,11,24,0.95);backdrop-filter:blur(10px);border-bottom:2px solid var(--cyan);flex-wrap:wrap;gap:10px}
+.logo-title{font-weight:bold;color:var(--gold);font-size:15px;display:flex;align-items:center;gap:8px}
+.user-badge{background:var(--cyan);color:#030b18;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold}
+
+.module-selector{display:flex;gap:6px;flex-wrap:wrap}
+.mod-btn{padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:#1e293b;color:var(--muted);font-weight:bold;cursor:pointer;font-size:11px;transition:all 0.3s}
+.mod-btn.active{background:var(--cyan);color:#030b18;border-color:var(--cyan)}
+
+.container{max-width:1400px;margin:auto;padding:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 8px 25px rgba(0,0,0,0.5)}
+.val{font-size:28px;font-weight:bold;color:var(--green)}
+.muted{color:var(--muted);font-size:12px}
+.btn{border:0;border-radius:20px;padding:8px 14px;margin:4px;background:var(--gold);color:#030b18;font-weight:bold;cursor:pointer;font-size:12px}
+.btn.green{background:var(--green);color:#001b0d}
+.btn.cyan{background:var(--cyan);color:#030b18}
+.btn.red{background:var(--red);color:#fff}
+.hidden{display:none!important}
+
+input,select{width:100%;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(6,22,47,0.9);color:#fff;margin:6px 0;font-size:12px}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11px}
+th,td{border:1px solid rgba(43,93,168,0.4);padding:6px;text-align:left}
+th{background:rgba(13,40,84,0.95);color:var(--gold)}
+.footer-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(3,11,24,0.95);padding:8px;text-align:center;font-size:11px;color:var(--muted);border-top:1px solid var(--line);z-index:90;display:flex;justify-content:space-around;}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo-title">
+    <span>🛡 SENTINEL OS V10 QUANTUM NEXUS</span>
+  </div>
+  <div class="module-selector">
+    <button onclick="switchModule('nexus')" id="btnModNexus" class="mod-btn active">🧠 Grand Cerveau</button>
+    <button onclick="switchModule('agro')" id="btnModAgro" class="mod-btn">🌱 AgroSentinelles (Hardware)</button>
+    <button onclick="switchModule('edu')" id="btnModEdu" class="mod-btn">📚 Sentinel Edu</button>
+  </div>
+  <div class="user-badge">VÉROLIS SARL × CEPT</div>
+</header>
+
+<div class="container">
+
+  <!-- ================= GRAND CERVEAU ================= -->
+  <div id="module-nexus">
+    <section class="card" style="margin-bottom: 20px; border-left: 4px solid var(--cyan);">
+      <h3 style="margin: 0 0 5px 0; color: var(--cyan);">🚀 Système Prêt pour la Demi-Finale FrancoTech</h3>
+      <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">
+        Intégration cyber-physique temps réel. Liaison ESP32 & Passerelle Edge active.
+      </p>
+    </section>
+    <div class="grid">
+      <div class="card">
+        <div class="muted">STATUT PASSERELLE HARDWARE</div>
+        <div id="hwStatusBadge" class="val" style="font-size:20px; color:var(--orange);">CONNEXION EN COURS...</div>
+        <div class="muted">Point d'accès local IP: 192.168.4.1</div>
+      </div>
+      <div class="card">
+        <div class="muted">INDICE TTD</div>
+        <div class="val">1.000</div>
+        <div class="muted">Stabilité optimale</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= AGROSENTINELLES (HARDWARE LINK) ================= -->
+  <div id="module-agro" class="hidden">
+    <div class="card" style="border-left: 4px solid var(--green); margin-bottom:15px;">
+      <h3 style="color:var(--green); margin-top:0;">🌱 AgroSentinelles — Superviseur Matériel Direct</h3>
+      <p class="muted">Interrogation automatique de l'ESP32 et de l'électrovanne locale.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="muted">Humidité du Sol (Capteur ESP32)</div>
+        <div id="agroHumidite" class="val">-- %</div>
+        <div id="agroHumiditeStatus" class="muted" style="margin-top:5px;">En attente de données capteur...</div>
+      </div>
+      <div class="card">
+        <div class="muted">Actionneur (Pompe / Vanne)</div>
+        <div id="agroPompe" class="val" style="font-size:22px; color:var(--orange);">STANDBY</div>
+        <button class="btn green" onclick="forcerActionHardware('ON')" style="margin-top:10px;">Forcer Pompe ON</button>
+        <button class="btn red" onclick="forcerActionHardware('OFF')" style="margin-top:10px;">Forcer Pompe OFF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SENTINEL EDU ================= -->
+  <div id="module-edu" class="hidden">
+    <div class="card">
+      <h3>📚 Sentinel Edu v10 — Gestion Locale</h3>
+      <p class="muted">Mode Offline-First opérationnel.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-bar">
+  <span>🛡 HARDWARE BRIDGE ACTIVE</span>
+  <span>ESP32 / RASPBERRY PI READY</span>
+  <span id="footerConnection" style="color:var(--orange)">● SYNC EN COURS</span>
+</div>
+
+<script>
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function jouerBip(freq = 440, duree = 0.1) {
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.1Parfait ! Pour rendre votre démonstration matérielle totalement fluide, exempte de bugs et prête à dialoguer en temps réel avec votre ESP32 ou votre passerelle locale, voici la version enrichie de **Sentinel OS v10**. 
+
+J'ai intégré un **moteur de synchronisation asynchrone par `fetch` (`polling intelligent`)** dans l'onglet **AgroSentinelles**. Le logiciel interroge en arrière-plan votre passerelle locale (par exemple l'API Python vue juste avant) toutes les 3 secondes. Si le matériel répond, les données s'actualisent instantanément à l'écran. Si le matériel est déconnecté ou s'il y a un problème réseau, le système bascule gracieusement en mode sécurisé sans jamais bloquer l'interface ni perturber le jury.
+
+### Code Mis à Jour (Intégration du Hardware Bridge & Auto-Refresh)
+
+Remplacez ou mettez à jour votre code avec cette version robuste :
+
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#030b18">
+<title>SENTINEL OS GRAND CERVEAU V10 — HARDWARE LINK</title>
+<script src="[https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js](https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js)"></script>
+<script src="[https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js](https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js)"></script>
 <style>
 :root{--bg:#030b18;--panel:rgba(13, 40, 84, 0.88);--line:#1f4c9c;--gold:#ffd54a;--green:#00ff88;--orange:#ffb020;--red:#ff4d4d;--cyan:#35d9ff;--muted:#a9bad6}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
@@ -29,378 +160,4 @@ body{margin:0;color:#fff;font-family:'Segoe UI',Arial,sans-serif;background:radi
 .btn:active{transform:scale(0.96)}
 .btn.green{background:var(--green);color:#001b0d}
 .btn.cyan{background:var(--cyan);color:#030b18}
-.btn.red{background:var(--red);color:#fff}
-.hidden{display:none!important}
-
-input,select{width:100%;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(6,22,47,0.9);color:#fff;margin:6px 0;font-size:12px}
-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11px}
-th,td{border:1px solid rgba(43,93,168,0.4);padding:6px;text-align:left}
-th{background:rgba(13,40,84,0.95);color:var(--gold)}
-
-.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:1000;display:flex;justify-content:center;align-items:center;padding:15px}
-.modal-content{background:#0d2854;border:2px solid var(--gold);padding:20px;border-radius:15px;width:100%;max-width:450px}
-.footer-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(3,11,24,0.95);padding:8px;text-align:center;font-size:11px;color:var(--muted);border-top:1px solid var(--line);z-index:90;display:flex;justify-content:space-around;align-items:center}
-</style>
-</head>
-<body>
-
-<header class="header">
-  <div class="logo-title">
-    <span>🛡 SENTINEL OS V10 QUANTUM NEXUS</span>
-    <span style="font-size:10px; background:var(--gold); color:#000; padding:2px 6px; border-radius:4px;">FRANCOTECH</span>
-  </div>
-  <div class="module-selector">
-    <button onclick="switchModule('nexus')" id="btnModNexus" class="mod-btn active">🧠 Grand Cerveau</button>
-    <button onclick="switchModule('agro')" id="btnModAgro" class="mod-btn">🌱 AgroSentinelles</button>
-    <button onclick="switchModule('edu')" id="btnModEdu" class="mod-btn">📚 Sentinel Edu</button>
-    <button onclick="switchModule('ligo')" id="btnModLigo" class="mod-btn" style="border-color:var(--gold); color:var(--gold);">⚛ TTD Oracle</button>
-  </div>
-  <div class="user-badge">VÉROLIS SARL × CEPT</div>
-</header>
-
-<div class="container">
-
-  <!-- ================= MODULE 1 : GRAND CERVEAU / NEXE ================= -->
-  <div id="module-nexus">
-    <section class="card" style="margin-bottom: 20px; border-left: 4px solid var(--cyan);">
-      <h3 style="margin: 0 0 5px 0; color: var(--cyan);">🚀 Démonstrateur Officiel — Demi-Finale FrancoTech 2026</h3>
-      <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">
-        Système d'exploitation souverain 100% Offline-First. « Lorsque la connexion s'arrête, c'est là que l'offline commence. »
-      </p>
-      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn green" onclick="lancerDemoJury()">▶ Lancer le Scénario Démo Jury</button>
-        <button class="btn cyan" onclick="parlerSynthese('Système Sentinel OS opérationnel. Intégrité TTD optimale.')">🔊 Activer l'Audio Oracle</button>
-        <button class="btn" style="background:#334155; color:#fff;" onclick="telechargerPackageOffline()">📥 Télécharger PWA Package</button>
-      </div>
-    </section>
-
-    <div class="grid" style="margin-bottom: 20px;">
-      <div class="card">
-        <div class="muted">INDICE DE STABILITÉ TTD</div>
-        <div id="nexusIttd" class="val">1.000</div>
-        <div class="muted">Point fixe validé (PMV-1.0)</div>
-      </div>
-      <div class="card">
-        <div class="muted">SECTEURS SUPERVISÉS</div>
-        <div class="val" style="color:var(--gold);">8 / 8</div>
-        <div class="muted">Agro, Énergie, Eau, Pharma, Mines...</div>
-      </div>
-      <div class="card">
-        <div class="muted">ÉTAT RÉSEAU / EDGE</div>
-        <div class="val" style="font-size:18px; color:var(--green);">OFFLINE AUTONOME</div>
-        <div class="muted">Zéro dépendance Cloud</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h4>⚡ Journal Temps Réel & Boucle Décisionnelle TTD</h4>
-      <div id="logConsole" style="background:#020617; border:1px solid var(--line); border-radius:8px; padding:12px; height:180px; overflow-y:auto; font-family:monospace; font-size:11px; color:var(--cyan);">
-        [09:50:00] [BOOT] Sentinel OS v10 Quantum Nexus initialisé...<br>
-        [09:50:02] [EDGE] Base de données locale IndexedDB/Storage sécurisée.<br>
-        [09:50:05] [ORACLE] Stabilité $I_{TTD} = 1.000$ confirmée. Prêt pour le déploiement.
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= MODULE 2 : AGROSENTINELLES ================= -->
-  <div id="module-agro" class="hidden">
-    <div class="card" style="border-left: 4px solid var(--green); margin-bottom:15px;">
-      <h3 style="color:var(--green); margin-top:0;">🌱 AgroSentinelles — Ferme Pilote Maluku & Irrigation</h3>
-      <p class="muted">Démonstrateur physique matériel (ESP32 / Capteurs / Pompe solaire)</p>
-    </div>
-    <div class="grid">
-      <div class="card">
-        <div class="muted">Humidité du Sol</div>
-        <div id="agroHumidite" class="val">42 %</div>
-        <button class="btn green" onclick="simulerArrosage()">Simuler Irrigation Auto</button>
-      </div>
-      <div class="card">
-        <div class="muted">État Électrovanne / Pompe</div>
-        <div id="agroPompe" class="val" style="font-size:20px; color:var(--orange);">STANDBY</div>
-        <div class="muted">Pilote par micro-contrôleur local</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= MODULE 3 : SENTINEL EDU ================= -->
-  <div id="module-edu" class="hidden">
-    <section class="card" style="margin-bottom: 20px; border-left: 4px solid #f59e0b;">
-      <h3 style="margin: 0 0 5px 0; color: #f59e0b;">🏫 Sentinel Edu v10 — ERP Scolaire Offline-First (CEPT)</h3>
-      <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">Groupe Scolaire Tshiseleka & C.S. Maman Gina Kumbi-Kumbi</p>
-    </section>
-
-    <div style="display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;">
-      <button onclick="switchEduTab('tab-eleves', this)" class="edu-btn btn cyan" style="margin:0;">👥 Répertoire Élèves</button>
-      <button onclick="switchEduTab('tab-paiement', this)" class="edu-btn btn" style="background:#334155; color:#fff; margin:0;">💰 Guichet Perception</button>
-      <button onclick="switchEduTab('tab-cahier', this)" class="edu-btn btn" style="background:#334155; color:#fff; margin:0;">📖 Journal de Caisse</button>
-      <button onclick="switchEduTab('tab-stats', this)" class="edu-btn btn" style="background:#334155; color:#fff; margin:0;">📊 Analyses & Stats</button>
-    </div>
-
-    <!-- Onglet 1 : Élèves -->
-    <div id="tab-eleves" class="edu-tab-content card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap:wrap; gap:10px;">
-        <h4 style="margin: 0;">Gestion et Inscription des Élèves</h4>
-        <button class="btn gold" onclick="openModal('modInscrireEleve')">+ Inscrire un nouvel élève</button>
-      </div>
-      <input type="text" id="searchEleve" placeholder="🔍 Filtrer par nom..." onkeyup="filtrerEleves()">
-      <table>
-        <thead>
-          <tr><th>ID</th><th>Nom & Postnom</th><th>Classe</th><th>Section</th><th>Solde</th><th style="text-align: right;">Actions</th></tr>
-        </thead>
-        <tbody id="listeElevesBody"></tbody>
-      </table>
-    </div>
-
-    <!-- Onglet 2 : Guichet -->
-    <div id="tab-paiement" class="edu-tab-content card hidden">
-      <h4>💰 Encaissement Frais Scolaires & Mobile Money</h4>
-      <div class="grid" style="grid-template-columns: 1fr 1fr; margin-top:15px;">
-        <div>
-          <label class="muted">Élève :</label>
-          <select id="payEleveSelect"></select>
-          <label class="muted">Montant ($) :</label>
-          <input type="number" id="payMontant" placeholder="Ex: 50">
-          <label class="muted">Canal :</label>
-          <select id="payCanal">
-            <option>Orange Money RDC</option>
-            <option>M-Pesa Vodacom</option>
-            <option>Airtel Money</option>
-            <option>Cash École</option>
-          </select>
-          <button class="btn green" onclick="effectuerPaiement()" style="width:100%; margin-top:10px;">Valider le Paiement</button>
-        </div>
-        <div style="background:rgba(4,16,38,0.9); padding:15px; border-radius:10px; border:1px dashed var(--cyan); text-align:center;">
-          <h4>🧾 Reçu & QR Code</h4>
-          <div id="recuPreview" style="font-size:12px; color:var(--muted); text-align:left; margin-bottom:10px;">En attente de transaction...</div>
-          <div id="qrcode" style="display:flex; justify-content:center;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Onglet 3 : Cahier -->
-    <div id="tab-cahier" class="edu-tab-content card hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h4>📖 Journal de Caisse</h4>
-        <button class="btn cyan" onclick="window.print()">🖨️ Imprimer</button>
-      </div>
-      <table>
-        <thead><tr><th>Date</th><th>Élève</th><th>Montant</th><th>Canal</th><th>Statut</th></tr></thead>
-        <tbody id="tableCahierBody"></tbody>
-      </table>
-    </div>
-
-    <!-- Onglet 4 : Stats -->
-    <div id="tab-stats" class="edu-tab-content card hidden">
-      <h4>📊 Répartition des Recettes</h4>
-      <div style="max-width: 350px; margin: auto;"><canvas id="chartRecouvrement"></canvas></div>
-    </div>
-  </div>
-
-  <!-- ================= MODULE 4 : TTD ORACLE ================= -->
-  <div id="module-ligo" class="hidden">
-    <div class="card" style="border-left: 4px solid var(--gold); margin-bottom:20px;">
-      <h3 style="color: var(--gold); margin-top:0;">⚛ Recherche & TTD-02 : Théorie de la Triade Dynamique</h3>
-      <p class="muted">Auteur : Dany Tshiseleka Thoka | Vérolis SARL / CEPT (Kinshasa)</p>
-    </div>
-    <div class="grid">
-      <div class="card">
-        <h4>Axiomatique PMV-1.0</h4>
-        <p class="muted">Régimes $RC$, $RO$, $RI$ validant la stabilité et l'opérateur de Banach.</p>
-      </div>
-      <div class="card">
-        <h4>Télémétrie LIGO & Gravitation</h4>
-        <p class="muted">Déphasage $\Delta\phi(f) = \varepsilon (f / 100\text{ Hz})$ intégré dans les calculateurs embarqués.</p>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- MODAL -->
-<div id="modInscrireEleve" class="modal hidden">
-  <div class="modal-content">
-    <h3>Nouvelle Inscription</h3>
-    <input type="text" id="modalNom" placeholder="Nom & Postnom">
-    <input type="text" id="modalClasse" placeholder="Classe (ex: 3ème Commerciale)">
-    <select id="modalSection"><option>Section Commerciale</option><option>Informatique</option></select>
-    <button class="btn green" onclick="validerInscriptionModal()">Enregistrer</button>
-    <button class="btn red" onclick="closeModal('modInscrireEleve')">Annuler</button>
-  </div>
-</div>
-
-<div class="footer-bar">
-  <span>🛡 SENTINEL OS V10</span>
-  <span>CONCOURS FRANCOTECH 2026</span>
-  <span style="color:var(--green)">● OFFLINE READY</span>
-</div>
-
-<script>
-// --- AUDIO SYNTHESIS & SPEECH ---
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function jouerSonBip(frequence = 440, duree = 0.1) {
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = frequence;
-  gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duree);
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + duree);
-}
-
-function parlerSynthese(texte) {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(texte);
-    utterance.lang = 'fr-FR';
-    utterance.rate = 1.0;
-    window.speechSynthesis.speak(utterance);
-  }
-}
-
-// --- DATA ---
-let elevesData = JSON.parse(localStorage.getItem('sentinel_eleves')) || [
-  {id: 1, nom: "KABANGU Jean", classe: "3ème", section: "Section Commerciale", solde: 45},
-  {id: 2, nom: "MUKOKO Sarah", classe: "2ème", section: "Informatique", solde: 120}
-];
-let transactionsData = JSON.parse(localStorage.getItem('sentinel_trans')) || [];
-let chartInstance = null;
-
-function sauvegarderDonnees() {
-  localStorage.setItem('sentinel_eleves', JSON.stringify(elevesData));
-  localStorage.setItem('sentinel_trans', JSON.stringify(transactionsData));
-  rafraichirInterface();
-}
-
-const $ = id => document.getElementById(id);
-
-function switchModule(mod){
-  ['nexus', 'agro', 'edu', 'ligo'].forEach(m => {
-    $('module-' + m).classList.add('hidden');$('btnMod' + m.charAt(0).toUpperCase() + m.slice(1)).classList.remove('active');
-  });
-  $('module-' + mod).classList.remove('hidden');$('btnMod' + mod.charAt(0).toUpperCase() + mod.slice(1)).classList.add('active');
-  jouerSonBip(580, 0.05);
-}
-
-function switchEduTab(tabId, btn){
-  document.querySelectorAll('.edu-tab-content').forEach(el => el.classList.add('hidden'));
-  $(tabId).classList.remove('hidden');
-  document.querySelectorAll('.edu-btn').forEach(b => { b.style.background = '#334155'; b.classList.remove('cyan'); });
-  btn.style.background = '';
-  btn.classList.add('cyan');
-  if(tabId === 'tab-stats') genererGraphiqueStats();
-}
-
-function openModal(id){ $(id).classList.remove('hidden'); jouerSonBip(500, 0.05); }
-function closeModal(id){ $(id).classList.add('hidden'); }
-
-function rafraichirInterface() {
-  const tbody = $('listeElevesBody');
-  const selectEleve = $('payEleveSelect');
-  const tbodyCahier = $('tableCahierBody');
-  if(!tbody) return;
-
-  tbody.innerHTML = ''; selectEleve.innerHTML = ''; tbodyCahier.innerHTML = '';
-
-  elevesData.forEach((el, index) => {
-    tbody.innerHTML += `<tr><td>0${index+1}</td><td><b>${el.nom}</b></td><td>${el.classe}</td><td>${el.section}</td><td style="color:var(--green)">${el.solde} $</td><td style="text-align:right;"><button onclick="supprimerEleve(${el.id})" style="background:none;border:none;color:#ef4444;cursor:pointer;">🗑️</button></td></tr>`;
-    selectEleve.innerHTML += `<option value="${el.id}">${el.nom} (${el.classe})</option>`;
-  });
-
-  if(transactionsData.length === 0) {
-    tbodyCahier.innerHTML = `<tr><td colspan="5" class="muted" style="text-align:center;">Aucune transaction.</td></tr>`;
-  } else {
-    transactionsData.forEach(tx => {
-      tbodyCahier.innerHTML += `<tr><td>${tx.date}</td><td><b>${tx.nomEleve}</b></td><td style="color:var(--green)">+${tx.montant} $</td><td>${tx.canal}</td><td><span style="color:var(--cyan)">Synchronisé (Local)</span></td></tr>`;
-    });
-  }
-}
-
-function effectuerPaiement(){
-  const eleveId = parseInt($('payEleveSelect').value);
-  const montant = parseFloat($('payMontant').value);
-  const canal = $('payCanal').value;
-  if(isNaN(montant) || montant <= 0){ alert("Montant invalide"); return; }
-  const eleve = elevesData.find(e => e.id === eleveId);
-  if(!eleve) return;
-
-  eleve.solde += montant;
-  transactionsData.unshift({date: new Date().toLocaleString(), nomEleve: eleve.nom, montant, canal});
-  sauvegarderDonnees();
-
-  $('recuPreview.innerHTML = `<b>CEPT / GS Tshiseleka</b><br>Élève : ${eleve.nom}<br>Montant : ${montant} $ (${canal})<br><span style="color:var(--green)">VALIDÉ OFFLINE</span>`;
-  $('qrcode').innerHTML = '';
-  new QRCode($('qrcode'), {text: `CEPT-${eleve.nom}-${montant}-${Date.now()}`, width:80, height:80});
-
-  jouerSonBip(880, 0.2);
-  parlerSynthese(`Paiement de ${montant} dollars enregistré pour ${eleve.nom}`);
-  alert("Paiement enregistré avec succès en mode local !");
-}
-
-function lancerDemoJury(){
-  switchModule('nexus');
-  let consoleBox = $('logConsole');
-  consoleBox.innerHTML += `<br>[DEMO] 🚀 Lancement du cycle de démonstration FrancoTech...`;
-  jouerSonBip(700, 0.1);
-  setTimeout(() => {
-    consoleBox.innerHTML += `<br>[ANALYSE] Capteur sol & caisse scolaire interrogés. Intégrité TTD vérifiée.`;
-    jouerSonBip(750, 0.1);
-    parlerSynthese("Démonstration Sentinel OS réussie. Système souverain et opérationnel.");
-  }, 1000);
-}
-
-function simulerArrosage(){
-  $('agroHumidite').innerText = '68 %';
-  $('agroPompe').innerText = 'ACTIF (Pumping)';$('agroPompe').style.color = 'var(--green)';
-  jouerSonBip(950, 0.15);
-  parlerSynthese("Seuil d'humidité atteint. Pompe activée automatiquement.");
-}
-
-function telechargerPackageOffline(){
-  const htmlContent = document.documentElement.outerHTML;
-  const blob = new Blob([htmlContent], {type: 'text/html'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'Sentinel_OS_v10_FrancoTech.html';
-  a.click();
-  jouerSonBip(1046, 0.3);
-  parlerSynthese("Package PWA téléchargé avec succès.");
-}
-
-function validerInscriptionModal(){
-  const nom = $('modalNom').value.trim();
-  const classe = $('modalClasse').value.trim();
-  if(!nom){ alert("Nom requis"); return; }
-  elevesData.push({id: Date.now(), nom, classe, section: $('modalSection').value, solde: 0});
-  sauvegarderDonnees();
-  closeModal('modInscrireEleve');
-  parlerSynthese("Nouvel élève inscrit.");
-}
-
-function supprimerEleve(id){
-  if(confirm("Supprimer ?")){ elevesData = elevesData.filter(e => e.id !== id); sauvegarderDonnees(); }
-}
-
-function genererGraphiqueStats(){
-  const ctx = $('chartRecouvrement').getContext('2d');
-  let canaux = {};
-  transactionsData.forEach(t => canaux[t.canal] = (canaux[t.canal]||0) + t.montant);
-  if(chartInstance) chartInstance.destroy();
-  chartInstance = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: Object.keys(canaux).length ? Object.keys(canaux) : ['Aucun'],
-      datasets: [{data: Object.values(canaux).length ? Object.values(canaux) : [1], backgroundColor:['#35d9ff','#ffd54a','#00ff88','#ffb020']}]
-    },
-    options:{responsive:true, plugins:{legend:{position:'bottom', labels:{color:'#fff'}}}}
-  });
-}
-
-window.onload = rafraichirInterface;
-</script>
-</body>
-</html>
+.btn.red{background:var(--red);color:#fff
