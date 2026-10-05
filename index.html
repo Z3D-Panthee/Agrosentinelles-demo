@@ -87,6 +87,7 @@ th{background:rgba(13,40,84,0.95);color:var(--gold)}
 
 <nav class="tabs">
   <button class="active" onclick="show('overview',this)">🧠 GRAND CERVEAU</button>
+  <button onclick="show('galerie',this)">🖼️ INFRASTRUCTURES & AFFICHE</button>
   <button onclick="show('edu',this)">🎓 PORTAIL 2 ÉCOLES</button>
   <button onclick="show('agri',this)">🌱 AGRO-SENTINEL</button>
   <button onclick="show('regideso',this)">💧 REGIDESO</button>
@@ -97,7 +98,7 @@ th{background:rgba(13,40,84,0.95);color:var(--gold)}
 <section id="overview" class="grid">
   <div class="card" style="grid-column:1/-1;background:linear-gradient(135deg,rgba(13,40,84,0.85),rgba(6,22,47,0.95))">
     <h3 style="color:var(--cyan)">🌐 PILOTAGE OFFICIEL DES 2 ÉTABLISSEMENTS DU CEPT ASBL</h3>
-    <p class="muted">Adresses rectifiées et synchronisées conformément aux instructions officielles.</p>
+    <p class="muted">Conforme aux arrêtés ministériels et aux adresses enregistrées à Kinshasa.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:15px">
       <div class="metric" style="border-color:var(--gold)">
         <h4 style="color:var(--gold);margin:0 0 5px">1. GROUPE SCOLAIRE TSHISELEKA</h4>
@@ -122,7 +123,7 @@ th{background:rgba(13,40,84,0.95);color:var(--gold)}
     <h3>🛡 SCORE DE CONFIANCE CLOUD</h3>
     <div style="text-align:center;padding:15px">
       <div class="val" style="font-size:52px;color:var(--cyan)">100%</div>
-      <div class="green" style="font-weight:bold;margin:5px 0">ADRESSES CORRIGÉES VALIDÉES</div>
+      <div class="green" style="font-weight:bold;margin:5px 0">INFRASTRUCTURES OFFICIELLES INTÉGRÉES</div>
       <div class="progress"><i style="width:100%"></i></div>
       <div class="muted">Oracle Render : ttd-oracle-3lfbyz3d.onrender.com</div>
     </div>
@@ -131,8 +132,31 @@ th{background:rgba(13,40,84,0.95);color:var(--gold)}
   <div class="card" style="grid-column:1/-1">
     <h3>🔊 JOURNAL DE BORD UNIFIÉ — CONSCIENCE TTD</h3>
     <div id="log" class="log">
-      <div style="color:var(--green)">[SYSTEM] Sentinel V4.1 Adresses mises à jour (Mbudi & Ngaba)</div>
-      <div style="color:var(--cyan)">[CEPT ASBL] Connexion aux établissements validée</div>
+      <div style="color:var(--green)">[SYSTEM] Sentinel V4.1 Affichage des infrastructures activé</div>
+      <div style="color:var(--cyan)">[CEPT ASBL] Mbudi (Mont Ngafula) & Ngaba synchronisés</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION GALERIE / AFFICHE OFFICIELLE -->
+<section id="galerie" class="grid hidden">
+  <div class="card" style="grid-column:1/-1;text-align:center">
+    <h3 style="color:var(--gold)">🖼️ GALERIE OFFICIELLE & INFRASTRUCTURES DU CEPT ASBL</h3>
+    <p class="muted">Affiche institutionnelle validée — Arrêté ministériel n°051/Cab/Min/J&D.H/2013</p>
+    
+    <div style="margin:20px auto;max-width:800px;border:2px solid var(--cyan);border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.8)">
+      <img src="1000111521.jpg" alt="Affiche CEPT ASBL - Nos Établissements" style="width:100%;height:auto;display:block">
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin-top:20px;text-align:left">
+      <div class="metric">
+        <h4 style="color:var(--gold)">🏫 Groupe Scolaire Tshiseleka</h4>
+        <p class="muted">Implantation : <b>Mbudi (Mont Ngafula)</b><br>Cycles : Maternelle, Primaire & Secondaire<br>Objectif : Excellence pédagogique et numérique.</p>
+      </div>
+      <div class="metric">
+        <h4 style="color:var(--cyan)">🏫 Complexe Scolaire Maman Gina</h4>
+        <p class="muted">Implantation : <b>Ngaba</b><br>Cycles : Maternelle, Primaire, Secondaire & Professionnel<br>Objectif : Formation technique et intégrale.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -289,7 +313,7 @@ function toggleVoix(){
   if(state.voix){
     btn.classList.add('on'); btn.innerText='🔊 VOIX ON';
     if(st){ st.innerText='ACTIVE'; st.className='green'; }
-    parler('Voix TTD activée. Adresses de Mbudi et Ngaba configurées.');
+    parler('Voix TTD activée. Affiche et infrastructures du CEPT chargées.');
     loguer('🔊 Voix TTD active');
   } else {
     btn.classList.remove('on'); btn.innerText='🔇 VOIX TTD';
@@ -312,7 +336,7 @@ function conscienceSentinel(){
   loguer('🧬 Conscience TTD exécutée');
 }
 
-let MULTI_EDU_DB = JSON.parse(localStorage.getItem('sentinel_cept_v41_b')||JSON.stringify({
+let MULTI_EDU_DB = JSON.parse(localStorage.getItem('sentinel_cept_v41_c')||JSON.stringify({
   tshiseleka: { nom: "Groupe Scolaire Tshiseleka (Mbudi / Mont Ngafula)", eleves: [], frais: [], paiements: [] },
   gina: { nom: "Complexe Scolaire Maman GINA KUMBI-KUMBI (Ngaba)", eleves: [], frais: [], paiements: [] }
 }));
@@ -320,7 +344,7 @@ let MULTI_EDU_DB = JSON.parse(localStorage.getItem('sentinel_cept_v41_b')||JSON.
 let ecoleActive = 'tshiseleka';
 
 function saveMultiEdu(){ 
-  localStorage.setItem('sentinel_cept_v41_b', JSON.stringify(MULTI_EDU_DB)); 
+  localStorage.setItem('sentinel_cept_v41_c', JSON.stringify(MULTI_EDU_DB)); 
 }
 
 function changerEcoleActive(){
@@ -395,8 +419,8 @@ state.charts.sol=createChart("chartSol",["J-4","J-3","J-2","J-1","NOW"],[58,60,6
 state.charts.agri=createChart("chartAgri",["S1","S2","S3","S4"],[92,95,97,98.5],"Confiance %");
 
 function runScenario(){
-  loguer('▶ Synchronisation des adresses (Mbudi & Ngaba) exécutée.');
-  parler('Mise à jour des adresses des écoles du CEPT enregistrée.');
+  loguer('▶ Synchronisation des infrastructures exécutée.');
+  parler('Affichage des infrastructures du CEPT validé.');
 }
 function diagnose(){
   $('diagRes').innerText='🌿 Analyse IA en cours...';
