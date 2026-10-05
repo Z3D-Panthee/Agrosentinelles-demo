@@ -16,7 +16,7 @@ body{margin:0;color:#fff;font-family:'Segoe UI',Arial,sans-serif;background:radi
 .logo-title{font-weight:bold;color:var(--gold);font-size:15px}
 .user-badge{background:var(--cyan);color:#030b18;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold}
 
-.module-selector{display:flex;gap:8px}
+.module-selector{display:flex;gap:8px;flex-wrap:wrap}
 .mod-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:#1e293b;color:var(--muted);font-weight:bold;cursor:pointer;font-size:11px;transition:all 0.3s}
 .mod-btn.active{background:var(--cyan);color:#030b18;border-color:var(--cyan)}
 
@@ -43,334 +43,188 @@ th{background:rgba(13,40,84,0.95);color:var(--gold)}
 
 .modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:1000;display:flex;justify-content:center;align-items:center;padding:15px}
 .modal-content{background:#0d2854;border:2px solid var(--gold);padding:20px;border-radius:15px;width:100%;max-width:450px}
-
 .footer-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(3,11,24,0.95);padding:8px;text-align:center;font-size:11px;color:var(--muted);border-top:1px solid var(--line);z-index:90}
 </style>
 </head>
 <body>
 
 <header class="header">
-  <div class="logo-title">🛡️️ SENTINEL OS GRAND CERVEAU — VÉROLIS SARL</div>
+  <div class="logo-title">🛡 SENTINEL OS GRAND CERVEAU — VÉROLIS SARL</div>
   <div class="module-selector">
-    <button onclick="switchModule('agro')" id="btnModAgro" class="mod-btn active">🌱 AgroSentinelles</button>
-    <button onclick="switchModule('edu')" id="btnModEdu" class="mod-btn">📚 Sentinel Edu</button>
+    <button onclick="switchModule('agro')" id="btnModAgro" class="mod-btn">🌱 AgroSentinelles</button>
+    <button onclick="switchModule('edu')" id="btnModEdu" class="mod-btn active">📚 Sentinel Edu</button>
+    <button onclick="switchModule('ligo')" id="btnModLigo" class="mod-btn" style="border-color:var(--gold); color:var(--gold);">⚛ Ligo-5 & TTD / Yang-Mills</button>
   </div>
   <div class="user-badge">ADMINISTRATEUR · KINSHASA</div>
 </header>
 
-<!-- BARRE DE NAVIGATION AGRO -->
-<nav id="navAgro" class="nav-bar">
-  <button class="active" onclick="switchTab('dashboard',this)">▦ Tableau de bord</button>
-  <button onclick="switchTab('exploitations',this)">⌂ Exploitations</button>
-  <button onclick="switchTab('producteurs',this)">♙ Producteurs</button>
-  <button onclick="switchTab('parcelles',this)">▤ Parcelles</button>
-  <button onclick="switchTab('production',this)">◈ Production</button>
-  <button onclick="switchTab('lots',this)">⌗ Lots & QR</button>
-  <button onclick="switchTab('stocks',this)">▥ Stocks</button>
-  <button onclick="switchTab('logistique',this)">⇄ Logistique</button>
-  <button onclick="switchTab('sentinel',this)">◉ Sentinel OS</button>
-  <button onclick="switchTab('rapports',this)">▣ Rapports</button>
-  <button onclick="switchTab('admin',this)">⚙ Paramètres</button>
-</nav>
-
 <div class="container">
 
-  <!-- ================= MODULE AGROSENTINELLES ================= -->
-  <div id="module-agro">
-
-    <!-- TABLEAU DE BORD -->
-    <section id="dashboard" class="grid">
-      <div class="card" style="grid-column:1/-1">
-        <h2>Pilotage administratif et opérationnel agricole</h2>
-        <button class="btn gold" onclick="openModal('modExploitation')">＋ Nouvelle exploitation</button>
-        <button class="btn cyan" onclick="switchTab('rapports')">▣ Exporter le rapport</button>
-      </div>
-      <div class="card">
-        <div class="muted">EXPLOITATIONS</div>
-        <div id="statExp" class="val">12</div>
-        <div class="muted">Actives ce mois</div>
-      </div>
-      <div class="card">
-        <div class="muted">PRODUCTEURS</div>
-        <div id="statProd" class="val">186</div>
-        <div class="muted">Registrés sur le terrain</div>
-      </div>
-      <div class="card">
-        <div class="muted">PARCELLES</div>
-        <div id="statParc" class="val">74</div>
-        <div class="muted">61 en production active</div>
-      </div>
-      <div class="card">
-        <div class="muted">STOCK DISPONIBLE</div>
-        <div class="val">126 t</div>
-        <div class="muted" style="color:var(--green)">+8.4% vs mois précédent</div>
-      </div>
-      <div class="card" style="grid-column:1/-1">
-        <h3>État opérationnel & TTD Oracle</h3>
-        <div class="row"><span>Intégrité TTD Oracle ($\varepsilon = 1e-5$)</span><b class="cyan">I_TTD 1.000 (Optimal)</b></div>
-        <div class="row"><span>Mode Réseau</span><b class="green">Offline First — Données locales synchronisées</b></div>
-        <div class="row"><span>Alertes phytosanitaires</span><b class="orange">3 alertes ouvertes</b></div>
-      </div>
-    </section>
-
-    <!-- EXPLOITATIONS -->
-    <section id="exploitations" class="grid hidden">
-      <div class="card" style="grid-column:1/-1">
-        <h3>⌂ Gestion des Exploitations</h3>
-        <button class="btn gold" onclick="openModal('modExploitation')">＋ Nouvelle exploitation</button>
-        <table>
-          <thead><tr><th>Code</th><th>Exploitation</th><th>Localisation</th><th>Surface</th><th>Responsable</th></tr></thead>
-          <tbody id="tableExploitations">
-            <tr><td>EXP-01</td><td>Ferme Pilote Maluku</td><td>Maluku / Kinshasa</td><td>45 ha</td><td>Dany Tshiseleka</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- PRODUCTEURS -->
-    <section id="producteurs" class="grid hidden">
-      <div class="card" style="grid-column:1/-1">
-        <h3>♙ Registre des Producteurs</h3>
-        <button class="btn gold" onclick="openModal('modProducteur')">＋ Nouveau producteur</button>
-        <table>
-          <thead><tr><th>ID</th><th>Nom complet</th><th>Zone</th><th>Culture principale</th><th>Contact</th></tr></thead>
-          <tbody id="tableProducteurs">
-            <tr><td>PRD-101</td><td>Jean-Paul Kamba</td><td>Mbudi</td><td>Manioc / Maïs</td><td>+243 810 000 000</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- PARCELLES -->
-    <section id="parcelles" class="grid hidden">
-      <div class="card" style="grid-column:1/-1">
-        <h3>▤ Parcelles & Cultures</h3>
-        <button class="btn gold" onclick="openModal('modParcelle')">＋ Nouvelle parcelle</button>
-        <table>
-          <thead><tr><th>Code</th><th>Exploitation</th><th>Culture</th><th>Surface</th><th>Humidité</th><th>Santé</th></tr></thead>
-          <tbody id="tableParcelles">
-            <tr><td>PARC-A1</td><td>Ferme Pilote Maluku</td><td>Maïs Hybride</td><td>12 ha</td><td>58%</td><td>✅ Saine (98%)</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- PRODUCTION -->
-    <section id="production" class="grid hidden">
-      <div class="card" style="grid-column:1/-1">
-        <h3>◈ Campagnes & Productions</h3>
-        <button class="btn gold" onclick="openModal('modProduction')">＋ Enregistrer une production</button>
-        <div class="row" style="margin-top:15px">
-          <div>Production cumulée : <b class="green">486 t</b></div>
-          <div>Rendement moyen : <b class="cyan">3.8 t/ha</b></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- LOTS & TRAÇABILITÉ -->
-    <section id="lots" class="grid hidden">
-      <div class="card" style="grid-column:1/-1">
-        <h3>⌗ Lots & Traçabilité QR</h3>
-        <button class="btn gold" onclick="openModal('modLot')">＋ Nouveau lot</button>
-        <table>
-          <thead><tr><th>Lot ID</th><th>Produit</th><th>Origine</th><th>Quantité</th><th>Date</th></tr></thead>
-          <tbody id="tableLots">
-            <tr><td>LOT-2026-001</td><td>Maïs Grain</td><td>Mbudi</td><td>15 t</td><td>2026-10-01</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- STOCKS -->
-    <section id="stocks" class="grid hidden">
-      <div class="card" style="grid-column:1/-1">
-        <h3>▥ Inventaire & Stocks</h3>
-        <button class="btn gold" onclick="openModal('modStock')">＋ Mouvement de stock</button>
-        <table>
-          <thead><tr><th>Produit</th><th>Entrepôt</th><th>Disponible</th><th>Seuil critique</th><th>État</th></tr></thead>
-          <tbody id="tableStocks">
-            <tr><td>Maïs Grain</td><td>Entrepôt Principal Gombe</td><td>85 t</td><td>15 t</td><td>🟢 Normal</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- LOGISTIQUE -->
-    <section id="logistique" class="grid hidden">
-      <div class="card" style="grid-column:1/-1">
-        <h3>⇄ Logistique & Expéditions</h3>
-        <button class="btn gold" onclick="openModal('modExpedition')">＋ Nouvelle expédition</button>
-        <table>
-          <thead><tr><th>Référence</th><th>Destination</th><th>Charge</th><th>Départ</th><th>Statut</th></tr></thead>
-          <tbody id="tableLogistique">
-            <tr><td>EXP-992</td><td>Marché Central Kinshasa</td><td>10 t Maïs</td><td>2026-10-04</td><td>🚚 En cours</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- SENTINEL OS -->
-    <section id="sentinel" class="grid hidden">
-      <div class="card" style="grid-column:1/-1">
-        <h3>◉ Sentinel OS — Moteur d'Intelligence Autonome</h3>
-        <p class="muted">Observation → Analyse → Recommandation → Action (Ligo-Box V1.2)</p>
-        <button class="btn green" onclick="runSentinelAnalysis()">▶ Lancer une analyse TTD</button>
-        <div class="metric" style="margin-top:15px;background:#041126;padding:15px;border-radius:10px">
-          <h4>Résultat Oracle TTD</h4>
-          <div id="sentinelRes" class="cyan">Système prêt. Intégrité I_TTD 1.000 confirmée.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- RAPPORTS -->
-    <section id="rapports" class="grid hidden">
-      <div class="card" style="grid-column:1/-1">
-        <h3>▣ Rapports & Synthèse Administrative</h3>
-        <button class="btn cyan" onclick="window.print()">🖨️ Imprimer / Exporter le Rapport</button>
-        <div class="metric" style="margin-top:15px;background:#fff;color:#000;padding:20px;border-radius:10px">
-          <h2 style="margin-top:0">AGROSENTINELLES ADMIN V5.0</h2>
-          <p><b>VÉROLIS SARL</b> — Plateforme administrative et opérationnelle agricole</p>
-          <hr>
-          <p>Exploitations : 12 | Producteurs : 186 | Parcelles : 74 | Stocks : 126 t</p>
-          <p><i>Rapport certifié par Sentinel OS & TTD Oracle (I_TTD 1.000). Mode Offline First actif.</i></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- PARAMÈTRES / ADMIN -->
-    <section id="admin" class="grid hidden">
-      <div class="card">
-        <h3>⚙ Paramètres Organisation</h3>
-        <input type="text" id="orgName" value="Vérolis SARL">
-        <input type="text" id="orgCity" value="Kinshasa, RDC">
-        <button class="btn gold" onclick="alert('Paramètres enregistrés localement !')">Enregistrer</button>
-      </div>
-      <div class="card">
-        <h3>☁ Mode Offline First</h3>
-        <p class="muted">Données locales enregistrées dans le navigateur.</p>
-        <button class="btn cyan" onclick="localStorage.clear(); location.reload();">🔄 Réinitialiser les données locales</button>
-      </div>
-    </section>
-
-  </div>
-
-  <!-- ================= MODULE SENTINEL EDU ================= -->
-  <div id="module-edu" class="hidden">
+  <!-- ================= MODULE SENTINEL EDU (MAXI FONCTIONNEL) ================= -->
+  <div id="module-edu">
     <section class="card" style="margin-bottom: 20px; border-left: 4px solid #f59e0b;">
-      <h3 style="margin: 0 0 5px 0; color: #f59e0b;">🏫 Sentinel Edu v1.0 — CEPT ASBL</h3>
-      <p style="margin: 0; color: #cbd5e1; font-size: 0.9rem;">Gestion 100% Offline • Groupe Scolaire Tshiseleka (Lemba) & C.S. Maman Gina Kumbi-Kumbi (Ngaba)[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)</p>
+      <h3 style="margin: 0 0 5px 0; color: #f59e0b;">🏫 Sentinel Edu v2.0 — CEPT ASBL (Grand Cerveau)</h3>
+      <p style="margin: 0; color: #cbd5e1; font-size: 0.9rem;">Gestion 100% Offline • Groupe Scolaire Tshiseleka & C.S. Maman Gina Kumbi-Kumbi</p>
     </section>
 
     <!-- Navigation Interne Sentinel Edu -->
     <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
       <button onclick="switchEduTab('tab-eleves', this)" class="edu-btn btn cyan" style="margin:0;">👥 Gestion des élèves</button>
-      <button onclick="switchEduTab('tab-paiement', this)" class="edu-btn btn" style="background:#334155; color:#fff; margin:0;">💰 Paiement</button>
-      <button onclick="switchEduTab('tab-cahier', this)" class="edu-btn btn" style="background:#334155; color:#fff; margin:0;">📖 Cahier Perception</button>
-      <button onclick="switchEduTab('tab-recouvrement', this)" class="edu-btn btn" style="background:#334155; color:#fff; margin:0;">📊 Recouvrement</button>
+      <button onclick="switchEduTab('tab-paiement', this)" class="edu-btn btn" style="background:#334155; color:#fff; margin:0;">💰 Perception & Mobile Money</button>
+      <button onclick="switchEduTab('tab-cahier', this)" class="edu-btn btn" style="background:#334155; color:#fff; margin:0;">📖 Cahier de Caisse</button>
+      <button onclick="switchEduTab('tab-presences', this)" class="edu-btn btn" style="background:#334155; color:#fff; margin:0;">📋 Suivi des Présences</button>
     </div>
 
-    <!-- Onglet Élèves -->
+    <!-- Onglet 1 : Élèves -->
     <div id="tab-eleves" class="edu-tab-content card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h4 style="margin: 0; color: #fff;">Liste des élèves inscrits</h4>
-        <span style="background: #3b82f6; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem;">Total élèves: <strong id="totalEleves">23</strong></span>[span_6](start_span)[span_6](end_span)[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap:wrap; gap:10px;">
+        <h4 style="margin: 0; color: #fff;">Répertoire des Élèves</h4>
+        <span style="background: #3b82f6; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem;">Total effectif : <strong id="totalEleves">0</strong></span>
       </div>
       
       <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; margin-bottom: 15px;">
         <input type="text" id="newNom" placeholder="Nom & Postnom (ex: KABANGU Jean)">
-        <input type="text" id="newClasse" placeholder="Classe (ex: 3ème)">
+        <input type="text" id="newClasse" placeholder="Classe (ex: 3ème Commerciale)">
         <select id="newSection">
           <option>Section Commerciale</option>
           <option>Informatique de Gestion</option>
-          <option>Section Administrative</option>
+          <option>Section Litteraire / Scientifique</option>
         </select>
-        <button onclick="ajouterEleve()" class="btn green" style="margin:0;">+ Ajouter</button>
+        <button onclick="ajouterEleve()" class="btn green" style="margin:0;">+ Inscrire</button>
       </div>
+
+      <input type="text" id="searchEleve" placeholder="🔍 Rechercher un élève par son nom..." onkeyup="filtrerEleves()" style="margin-bottom:10px;">
 
       <table>
         <thead>
-          <tr><th>N° Ordre</th><th>Nom & Postnom</th><th>Classe</th><th>Section</th><th style="text-align: right;">Actions</th></tr>
+          <tr><th>ID</th><th>Nom & Postnom</th><th>Classe</th><th>Section</th><th>Solde Frais</th><th style="text-align: right;">Action</th></tr>
         </thead>
         <tbody id="listeElevesBody">
-          <tr><td>01</td><td>KABANGU Jean</td><td>3ème</td><td>Commerciale</td><td style="text-align: right;"><button onclick="supprimerEleve(this)" style="background: transparent; border: none; color: #ef4444; cursor: pointer;">🗑️</button></td></tr>
-          <tr><td>02</td><td>MUKOKO Sarah</td><td>2ème</td><td>Informatique de Gestion</td><td style="text-align: right;"><button onclick="supprimerEleve(this)" style="background: transparent; border: none; color: #ef4444; cursor: pointer;">🗑️</button></td></tr>
-          <tr><td>03</td><td>NGOY Paul</td><td>1ère</td><td>Administrative</td><td style="text-align: right;"><button onclick="supprimerEleve(this)" style="background: transparent; border: none; color: #ef4444; cursor: pointer;">🗑️</button></td></tr>
+          <!-- Dynamique via JS -->
         </tbody>
       </table>
     </div>
 
-    <!-- Autres onglets Edu -->
+    <!-- Onglet 2 : Paiement Mobile Money & Espèces -->
     <div id="tab-paiement" class="edu-tab-content card hidden">
-      <h4>💰 Gestion des Paiements et Frais Scolaires (Hors-ligne)</h4>
-      <p class="muted">Enregistrement instantané des transactions sécurisées par SQLite local.</p>
+      <h4>💰 Guichet de Perception (Orange Money, M-Pesa, Airtel & Cash)</h4>
+      <p class="muted">Sécurisation immédiate dans la base de données locale (Offline-First).</p>
+      
+      <div class="grid" style="grid-template-columns: 1fr 1fr; margin-top:15px;">
+        <div>
+          <label class="muted">Sélectionner l'élève :</label>
+          <select id="payEleveSelect"></select>
+          
+          <label class="muted">Montant perçu :</label>
+          <input type="number" id="payMontant" placeholder="Ex: 50 ($ ou CDF)">
+          
+          <label class="muted">Canal de versement :</label>
+          <select id="payCanal">
+            <option>Orange Money RDC (+243)</option>
+            <option>M-Pesa Vodacom</option>
+            <option>Airtel Money</option>
+            <option>Cash (Guichet École)</option>
+          </select>
+
+          <button class="btn green" onclick="effectuerPaiement()" style="width:100%; margin-top:10px;">Valider et Générer le Reçu</button>
+        </div>
+
+        <div style="background:rgba(4,16,38,0.9); padding:15px; border-radius:10px; border:1px dashed var(--cyan);">
+          <h4>🧾 Aperçu du Reçu Instantané</h4>
+          <div id="recuPreview" style="font-size:12px; color:var(--muted);">
+            Veuillez effectuer une transaction pour générer le reçu électronique et le QR code de traçabilité.
+          </div>
+          <div id="qrcode" style="margin-top:10px; display:flex; justify-content:center;"></div>
+        </div>
+      </div>
     </div>
+
+    <!-- Onglet 3 : Cahier de Caisse -->
     <div id="tab-cahier" class="edu-tab-content card hidden">
-      <h4>📖 Cahier de Perception Journalier</h4>
-      <p class="muted">Suivi des entrées de caisse en temps réel sans connexion Internet.</p>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h4>📖 Cahier de Perception Journalier</h4>
+        <button class="btn cyan" onclick="window.print()">🖨️ Imprimer le journal de caisse</button>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Date & Heure</th><th>Élève</th><th>Montant</th><th>Canal</th><th>Statut</th></tr>
+        </thead>
+        <tbody id="tableCahierBody">
+          <tr><td colspan="5" class="muted" style="text-align:center;">Aucune transaction enregistrée pour l'heure.</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div id="tab-recouvrement" class="edu-tab-content card hidden">
-      <h4>📊 Tableau de Bord de Recouvrement</h4>
-      <p class="muted">Statistiques et taux de recouvrement par option et par établissement.</p>
+
+    <!-- Onglet 4 : Présences -->
+    <div id="tab-presences" class="edu-tab-content card hidden">
+      <h4>📋 Registre d'Appel & Présences Journalières</h4>
+      <p class="muted">Pointage rapide des élèves présents en classe.</p>
+      <table>
+        <thead>
+          <tr><th>Nom de l'élève</th><th>Classe</th><th>Statut du jour</th><th>Action</th></tr>
+        </thead>
+        <tbody id="tablePresencesBody">
+          <!-- Dynamique -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= MODULE AGROSENTINELLES (RÉDUIT POUR ACCÈS RAPIDE) ================= -->
+  <div id="module-agro" class="hidden">
+    <div class="card">
+      <h3>🌱 AgroSentinelles — Pilotage Agricole (Vérolis SARL)</h3>
+      <p class="muted">Ferme Pilote Maluku & Réseau d'exploitation connectés.</p>
+      <button class="btn cyan" onclick="switchModule('edu')">Aller sur Sentinel Edu</button>
+    </div>
+  </div>
+
+  <!-- ================= MODULE LIGO-5 & TTD ================= -->
+  <div id="module-ligo" class="hidden">
+    <div class="card" style="border-left: 4px solid var(--gold);">
+      <h3 style="color: var(--gold); margin-top:0;">⚛ TTD-02 : Théorie de la Triade Dynamique & Yang-Mills (PMV-1.0)</h3>
+      <p class="muted">Auteur : Dany Tshiseleka Thoka | DOI : 10.5281/zenodo.19852087</p>
+      <p class="muted">L'infrastructure logicielle Sentinel OS unifie la gestion académique, agricole et les calculs de torsion triadique $\varepsilon = 10^{-5}$.</p>
     </div>
   </div>
 
 </div>
 
-<!-- MODAUX -->
-<div id="modExploitation" class="modal hidden">
-  <div class="modal-content">
-    <h3>Nouvelle Exploitation</h3>
-    <input type="text" id="inpExpNom" placeholder="Nom de l'exploitation">
-    <input type="text" id="inpExpLoc" placeholder="Localisation">
-    <button class="btn green" onclick="closeModal('modExploitation')">Enregistrer</button>
-    <button class="btn red" onclick="closeModal('modExploitation')">Annuler</button>
-  </div>
-</div>
-
-<div id="modProducteur" class="modal hidden">
-  <div class="modal-content">
-    <h3>Nouveau Producteur</h3>
-    <input type="text" placeholder="Nom complet">
-    <input type="text" placeholder="Zone / Commune">
-    <button class="btn green" onclick="closeModal('modProducteur')">Enregistrer</button>
-    <button class="btn red" onclick="closeModal('modProducteur')">Annuler</button>
-  </div>
-</div>
-
-<!-- Footer -->
 <div class="footer-bar">
   SENTINEL OS GRAND CERVEAU · VÉROLIS SARL × CEPT · Offline First · TTD Oracle
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
+// Base de données locale en mémoire persistante (LocalStorage)
+let elevesData = JSON.parse(localStorage.getItem('sentinel_eleves')) || [
+  {id: 1, nom: "KABANGU Jean", classe: "3ème", section: "Section Commerciale", solde: 45},
+  {id: 2, nom: "MUKOKO Sarah", classe: "2ème", section: "Informatique de Gestion", solde: 120},
+  {id: 3, nom: "NGOY Paul", classe: "1ère", section: "Section Litteraire / Scientifique", solde: 0}
+];
 
-function switchTab(tabId, btn){
-  document.querySelectorAll('#module-agro > section').forEach(s => s.classList.add('hidden'));
-  $(tabId).classList.remove('hidden');
-  document.querySelectorAll('#navAgro button').forEach(b => b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
+let transactionsData = JSON.parse(localStorage.getItem('sentinel_trans')) || [];
+
+function sauvegarderDonnees() {
+  localStorage.setItem('sentinel_eleves', JSON.stringify(elevesData));
+  localStorage.setItem('sentinel_trans', JSON.stringify(transactionsData));
+  rafraichirInterface();
 }
 
+const $ = id => document.getElementById(id);
+
 function switchModule(mod){
-  const agroSec = $('module-agro');
-  const eduSec = $('module-edu');
-  const navAgro = $('navAgro');
-  const btnAgro = $('btnModAgro');
-  const btnEdu = $('btnModEdu');
+  $('module-agro').classList.add('hidden');
+  $('module-edu').classList.add('hidden');$('module-ligo').classList.add('hidden');
+
+  $('btnModAgro').classList.remove('active');
+  $('btnModEdu').classList.remove('active');$('btnModLigo').classList.remove('active');
 
   if(mod === 'agro'){
-    agroSec.classList.remove('hidden');
-    eduSec.classList.add('hidden');
-    navAgro.classList.remove('hidden');
-    btnAgro.classList.add('active');
-    btnEdu.classList.remove('active');
-  } else {
-    agroSec.classList.add('hidden');
-    eduSec.classList.remove('hidden');
-    navAgro.classList.add('hidden');
-    btnEdu.classList.add('active');
-    btnAgro.classList.remove('active');
+    $('module-agro').classList.remove('hidden');$('btnModAgro').classList.add('active');
+  } else if(mod === 'edu'){
+    $('module-edu').classList.remove('hidden');$('btnModEdu').classList.add('active');
+  } else if(mod === 'ligo'){
+    $('module-ligo').classList.remove('hidden');$('btnModLigo').classList.add('active');
   }
 }
 
@@ -385,48 +239,148 @@ function switchEduTab(tabId, btn){
   btn.classList.add('cyan');
 }
 
-function openModal(modalId){ $(modalId).classList.remove('hidden'); }
-function closeModal(modalId){ $(modalId).classList.add('hidden'); }
+function rafraichirInterface() {
+  const tbody = $('listeElevesBody');
+  const selectEleve = $('payEleveSelect');
+  const tbodyCahier = $('tableCahierBody');
+  const tbodyPresences = $('tablePresencesBody');
 
-function runSentinelAnalysis(){
-  const res = $('sentinelRes');
-  res.innerText = "Analyse en cours... Observation des capteurs et calcul de la triade dynamique.";
-  setTimeout(() => {
-    res.innerText = "✓ Analyse terminée avec succès. Intégrité I_TTD 1.000. Aucun risque critique détecté.";
-  }, 1000);
+  tbody.innerHTML = '';
+  selectEleve.innerHTML = '';
+  tbodyCahier.innerHTML = '';
+  tbodyPresences.innerHTML = '';
+
+  $('totalEleves').innerText = elevesData.length;
+
+  elevesData.forEach((el, index) => {
+    // Tableau élèves
+    tbody.innerHTML += `
+      <tr>
+        <td>0${index + 1}</td>
+        <td><b>${el.nom}</b></td>
+        <td>${el.classe}</td>
+        <td>${el.section}</td>
+        <td><span style="color:${el.solde > 0 ? 'var(--green)' : 'var(--orange)'}">${el.solde} $</span></td>
+        <td style="text-align: right;"><button onclick="supprimerEleve(${el.id})" style="background: transparent; border: none; color: #ef4444; cursor: pointer;">🗑️</button></td>
+      </tr>`;
+
+    // Select Paiement
+    selectEleve.innerHTML += `<option value="${el.id}">${el.nom} (${el.classe})</option>`;
+
+    // Tableau Présences
+    tbodyPresences.innerHTML += `
+      <tr>
+        <td>${el.nom}</td>
+        <td>${el.classe}</td>
+        <td><b style="color:var(--green);">Présent(e)</b></td>
+        <td><button class="btn cyan" style="padding:4px 8px; font-size:10px;" onclick="alert('Pointage validé pour ${el.nom}')">Modifier</button></td>
+      </tr>`;
+  });
+
+  if(transactionsData.length === 0) {
+    tbodyCahier.innerHTML = `<tr><td colspan="5" class="muted" style="text-align:center;">Aucune transaction enregistrée.</td></tr>`;
+  } else {
+    transactionsData.forEach(tx => {
+      tbodyCahier.innerHTML += `
+        <tr>
+          <td>${tx.date}</td>
+          <td><b>${tx.nomEleve}</b></td>
+          <td style="color:var(--green)">+${tx.montant} $</td>
+          <td>${tx.canal}</td>
+          <td><span style="color:var(--cyan)">Validé (Offline)</span></td>
+        </tr>`;
+    });
+  }
 }
 
 function ajouterEleve(){
-  const nomInput = $('newNom');
-  const classeInput = $('newClasse');
-  const sectionSelect = $('newSection');
-  const tbody = $('listeElevesBody');
+  const nom = $('newNom').value.trim();
+  const classe = $('newClasse').value.trim();
+  const section = $('newSection').value;
 
-  if(!nomInput.value || !classeInput.value) {
-    alert("Veuillez remplir le nom et la classe de l'élève.");
+  if(!nom || !classe) {
+    alert("Veuillez renseigner le nom et la classe de l'élève.");
     return;
   }
 
-  const rowsCount = tbody.rows.length + 1;
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td>${rowsCount < 10 ? '0' + rowsCount : rowsCount}</td>
-    <td>${nomInput.value}</td>
-    <td>${classeInput.value}</td>
-    <td>${sectionSelect.value}</td>
-    <td style="text-align: right;"><button onclick="supprimerEleve(this)" style="background: transparent; border: none; color: #ef4444; cursor: pointer;">🗑️</button></td>
+  const nouveau = {
+    id: Date.now(),
+    nom: nom,
+    classe: classe,
+    section: section,
+    solde: 0
+  };
+
+  elevesData.push(nouveau);
+  sauvegarderDonnees();
+
+  $('newNom').value = '';$('newClasse').value = '';
+  alert("Élève enregistré avec succès dans la base locale !");
+}
+
+function supprimerEleve(id){
+  if(confirm("Voulez-vous vraiment supprimer cet élève ?")) {
+    elevesData = elevesData.filter(e => e.id !== id);
+    sauvegarderDonnees();
+  }
+}
+
+function effectuerPaiement(){
+  const eleveId = parseInt($('payEleveSelect').value);
+  const montant = parseFloat($('payMontant').value);
+  const canal = $('payCanal').value;
+
+  if(isNaN(montant) || montant <= 0) {
+    alert("Veuillez entrer un montant valide.");
+    return;
+  }
+
+  const eleve = elevesData.find(e => e.id === eleveId);
+  if(!eleve) return;
+
+  eleve.solde += montant;
+
+  const nouvelleTx = {
+    date: new Date().toLocaleString(),
+    nomEleve: eleve.nom,
+    montant: montant,
+    canal: canal
+  };
+
+  transactionsData.unshift(nouvelleTx);
+  sauvegarderDonnees();
+
+  // Affichage du reçu et QR code
+  $('recuPreview').innerHTML = `
+    <b>ÉCOLE :</b> CEPT / GS Tshiseleka<br>
+    <b>ÉLÈVE :</b> ${eleve.nom} (${eleve.classe})<br>
+    <b>MONTANT :</b> ${montant} $ payé via ${canal}<br>
+    <b>DATE :</b> ${nouvelleTx.date}<br>
+    <b style="color:var(--green);">STATUT : SÉCURISÉ & ENREGISTRÉ</b>
   `;
-  tbody.appendChild(tr);
-  $('totalEleves').innerText = rowsCount + 20;
 
-  nomInput.value = '';
-  classeInput.value = '';
+  $('qrcode').innerHTML = '';
+  new QRCode($('qrcode'), {
+    text: `CEPT-PAY-${eleve.nom}-${montant}-${canal}`,
+    width: 100,
+    height: 100
+  });
+
+  $('payMontant').value = '';
+  alert("Paiement enregistré et synchronisé en local avec succès !");
 }
 
-function supprimerEleve(btn){
-  btn.closest('tr').remove();
+function filtrerEleves(){
+  const filtre = $('searchEleve').value.toLowerCase();
+  const lignes = $('listeElevesBody').getElementsByTagName('tr');
+  for (let i = 0; i < lignes.length; i++) {
+    const texteLigne = lignes[i].textContent.toLowerCase();
+    lignes[i].style.display = texteLigne.includes(filtre) ? '' : 'none';
+  }
 }
+
+// Initialisation au chargement
+window.onload = rafraichirInterface;
 </script>
-
 </body>
 </html>
