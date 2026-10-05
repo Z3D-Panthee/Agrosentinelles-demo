@@ -1,436 +1,297 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#030b18">
-<title>SENTINEL V4.1 — L'ÉCOLE DU FUTUR | CEPT ASBL</title>
+<title>AGROSENTINELLES ADMIN V5.0 — VÉROLIS SARL</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
-:root{--bg:#030b18;--panel:rgba(13, 40, 84, 0.75);--panel2:rgba(9, 30, 64, 0.85);--line:#1f4c9c;--gold:#ffd54a;--green:#00ff88;--orange:#ffb020;--red:#ff4d4d;--cyan:#35d9ff;--purple:#b878ff;--muted:#a9bad6}
+:root{--bg:#030b18;--panel:rgba(13, 40, 84, 0.85);--panel2:rgba(9, 30, 64, 0.95);--line:#1f4c9c;--gold:#ffd54a;--green:#00ff88;--orange:#ffb020;--red:#ff4d4d;--cyan:#35d9ff;--muted:#a9bad6}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;color:#fff;font-family:'Segoe UI',Arial,sans-serif;background:radial-gradient(circle at 50% -20%,#113a7c 0,#030b18 55%),var(--bg);min-height:100vh;padding-bottom:90px;overflow-x:hidden}
 
-@keyframes holoGlow{0%{box-shadow:0 0 10px rgba(53,217,255,0.2),inset 0 0 15px rgba(53,217,255,0.1)}50%{box-shadow:0 0 25px rgba(53,217,255,0.5),inset 0 0 25px rgba(53,217,255,0.3)}100%{box-shadow:0 0 10px rgba(53,217,255,0.2),inset 0 0 15px rgba(53,217,255,0.1)}}
-@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(1000%)}}
+.header{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(3,11,24,0.95);backdrop-filter:blur(10px);border-bottom:2px solid var(--cyan)}
+.logo-title{font-weight:bold;color:var(--gold);font-size:16px}
+.user-badge{background:var(--cyan);color:#030b18;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:bold}
 
-.header{position:sticky;top:0;z-index:100;text-align:center;padding:14px;background:linear-gradient(90deg,rgba(3,11,24,0.95),rgba(17,58,140,0.95),rgba(3,11,24,0.95));backdrop-filter:blur(10px);border-bottom:2px solid var(--cyan);box-shadow:0 5px 20px rgba(0,0,0,0.5)}
-.live{color:var(--green);font-weight:bold}.blink{animation:blink 1s infinite}@keyframes blink{50%{opacity:.3}}
-.badge{display:inline-block;background:var(--cyan);color:#001b0d;padding:4px 10px;border-radius:15px;font-size:10px;font-weight:bold}
+.nav-bar{display:flex;gap:6px;overflow-x:auto;padding:10px;background:rgba(4,16,38,0.9);border-bottom:1px solid var(--line)}
+.nav-bar button{padding:8px 14px;border-radius:18px;border:1px solid var(--line);background:rgba(6,22,47,0.9);color:var(--cyan);font-weight:bold;cursor:pointer;font-size:11px;white-space:nowrap;transition:all 0.3s}
+.nav-bar button:hover, .nav-bar button.active{background:var(--gold);color:#030b18;border-color:var(--gold)}
 
-.hero-banner{position:relative;width:100%;height:220px;background:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;border-bottom:3px solid var(--gold);display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
-.hero-banner::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(3,11,24,0.4),rgba(3,11,24,0.9));}
-.hero-content{position:relative;z-index:2;max-width:900px}
-.hero-content h1{font-size:24px;color:var(--gold);margin:0 0 8px;text-shadow:0 2px 10px #000}
-.hero-content p{font-size:12px;color:var(--muted);margin:0}
-
-.tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:12px;background:rgba(4,16,38,0.9);border-bottom:1px solid var(--line);backdrop-filter:blur(5px)}
-.tabs button{padding:9px 14px;border-radius:20px;border:1px solid var(--cyan);background:rgba(6,22,47,0.8);color:var(--cyan);font-weight:bold;cursor:pointer;font-size:11px;transition:all 0.3s}
-.tabs button:hover{background:var(--cyan);color:#030b18;box-shadow:0 0 12px var(--cyan)}
-.tabs button.active{background:var(--gold);color:#030b18;border-color:var(--gold);box-shadow:0 0 15px var(--gold)}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;padding:16px;max-width:1500px;margin:auto}
-.card{background:var(--panel);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.6);animation:holoGlow 6s infinite ease-in-out;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scanline 4s linear infinite;opacity:.4}
-
-.val{font-size:32px;font-weight:bold;color:var(--green)}.warn{color:var(--orange)}.danger{color:var(--red)!important}.cyan{color:var(--cyan)}.green{color:var(--green)}.muted{color:var(--muted);font-size:12px}
-.row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:8px 0}
-.metric{padding:12px;border-radius:12px;background:rgba(6,26,56,0.6);border:1px solid rgba(36,77,136,0.5);margin:10px 0}
-.btn{border:0;border-radius:22px;padding:10px 16px;margin:4px;background:var(--gold);color:#030b18;font-weight:bold;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(255,213,74,0.4)}
-.btn.green{background:var(--green);color:#001b0d}.btn.red{background:var(--red);color:#fff}.btn.cyan{background:var(--cyan);color:#030b18}
+.container{max-width:1400px;margin:auto;padding:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.card{background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 8px 25px rgba(0,0,0,0.5)}
+.val{font-size:28px;font-weight:bold;color:var(--green)}
+.muted{color:var(--muted);font-size:12px}
+.row{display:flex;justify-content:space-between;align-items:center;margin:6px 0}
+.btn{border:0;border-radius:20px;padding:8px 14px;margin:4px;background:var(--gold);color:#030b18;font-weight:bold;cursor:pointer;font-size:12px}
+.btn.green{background:var(--green);color:#001b0d}
+.btn.cyan{background:var(--cyan);color:#030b18}
+.btn.red{background:var(--red);color:#fff}
 .hidden{display:none!important}
-.progress{height:10px;background:rgba(6,21,46,0.8);border-radius:10px;overflow:hidden;border:1px solid rgba(25,60,112,0.6);margin:8px 0}
-.progress>i{display:block;height:100%;background:var(--green);width:50%;transition:.7s}
 
-.log{height:180px;overflow:auto;background:#020814;border-radius:10px;padding:10px;font-family:monospace;font-size:11px;border:1px solid var(--line)}
-#qrcode{background:#fff;padding:12px;width:max-content;border-radius:12px;margin:12px auto;box-shadow:0 5px 20px rgba(0,0,0,0.5)}
-input,select{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(6,22,47,0.9);color:#fff;margin:6px 0;font-size:13px}
-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
-th,td{border:1px solid rgba(43,93,168,0.4);padding:8px;text-align:left}
+input,select{width:100%;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(6,22,47,0.9);color:#fff;margin:6px 0;font-size:12px}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11px}
+th,td{border:1px solid rgba(43,93,168,0.4);padding:6px;text-align:left}
 th{background:rgba(13,40,84,0.95);color:var(--gold)}
-.recu{border:2px dashed var(--gold);padding:14px;background:#fff;color:#030b18;border-radius:10px;font-family:monospace;margin-top:12px;box-shadow:0 5px 20px rgba(0,0,0,0.3)}
 
-.floatBar{position:fixed;bottom:0;left:0;right:0;z-index:999;display:flex;gap:8px;justify-content:center;padding:10px 10px 14px;background:rgba(3,11,24,0.9);backdrop-filter:blur(10px);border-top:2px solid var(--cyan)}
-.floatBar button{flex:1;max-width:180px;padding:12px 8px;border-radius:25px;font-weight:bold;border:0;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.5);font-size:12px}
-#btnVoix{background:#444;color:#fff}#btnVoix.on{background:var(--green);color:#000;animation:pulse 1s infinite}
-#btnRapport{background:var(--cyan);color:#030b18}#btnConscience{background:var(--gold);color:#030b18}
-@keyframes pulse{50%{transform:scale(1.05)}}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:1000;display:flex;justify-content:center;align-items:center;padding:15px}
+.modal-content{background:#0d2854;border:2px solid var(--gold);padding:20px;border-radius:15px;width:100%;max-width:450px}
 
-@media(min-width:800px){
-  .floatBar{top:76px;bottom:auto;background:transparent;border:0;backdrop-filter:none;justify-content:space-between;pointer-events:none}
-  .floatBar button{pointer-events:auto;position:fixed}
-  #btnRapport{left:15px;top:76px}#btnVoix{right:15px;top:76px}#btnConscience{right:15px;top:126px}
-  body{padding-bottom:0}
-}
+.footer-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(3,11,24,0.95);padding:8px;text-align:center;font-size:11px;color:var(--muted);border-top:1px solid var(--line);z-index:90}
 </style>
 </head>
 <body>
 
 <header class="header">
-  <h2>CENTRE ÉDUCATION POUR TOUS — CEPT ASBL <span class="badge">ARRÊTÉ N°051/2013</span></h2>
-  <div><span class="live blink">● ORACLE CLOUD ACTIF</span> · <span id="clock">--:--:--</span> · KINSHASA · TTD v4.1</div>
+  <div class="logo-title">🌱 AGROSENTINELLES ADMIN V5.0 — VÉROLIS SARL</div>
+  <div class="user-badge">ADMINISTRATEUR · DEMO</div>
 </header>
 
-<div class="hero-banner">
-  <div class="hero-content">
-    <h1>L'ÉCOLE DU FUTUR — SYSTÈME SENTINEL UNIFIÉ</h1>
-    <p>Arrêté Ministériel n°051/Cab/Min/J&D.H/2013 | Gestion Officielle (Mbudi & Ngaba)</p>
-  </div>
-</div>
-
-<div class="floatBar">
-  <button id="btnRapport" onclick="genererRapportAutonome()">🎙️ RAPPORT ORACLE</button>
-  <button id="btnVoix" onclick="toggleVoix()">🔇 VOIX TTD</button>
-  <button id="btnConscience" onclick="conscienceSentinel()">🧬 CONSCIENCE TTD</button>
-</div>
-
-<nav class="tabs">
-  <button class="active" onclick="show('overview',this)">🧠 GRAND CERVEAU</button>
-  <button onclick="show('galerie',this)">🖼️ INFRASTRUCTURES & AFFICHE</button>
-  <button onclick="show('edu',this)">🎓 PORTAIL 2 ÉCOLES</button>
-  <button onclick="show('agri',this)">🌱 AGRO-SENTINEL</button>
-  <button onclick="show('regideso',this)">💧 REGIDESO</button>
-  <button onclick="show('snel',this)">⚡ SNEL</button>
-  <button onclick="show('qr',this)">🔗 TRAÇABILITÉ</button>
+<nav class="nav-bar">
+  <button class="active" onclick="switchTab('dashboard',this)">▦ Tableau de bord</button>
+  <button onclick="switchTab('exploitations',this)">⌂ Exploitations</button>
+  <button onclick="switchTab('producteurs',this)">♙ Producteurs</button>
+  <button onclick="switchTab('parcelles',this)">▤ Parcelles</button>
+  <button onclick="switchTab('production',this)">◈ Production</button>
+  <button onclick="switchTab('lots',this)">⌗ Lots & QR</button>
+  <button onclick="switchTab('stocks',this)">▥ Stocks</button>
+  <button onclick="switchTab('logistique',this)">⇄ Logistique</button>
+  <button onclick="switchTab('sentinel',this)">◉ Sentinel OS</button>
+  <button onclick="switchTab('rapports',this)">▣ Rapports</button>
+  <button onclick="switchTab('admin',this)">⚙ Paramètres</button>
 </nav>
 
-<section id="overview" class="grid">
-  <div class="card" style="grid-column:1/-1;background:linear-gradient(135deg,rgba(13,40,84,0.85),rgba(6,22,47,0.95))">
-    <h3 style="color:var(--cyan)">🌐 PILOTAGE OFFICIEL DES 2 ÉTABLISSEMENTS DU CEPT ASBL</h3>
-    <p class="muted">Conforme aux arrêtés ministériels et aux adresses enregistrées à Kinshasa.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:15px">
-      <div class="metric" style="border-color:var(--gold)">
-        <h4 style="color:var(--gold);margin:0 0 5px">1. GROUPE SCOLAIRE TSHISELEKA</h4>
-        <p class="muted" style="margin:0"><b>Mbudi</b><br>Commune de Mont Ngafula, Kinshasa</p>
+<div class="container">
+
+  <!-- TABLEAU DE BORD -->
+  <section id="dashboard" class="grid">
+    <div class="card" style="grid-column:1/-1">
+      <h2>Pilotage administratif et opérationnel agricole</h2>
+      <button class="btn gold" onclick="openModal('modExploitation')">＋ Nouvelle exploitation</button>
+      <button class="btn cyan" onclick="switchTab('rapports')">▣ Exporter le rapport</button>
+    </div>
+    <div class="card">
+      <div class="muted">EXPLOITATIONS</div>
+      <div id="statExp" class="val">12</div>
+      <div class="muted">Actives ce mois</div>
+    </div>
+    <div class="card">
+      <div class="muted">PRODUCTEURS</div>
+      <div id="statProd" class="val">186</div>
+      <div class="muted">Registrés sur le terrain</div>
+    </div>
+    <div class="card">
+      <div class="muted">PARCELLES</div>
+      <div id="statParc" class="val">74</div>
+      <div class="muted">61 en production active</div>
+    </div>
+    <div class="card">
+      <div class="muted">STOCK DISPONIBLE</div>
+      <div class="val">126 t</div>
+      <div class="muted" style="color:var(--green)">+8.4% vs mois précédent</div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <h3>État opérationnel & TTD Oracle</h3>
+      <div class="row"><span>Intégrité TTD Oracle</span><b class="cyan">I_TTD 1.000 (Optimal)</b></div>
+      <div class="row"><span>Mode Réseau</span><b class="green">Offline First — Données locales synchronisées</b></div>
+      <div class="row"><span>Alertes phytosanitaires</span><b class="orange">3 alertes ouvertes</b></div>
+    </div>
+  </section>
+
+  <!-- EXPLOITATIONS -->
+  <section id="exploitations" class="grid hidden">
+    <div class="card" style="grid-column:1/-1">
+      <h3>⌂ Gestion des Exploitations</h3>
+      <button class="btn gold" onclick="openModal('modExploitation')">＋ Nouvelle exploitation</button>
+      <table>
+        <thead><tr><th>Code</th><th>Exploitation</th><th>Localisation</th><th>Surface</th><th>Responsable</th></tr></thead>
+        <tbody id="tableExploitations">
+          <tr><td>EXP-01</td><td>Ferme Pilote Maluku</td><td>Maluku / Kinshasa</td><td>45 ha</td><td>Dany Tshiseleka</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PRODUCTEURS -->
+  <section id="producteurs" class="grid hidden">
+    <div class="card" style="grid-column:1/-1">
+      <h3>♙ Registre des Producteurs</h3>
+      <button class="btn gold" onclick="openModal('modProducteur')">＋ Nouveau producteur</button>
+      <table>
+        <thead><tr><th>ID</th><th>Nom complet</th><th>Zone</th><th>Culture principale</th><th>Contact</th></tr></thead>
+        <tbody id="tableProducteurs">
+          <tr><td>PRD-101</td><td>Jean-Paul Kamba</td><td>Mbudi</td><td>Manioc / Maïs</td><td>+243 810 000 000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PARCELLES -->
+  <section id="parcelles" class="grid hidden">
+    <div class="card" style="grid-column:1/-1">
+      <h3>▤ Parcelles & Cultures</h3>
+      <button class="btn gold" onclick="openModal('modParcelle')">＋ Nouvelle parcelle</button>
+      <table>
+        <thead><tr><th>Code</th><th>Exploitation</th><th>Culture</th><th>Surface</th><th>Humidité</th><th>Santé</th></tr></thead>
+        <tbody id="tableParcelles">
+          <tr><td>PARC-A1</td><td>Ferme Pilote Maluku</td><td>Maïs Hybride</td><td>12 ha</td><td>58%</td><td>✅ Saine (98%)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PRODUCTION -->
+  <section id="production" class="grid hidden">
+    <div class="card" style="grid-column:1/-1">
+      <h3>◈ Campagnes & Productions</h3>
+      <button class="btn gold" onclick="openModal('modProduction')">＋ Enregistrer une production</button>
+      <div class="row" style="margin-top:15px">
+        <div>Production cumulée : <b class="green">486 t</b></div>
+        <div>Rendement moyen : <b class="cyan">3.8 t/ha</b></div>
       </div>
-      <div class="metric" style="border-color:var(--cyan)">
-        <h4 style="color:var(--cyan);margin:0 0 5px">2. COMPLEXE SCOLAIRE MAMAN GINA</h4>
-        <p class="muted" style="margin:0"><b>Commune de Ngaba</b><br>Kinshasa, RDC</p>
+    </div>
+  </section>
+
+  <!-- LOTS & TRAÇABILITÉ -->
+  <section id="lots" class="grid hidden">
+    <div class="card" style="grid-column:1/-1">
+      <h3>⌗ Lots & Traçabilité QR</h3>
+      <button class="btn gold" onclick="openModal('modLot')">＋ Nouveau lot</button>
+      <table>
+        <thead><tr><th>Lot ID</th><th>Produit</th><th>Origine</th><th>Quantité</th><th>Date</th></tr></thead>
+        <tbody id="tableLots">
+          <tr><td>LOT-2026-001</td><td>Maïs Grain</td><td>Mbudi</td><td>15 t</td><td>2026-10-01</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- STOCKS -->
+  <section id="stocks" class="grid hidden">
+    <div class="card" style="grid-column:1/-1">
+      <h3>▥ Inventaire & Stocks</h3>
+      <button class="btn gold" onclick="openModal('modStock')">＋ Mouvement de stock</button>
+      <table>
+        <thead><tr><th>Produit</th><th>Entrepôt</th><th>Disponible</th><th>Seuil critique</th><th>État</th></tr></thead>
+        <tbody id="tableStocks">
+          <tr><td>Maïs Grain</td><td>Entrepôt Principal Gombe</td><td>85 t</td><td>15 t</td><td>🟢 Normal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- LOGISTIQUE -->
+  <section id="logistique" class="grid hidden">
+    <div class="card" style="grid-column:1/-1">
+      <h3>⇄ Logistique & Expéditions</h3>
+      <button class="btn gold" onclick="openModal('modExpedition')">＋ Nouvelle expédition</button>
+      <table>
+        <thead><tr><th>Référence</th><th>Destination</th><th>Charge</th><th>Départ</th><th>Statut</th></tr></thead>
+        <tbody id="tableLogistique">
+          <tr><td>EXP-992</td><td>Marché Central Kinshasa</td><td>10 t Maïs</td><td>2026-10-04</td><td>🚚 En cours</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SENTINEL OS -->
+  <section id="sentinel" class="grid hidden">
+    <div class="card" style="grid-column:1/-1">
+      <h3>◉ Sentinel OS — Moteur d'Intelligence Autonome</h3>
+      <p class="muted">Observation → Analyse → Recommandation → Action</p>
+      <button class="btn green" onclick="runSentinelAnalysis()">▶ Lancer une analyse TTD</button>
+      <div class="metric" style="margin-top:15px;background:#041126;padding:15px;border-radius:10px">
+        <h4>Résultat Oracle TTD</h4>
+        <div id="sentinelRes" class="cyan">Système prêt. Intégrité I_TTD 1.000 confirmée.</div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="card">
-    <h3>📊 INDICATEURS GLOBAUX</h3>
-    <div class="row"><span>Établissements actifs</span><strong class="cyan">2 / 2</strong></div>
-    <div class="row"><span>Agrément ASBL</span><strong class="green">N°051/2013</strong></div>
-    <div class="row"><span>Voix TTD</span><strong id="voiceState" class="muted">INACTIVE</strong></div>
-    <button class="btn green" onclick="runScenario()">▶ LANCER SYNCHRONISATION</button>
-  </div>
-
-  <div class="card">
-    <h3>🛡 SCORE DE CONFIANCE CLOUD</h3>
-    <div style="text-align:center;padding:15px">
-      <div class="val" style="font-size:52px;color:var(--cyan)">100%</div>
-      <div class="green" style="font-weight:bold;margin:5px 0">INFRASTRUCTURES OFFICIELLES INTÉGRÉES</div>
-      <div class="progress"><i style="width:100%"></i></div>
-      <div class="muted">Oracle Render : ttd-oracle-3lfbyz3d.onrender.com</div>
-    </div>
-  </div>
-
-  <div class="card" style="grid-column:1/-1">
-    <h3>🔊 JOURNAL DE BORD UNIFIÉ — CONSCIENCE TTD</h3>
-    <div id="log" class="log">
-      <div style="color:var(--green)">[SYSTEM] Sentinel V4.1 Affichage des infrastructures activé</div>
-      <div style="color:var(--cyan)">[CEPT ASBL] Mbudi (Mont Ngafula) & Ngaba synchronisés</div>
-    </div>
-  </div>
-</section>
-
-<!-- SECTION GALERIE / AFFICHE OFFICIELLE -->
-<section id="galerie" class="grid hidden">
-  <div class="card" style="grid-column:1/-1;text-align:center">
-    <h3 style="color:var(--gold)">🖼️ GALERIE OFFICIELLE & INFRASTRUCTURES DU CEPT ASBL</h3>
-    <p class="muted">Affiche institutionnelle validée — Arrêté ministériel n°051/Cab/Min/J&D.H/2013</p>
-    
-    <div style="margin:20px auto;max-width:800px;border:2px solid var(--cyan);border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.8)">
-      <img src="1000111521.jpg" alt="Affiche CEPT ASBL - Nos Établissements" style="width:100%;height:auto;display:block">
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin-top:20px;text-align:left">
-      <div class="metric">
-        <h4 style="color:var(--gold)">🏫 Groupe Scolaire Tshiseleka</h4>
-        <p class="muted">Implantation : <b>Mbudi (Mont Ngafula)</b><br>Cycles : Maternelle, Primaire & Secondaire<br>Objectif : Excellence pédagogique et numérique.</p>
-      </div>
-      <div class="metric">
-        <h4 style="color:var(--cyan)">🏫 Complexe Scolaire Maman Gina</h4>
-        <p class="muted">Implantation : <b>Ngaba</b><br>Cycles : Maternelle, Primaire, Secondaire & Professionnel<br>Objectif : Formation technique et intégrale.</p>
+  <!-- RAPPORTS -->
+  <section id="rapports" class="grid hidden">
+    <div class="card" style="grid-column:1/-1">
+      <h3>▣ Rapports & Synthèse Administrative</h3>
+      <button class="btn cyan" onclick="window.print()">🖨️ Imprimer / Exporter le Rapport</button>
+      <div class="metric" style="margin-top:15px;background:#fff;color:#000;padding:20px;border-radius:10px">
+        <h2 style="margin-top:0">AGROSENTINELLES ADMIN V5.0</h2>
+        <p><b>VÉROLIS SARL</b> — Plateforme administrative et opérationnelle agricole</p>
+        <hr>
+        <p>Exploitations : 12 | Producteurs : 186 | Parcelles : 74 | Stocks : 126 t</p>
+        <p><i>Rapport certifié par Sentinel OS & TTD Oracle (I_TTD 1.000). Mode Offline First actif.</i></p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- SECTION PORTAIL 2 ÉCOLES (EDU) -->
-<section id="edu" class="grid hidden">
-  <div class="card" style="grid-column:1/-1;background:linear-gradient(135deg,rgba(17,58,140,0.4),rgba(3,11,24,0.9))">
-    <h3 style="color:var(--gold)">🎓 GESTION CENTRALISÉE DES DEUX ÉCOLES OFFICIELLES</h3>
-    <div class="metric" style="background:rgba(3,11,24,0.8)">
-      <label><b style="color:var(--gold)">Sélectionnez l'établissement cible :</b></label>
-      <select id="selectEcoleActive" onchange="changerEcoleActive()" style="border-color:var(--gold);font-weight:bold;color:var(--gold)">
-        <option value="tshiseleka">1. Groupe Scolaire Tshiseleka (Mbudi / Mont Ngafula)</option>
-        <option value="gina">2. Complexe Scolaire Maman GINA KUMBI-KUMBI (Ngaba)</option>
-      </select>
+  <!-- PARAMÈTRES / ADMIN -->
+  <section id="admin" class="grid hidden">
+    <div class="card">
+      <h3>⚙ Paramètres Organisation</h3>
+      <input type="text" id="orgName" value="Vérolis SARL">
+      <input type="text" id="orgCity" value="Kinshasa, RDC">
+      <button class="btn gold" onclick="alert('Paramètres enregistrés localement !')">Enregistrer</button>
     </div>
-    <div class="tabs" style="background:transparent;border:0;padding:5px 0">
-      <button class="btn cyan" onclick="showEduTab('eleves')">👤 Élèves & Inscriptions</button>
-      <button class="btn cyan" onclick="showEduTab('frais')">⚙️ Configuration Frais</button>
-      <button class="btn cyan" onclick="showEduTab('paiement')">💳 Encaissement & Reçu</button>
-      <button class="btn cyan" onclick="showEduTab('recouvrement')">📋 Cahier Recouvrement</button>
+    <div class="card">
+      <h3>☁ Mode Offline First</h3>
+      <p class="muted">Données locales enregistrées dans le navigateur.</p>
+      <button class="btn cyan" onclick="localStorage.clear(); location.reload();">🔄 Réinitialiser les données locales</button>
     </div>
-  </div>
+  </section>
 
-  <div id="edu-eleves" class="card">
-    <h4>Effectifs Élèves — <span class="nomEcoleCourante" style="color:var(--gold)">GS Tshiseleka (Mbudi)</span></h4>
-    <input id="nomEleve" placeholder="Nom & Postnom de l'élève">
-    <input id="classeEleve" placeholder="Classe / Option">
-    <button class="btn gold" onclick="addEleveEdu()">+ Inscrire l'élève</button>
-    <table id="tabEleves"><tr><th>N°</th><th>Nom complet</th><th>Classe</th></tr></table>
-  </div>
+</div>
 
-  <div id="edu-frais" class="card" style="display:none">
-    <h4>Grille des Frais Scolaires — <span class="nomEcoleCourante" style="color:var(--gold)">GS Tshiseleka (Mbudi)</span></h4>
-    <input id="typeFrais" placeholder="Libellé (Frais scolaires, Minerval...)">
-    <input id="montantFrais" type="number" placeholder="Montant en USD">
-    <button class="btn green" onclick="addFraisEdu()">Enregistrer les Frais</button>
-    <table id="tabFrais"><tr><th>Libellé Frais</th><th>Montant USD</th></tr></table>
+<!-- MODAUX DE SAISIE -->
+<div id="modExploitation" class="modal hidden">
+  <div class="modal-content">
+    <h3>Nouvelle Exploitation</h3>
+    <input type="text" id="inpExpNom" placeholder="Nom de l'exploitation">
+    <input type="text" id="inpExpLoc" placeholder="Localisation">
+    <button class="btn green" onclick="closeModal('modExploitation')">Enregistrer</button>
+    <button class="btn red" onclick="closeModal('modExploitation')">Annuler</button>
   </div>
+</div>
 
-  <div id="edu-paiement" class="card" style="display:none">
-    <h4>Caisse & Reçu Sécurisé — <span class="nomEcoleCourante" style="color:var(--gold)">GS Tshiseleka (Mbudi)</span></h4>
-    <select id="selEleve"></select>
-    <select id="selFrais"></select>
-    <input id="montantPaye" type="number" placeholder="Montant versé en USD">
-    <button class="btn gold" onclick="payerEdu()">Encaisser & Émettre le Reçu</button>
-    <div id="recuBox" class="recu" style="display:none"></div>
+<div id="modProducteur" class="modal hidden">
+  <div class="modal-content">
+    <h3>Nouveau Producteur</h3>
+    <input type="text" placeholder="Nom complet">
+    <input type="text" placeholder="Zone / Commune">
+    <button class="btn green" onclick="closeModal('modProducteur')">Enregistrer</button>
+    <button class="btn red" onclick="closeModal('modProducteur')">Annuler</button>
   </div>
+</div>
 
-  <div id="edu-recouvrement" class="card" style="display:none">
-    <h4>Suivi Financier & Recouvrement — <span class="nomEcoleCourante" style="color:var(--gold)">GS Tshiseleka (Mbudi)</span></h4>
-    <table id="tabRecouvrement"><tr><th>Élève</th><th>Payé</th><th>Total Dû</th><th>Solde Restant</th><th>Statut</th></tr></table>
-  </div>
-</section>
-
-<!-- SECTION AGRO -->
-<section id="agri" class="grid hidden">
-  <div class="card">
-    <h3>🌱 AGRO-SENTINEL — FERME PILOTE</h3>
-    <input type="file" accept="image/*" id="photo" onchange="diagnose()">
-    <div id="diagRes" class="val" style="font-size:15px;margin:10px 0">📸 Charger image cultures / sol</div>
-    <div class="metric">
-      <div class="row"><span>Indice de Santé</span><b id="confidence" class="green">98.5%</b></div>
-      <div class="row"><span>Recommandation TTD</span><b id="plantAction" class="cyan">Optimisation active</b></div>
-    </div>
-    <canvas id="chartAgri" height="110"></canvas>
-  </div>
-  <div class="card">
-    <h3>🌍 CAPTEURS ENVIRONNEMENTAUX</h3>
-    <div>Humidité du sol : <span id="soilNow" class="val">62%</span> | Objectif : <span class="cyan">60%</span></div>
-    <div class="progress"><i id="pSol" style="width:62%"></i></div>
-    <canvas id="chartSol" height="120"></canvas>
-  </div>
-</section>
-
-<!-- SECTION REGIDESO -->
-<section id="regideso" class="grid hidden">
-  <div class="card">
-    <h3>💧 REGIDESO — GESTION HYDRIQUE</h3>
-    <div>Consommation : <span id="eauVal" class="val">520 L</span></div>
-    <div>Débit en direct : <span id="debitVal" class="cyan" style="font-size:22px">2.1 L/min</span></div>
-    <div id="alerteEau" style="margin:10px 0;color:var(--green)">✅ Alimentation en eau stable</div>
-    <canvas id="chartEau" height="120"></canvas>
-  </div>
-  <div class="card">
-    <h3>☁️ SYNCHRONISATION CLOUD</h3>
-    <div class="metric">Serveur Oracle Render : Actif & Sécurisé</div>
-    <button class="btn cyan" onclick="parler('Réseau hydrique des établissements sous contrôle total.')">🔊 Émettre Rapport Eau</button>
-  </div>
-</section>
-
-<!-- SECTION SNEL -->
-<section id="snel" class="grid hidden">
-  <div class="card">
-    <h3>⚡ SNEL — STABILISATION ÉNERGÉTIQUE</h3>
-    <div>Tension Entrée : <span id="vIn" class="warn" style="font-size:30px">225V</span></div>
-    <div>Charge active : <span class="val" style="font-size:20px">4.2 kW</span></div>
-    <div id="alerteSnel" style="margin:10px 0;color:var(--green)">✅ Régulateur actif</div>
-    <canvas id="chartVolt" height="120"></canvas>
-  </div>
-  <div class="card">
-    <h3>🛡️ BOUCLIER ÉLECTRIQUE TTD</h3>
-    <div class="metric">Protection intelligente contre les surtensions</div>
-    <button class="btn gold" onclick="parler('Tension électrique stabilisée à deux cent vingt-cinq volts.')">🔊 Émettre Rapport Énergie</button>
-  </div>
-</section>
-
-<!-- SECTION QR -->
-<section id="qr" class="grid hidden">
-  <div class="card" style="text-align:center">
-    <h3>🔗 TRAÇABILITÉ NUMÉRIQUE & SCEAU ASBL</h3>
-    <div class="muted">Arrêté ministériel n°051/Cab/Min/J&D.H/2013 | CEPT</div>
-    <div id="qrcode"></div>
-    <button class="btn green" onclick="genererQR()">🔄 Actualiser le Sceau Numérique</button>
-  </div>
-</section>
+<!-- Footer -->
+<div class="footer-bar">
+  AGROSENTINELLES ADMIN V5.0 · VÉROLIS SARL · Sentinel OS · Offline First · TTD Oracle
+</div>
 
 <script>
-const $=id=>document.getElementById(id); let synth=window.speechSynthesis; let frVoice=null;
-function updateClock(){ const el=$('clock'); if(el) el.innerText=new Date().toTimeString().split(' ')[0]; } setInterval(updateClock,1000); updateClock();
-
-function show(id,btn){ 
-  document.querySelectorAll('section').forEach(s=>s.classList.add('hidden')); 
-  const t=$(id); if(t) t.classList.remove('hidden'); 
-  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active')); 
-  if(btn) btn.classList.add('active'); 
-  Object.values(state.charts).forEach(c=>{ try{c.resize();}catch(e){} }); 
+function switchTab(tabId, btn){
+  document.querySelectorAll('.container > section').forEach(s => s.classList.add('hidden'));
+  document.getElementById(tabId).classList.remove('hidden');
+  document.querySelectorAll('.nav-bar button').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
 }
 
-function loguer(m){ 
-  const log=$('log'); if(!log) return; 
-  const d=document.createElement('div'); 
-  d.innerText="["+new Date().toTimeString().split(' ')[0]+"] "+m; 
-  log.appendChild(d); log.scrollTop=log.scrollHeight; 
+function openModal(modalId){
+  document.getElementById(modalId).classList.remove('hidden');
 }
 
-const state={voix:false,charts:{}};
-
-function loadVoices(){ if(!synth) return; const v=synth.getVoices(); if(v.length===0) return; frVoice=v.find(x=>x.lang.toLowerCase().includes('fr'))||v[0]||null; }
-if(synth){ synth.onvoiceschanged=loadVoices; loadVoices(); setTimeout(loadVoices,1000); }
-
-function parler(texte){
-  loguer("VOIX: "+texte);
-  if(!synth || !state.voix) return;
-  synth.cancel();
-  const u=new SpeechSynthesisUtterance(texte);
-  u.lang='fr-FR'; u.rate=0.95;
-  if(frVoice) u.voice=frVoice;
-  synth.speak(u);
+function closeModal(modalId){
+  document.getElementById(modalId).classList.add('hidden');
 }
 
-function toggleVoix(){
-  state.voix=!state.voix;
-  const btn=$('btnVoix'), st=$('voiceState');
-  if(state.voix){
-    btn.classList.add('on'); btn.innerText='🔊 VOIX ON';
-    if(st){ st.innerText='ACTIVE'; st.className='green'; }
-    parler('Voix TTD activée. Affiche et infrastructures du CEPT chargées.');
-    loguer('🔊 Voix TTD active');
-  } else {
-    btn.classList.remove('on'); btn.innerText='🔇 VOIX TTD';
-    if(st){ st.innerText='INACTIVE'; st.className='muted'; }
-    if(synth) synth.cancel();
-    loguer('🔇 Voix désactivée');
-  }
-}
-
-function genererRapportAutonome(){
-  let ecoleNom = ecoleActive === 'tshiseleka' ? 'Groupe Scolaire Tshiseleka à Mbudi Mont Ngafula' : 'Complexe Scolaire Maman Gina à Ngaba';
-  let txt=`Rapport officiel CEPT. Établissement actif : ${ecoleNom}. Arrêté ministériel zéro cinquante et un validé.`;
-  parler(txt);
-  loguer('🎙️ Rapport Oracle généré pour : ' + ecoleNom);
-}
-
-function conscienceSentinel(){
-  let t=`Je suis Sentinel, intelligence artificielle du Centre Éducation Pour Tous, ASBL reconnue sous l'arrêté ministériel zéro cinquante et un du treize mars deux mille treize. Je supervise le Groupe Scolaire Tshiseleka à Mbudi Mont Ngafula et le Complexe Scolaire Maman Gina à Ngaba.`;
-  parler(t);
-  loguer('🧬 Conscience TTD exécutée');
-}
-
-let MULTI_EDU_DB = JSON.parse(localStorage.getItem('sentinel_cept_v41_c')||JSON.stringify({
-  tshiseleka: { nom: "Groupe Scolaire Tshiseleka (Mbudi / Mont Ngafula)", eleves: [], frais: [], paiements: [] },
-  gina: { nom: "Complexe Scolaire Maman GINA KUMBI-KUMBI (Ngaba)", eleves: [], frais: [], paiements: [] }
-}));
-
-let ecoleActive = 'tshiseleka';
-
-function saveMultiEdu(){ 
-  localStorage.setItem('sentinel_cept_v41_c', JSON.stringify(MULTI_EDU_DB)); 
-}
-
-function changerEcoleActive(){
-  ecoleActive = $('selectEcoleActive').value;
-  let nomLbl = ecoleActive === 'tshiseleka' ? 'GS Tshiseleka (Mbudi)' : 'CS Maman Gina (Ngaba)';
-  document.querySelectorAll('.nomEcoleCourante').forEach(el => el.innerText = nomLbl);
-  renderEdu();
-  loguer('🏫 Basculement actif vers : ' + nomLbl);
-}
-
-function showEduTab(tab){
-  ['edu-eleves','edu-frais','edu-paiement','edu-recouvrement'].forEach(id=>$(id).style.display='none');$('edu-'+tab).style.display='block';
-  renderEdu();
-}
-
-function addEleveEdu(){
-  if(!$('nomEleve').value) return;
-  MULTI_EDU_DB[ecoleActive].eleves.push({nom:$('nomEleve').value, classe:$('classeEleve').value});
-  saveMultiEdu(); renderEdu(); $('nomEleve').value='';
-  loguer('🎓 Élève inscrit avec succès à ' + MULTI_EDU_DB[ecoleActive].nom);
-}
-
-function addFraisEdu(){
-  if(!$('typeFrais').value \vert{}\vert{} !$('montantFrais').value) return;
-  MULTI_EDU_DB[ecoleActive].frais.push({type:$('typeFrais').value, montant:$('montantFrais').value});
-  saveMultiEdu(); renderEdu(); $('typeFrais').value='';$('montantFrais').value='';
-  loguer('💰 Frais configuré pour ' + MULTI_EDU_DB[ecoleActive].nom);
-}
-
-function payerEdu(){
-  let currentDB = MULTI_EDU_DB[ecoleActive];
-  let e = currentDB.eleves[$('selEleve').value];
-  let f = currentDB.frais[$('selFrais').value];
-  if(!e || !f) return;
-  let p={nom:e.nom, classe:e.classe, frais:f.type, montant:$('montantPaye').value, recu:'CEPT-REC-'+Math.floor(Math.random()*90000+10000), date:new Date().toLocaleDateString()};
-  currentDB.paiements.push(p); saveMultiEdu();
-  $('recuBox').style.display='block';$('recuBox').innerHTML=`<b>CENTRE ÉDUCATION POUR TOUS (CEPT) ASBL</b><br>Arrêté Min. n°051/Cab/Min/J&D.H/2013<br>--------------------------------------------------<br><b>REÇU OFFICIEL N° ${p.recu}</b><br>École : ${currentDB.nom}<br>Élève : ${p.nom} (${p.classe})<br>Motif : ${p.frais}<br>Montant payé : ${p.montant} USD<br>Date : ${p.date}<br><i>Validé par Sentinel Cloud & Oracle</i>`;
-  renderEdu();
-  parler(`Paiement de ${p.montant} dollars validé pour ${p.nom} à ${currentDB.nom}.`);
-  loguer('💳 Paiement encaissé et reçu généré');
-}
-
-function renderEdu(){
-  let currentDB = MULTI_EDU_DB[ecoleActive];
-  if($('tabEleves'))$('tabEleves').innerHTML='<tr><th>N°</th><th>Nom & Postnom</th><th>Classe / Option</th></tr>'+currentDB.eleves.map((e,i)=>`<tr><td>${i+1}</td><td>${e.nom}</td><td>${e.classe}</td></tr>`).join('');
-  if($('tabFrais'))$('tabFrais').innerHTML='<tr><th>Libellé</th><th>Montant USD</th></tr>'+currentDB.frais.map(f=>`<tr><td>${f.type}</td><td>${f.montant} $</td></tr>`).join('');
-  if($('selEleve'))$('selEleve').innerHTML=currentDB.eleves.map((e,i)=>`<option value="${i}">${e.nom} (${e.classe})</option>`).join('');
-  if($('selFrais'))$('selFrais').innerHTML=currentDB.frais.map((f,i)=>`<option value="${i}">${f.type} (${f.montant}$)</option>`).join('');
-  
-  let map={};
-  currentDB.eleves.forEach(e=>map[e.nom]={paye:0, nom:e.nom, classe:e.classe});
-  currentDB.paiements.forEach(p=>{if(map[p.nom]) map[p.nom].paye+=parseFloat(p.montant||0)});
-  let totalFrais=currentDB.frais.reduce((s,f)=>s+parseFloat(f.montant||0),0);
-  
-  if($('tabRecouvrement'))$('tabRecouvrement').innerHTML='<tr><th>Élève</th><th>Payé</th><th>Total Dû</th><th>Reste</th><th>Statut</th></tr>'+Object.values(map).map(r=>`<tr><td>${r.nom}</td><td>${r.paye}$</td><td>${totalFrais}$</td><td>${totalFrais-r.paye}$</td><td>${r.paye>=totalFrais?'✅ SOLDE':'❌ SOLDE INCOMPLET'}</td></tr>`).join('');
-}
-renderEdu();
-
-function genererQR(){
-  const c=$('qrcode'); if(!c) return;
-  c.innerHTML='';
-  let nomLbl = ecoleActive === 'tshiseleka' ? 'GS Tshiseleka Mbudi Mont Ngafula' : 'CS Maman Gina Ngaba';
-  new QRCode(c,{text:"CEPT-ASBL|Arrete-051-2013|" + nomLbl + "|https://ttd-oracle-3lfbyz3d.onrender.com",width:140,height:140,colorDark:"#030b18",colorLight:"#ffffff"});
-  loguer('🔗 Sceau QR généré pour : ' + nomLbl);
-}
-genererQR();
-
-function createChart(id,l,d,lb){ const cv=$(id); if(!cv) return null; return new Chart(cv.getContext('2d'),{type:'line',data:{labels:l,datasets:[{label:lb,data:d,tension:.35,borderWidth:2,borderColor:'#35d9ff',backgroundColor:'rgba(53,217,255,0.2)'}]},options:{responsive:true,scales:{x:{ticks:{color:"#a9bad6",font:{size:9}}},y:{ticks:{color:"#a9bad6",font:{size:9}}}}}}); }
-state.charts.volt=createChart("chartVolt",["T-4","T-3","T-2","T-1","NOW"],[220,225,225,220,225],"Tension V");
-state.charts.water=createChart("chartEau",["T-4","T-3","T-2","T-1","NOW"],[2.0,2.1,2.0,2.1,2.1],"Débit L/min");
-state.charts.sol=createChart("chartSol",["J-4","J-3","J-2","J-1","NOW"],[58,60,61,62,62],"Humidité %");
-state.charts.agri=createChart("chartAgri",["S1","S2","S3","S4"],[92,95,97,98.5],"Confiance %");
-
-function runScenario(){
-  loguer('▶ Synchronisation des infrastructures exécutée.');
-  parler('Affichage des infrastructures du CEPT validé.');
-}
-function diagnose(){
-  $('diagRes').innerText='🌿 Analyse IA en cours...';
-  setTimeout(()=>{
-    $('diagRes').innerText='🌿 Écosystème optimal — 98.5%';
-    if($('confidence'))$('confidence').innerText='98.5%';
-    if($('plantAction'))$('plantAction').innerText='Paramètres conformes';
-    parler('Analyse confirmée.');
-  }, 1200);
+function runSentinelAnalysis(){
+  const res = document.getElementById('sentinelRes');
+  res.innerText = "Analyse en cours... Observation des capteurs et calcul de la triade dynamique.";
+  setTimeout(() => {
+    res.innerText = "✓ Analyse terminée avec succès. Intégrité I_TTD 1.000. Aucun risque critique détecté.";
+  }, 1000);
 }
 </script>
+
 </body>
 </html>
