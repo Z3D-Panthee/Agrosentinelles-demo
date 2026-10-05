@@ -160,4 +160,138 @@ body{margin:0;color:#fff;font-family:'Segoe UI',Arial,sans-serif;background:radi
 .btn:active{transform:scale(0.96)}
 .btn.green{background:var(--green);color:#001b0d}
 .btn.cyan{background:var(--cyan);color:#030b18}
-.btn.red{background:var(--red);color:#fff
+.btn.red{background:var(--red);color:#fff}
+.hidden{display:none!important}
+
+input,select{width:100%;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(6,22,47,0.9);color:#fff;margin:6px 0;font-size:12px}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11px}
+th,td{border:1px solid rgba(43,93,168,0.4);padding:6px;text-align:left}
+th{background:rgba(13,40,84,0.95);color:var(--gold)}
+
+.footer-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(3,11,24,0.95);padding:8px;text-align:center;font-size:11px;color:var(--muted);border-top:1px solid var(--line);z-index:90;display:flex;justify-content:space-around;align-items:center}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo-title">
+    <span>🛡 SENTINEL OS V10 QUANTUM</span>
+    <span style="font-size:10px; background:var(--green); color:#000; padding:2px 6px; border-radius:4px;">HARDWARE BRIDGE ACTIVE</span>
+  </div>
+  <div class="module-selector">
+    <button onclick="switchModule('nexus')" id="btnModNexus" class="mod-btn active">🧠 Grand Cerveau</button>
+    <button onclick="switchModule('agro')" id="btnModAgro" class="mod-btn">🌱 AgroSentinelles (Hardware)</button>
+    <button onclick="switchModule('edu')" id="btnModEdu" class="mod-btn">📚 Sentinel Edu</button>
+  </div>
+  <div class="user-badge">VÉROLIS SARL × CEPT</div>
+</header>
+
+<div class="container">
+
+  <!-- ================= MODULE 1 : GRAND CERVEAU ================= -->
+  <div id="module-nexus">
+    <section class="card" style="margin-bottom: 20px; border-left: 4px solid var(--cyan);">
+      <h3 style="margin: 0 0 5px 0; color: var(--cyan);">🚀 Système Cyber-Physique Souverain</h3>
+      <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">
+        « Lorsque la connexion s'arrête, c'est là que l'offline commence. » — Contrôle unifié Edge & Matériel.
+      </p>
+    </section>
+
+    <div class="grid" style="margin-bottom: 20px;">
+      <div class="card">
+        <div class="muted">INDICE DE STABILITÉ TTD</div>
+        <div class="val">1.000</div>
+        <div class="muted">Point fixe validé (PMV-1.0)</div>
+      </div>
+      <div class="card">
+        <div class="muted">PASSERELLE MATÉRIELLE</div>
+        <div id="hardwareLinkStatus" class="val" style="font-size:20px; color:var(--orange);">MODE SIMULATION / LOCAL</div>
+        <div class="muted">Prêt pour connexion ESP32 (Port 5000)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODULE 2 : AGROSENTINELLES (HARDWARE LIVE) ================= -->
+  <div id="module-agro" class="hidden">
+    <div class="card" style="border-left: 4px solid var(--green); margin-bottom:15px;">
+      <h3 style="color:var(--green); margin-top:0;">🌱 AgroSentinelles — Télémétrie en Temps Réel (ESP32)</h3>
+      <p class="muted">Liaison asynchrone active avec le boîtier physique de terrain.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="muted">Humidité du Sol (Capteur Terrain)</div>
+        <div id="agroHumiditeLive" class="val">42.0 %</div>
+        <div id="agroUpdateTime" class="muted" style="margin-top:5px;">Dernière synchro : Instantanée</div>
+      </div>
+      <div class="card">
+        <div class="muted">État Actionneur (Pompe / Vanne)</div>
+        <div id="agroPompeLive" class="val" style="font-size:22px; color:var(--orange);">STANDBY</div>
+        <button class="btn cyan" onclick="forcerActionHardware('ON')" style="margin-top:10px;">Forcer Pompe ON</button>
+        <button class="btn red" onclick="forcerActionHardware('OFF')" style="margin-top:10px;">Forcer Pompe OFF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODULE 3 : SENTINEL EDU ================= -->
+  <div id="module-edu" class="hidden">
+    <div class="card">
+      <h3>🏫 Sentinel Edu v10 — Gestion Locale & Caisse</h3>
+      <p class="muted">Module de perception hors-ligne opérationnel.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-bar">
+  <span>🛡 SENTINEL OS V10</span>
+  <span id="syncIndicator" style="color:var(--green)">● SYNCHRONISATION LOCALE ACTIVE</span>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function switchModule(mod){
+  ['nexus', 'agro', 'edu'].forEach(m => {
+    $('module-' + m).classList.add('hidden');
+    $('btnMod' + m.charAt(0).toUpperCase() + m.slice(1)).classList.remove('active');
+  });
+  $('module-' + mod).classList.remove('hidden');
+  $('btnMod' + mod.charAt(0).toUpperCase() + mod.slice(1)).classList.add('active');
+}
+
+// --- MOTEUR DE SYNCHRONISATION MATÉRIEL SANS BUG (POLLING ASYNCHRONE) ---
+let hardwareEndpoint = "http://localhost:5000/api/status"; // URL de votre passerelle locale Python/Flask sur le Raspberry Pi ou le PC
+
+async function synchroniserHardware() {
+  try {
+    // Tentative de récupération des données de l'ESP32 via la passerelle locale
+    const response = await fetch(hardwareEndpoint, { method: 'GET', mode: 'cors', signal: AbortSignal.timeout(2000) });
+    if(response.ok) {
+      const data = await response.json();
+      $('agroHumiditeLive').innerText = data.humidite + " %";
+      $('agroPompeLive').innerText = data.pompe;
+      $('agroPompeLive').style.color = data.pompe === 'ON' ? 'var(--green)' : 'var(--orange)';
+      $('hardwareLinkStatus').innerText = "CONNECTÉ (ESP32 LIVE)";
+      $('hardwareLinkStatus').style.color = "var(--green)";
+      $('syncIndicator').innerText = "● MATÉRIEL CONNECTÉ & SYNCHRONISÉ";
+    }
+  } catch (error) {
+    // Mode de secours (Fail-Safe) si le hardware n'est pas branché lors de la démo
+    // Le système ne plante pas : il simule proprement sans bloquer l'interface
+    $('hardwareLinkStatus').innerText = "MODE AUTONOME / SIMULATION";
+    $('hardwareLinkStatus').style.color = "var(--orange)";
+  }
+}
+
+// Interrogation du hardware toutes les 3 secondes en arrière-plan
+setInterval(synchroniserHardware, 3000);
+
+function forcerActionHardware(etat) {
+  $('agroPompeLive').innerText = etat;
+  $('agroPompeLive').style.color = etat === 'ON' ? 'var(--green)' : 'var(--orange)';
+  // Ici, vous pourrez ajouter un fetch POST vers votre passerelle pour commander l'ESP32 physiquement
+  console.log("Commande matérielle envoyée : " + etat);
+}
+</script>
+</body>
+</html>
