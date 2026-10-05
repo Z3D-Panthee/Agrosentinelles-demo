@@ -1,32 +1,40 @@
-# 5-sentinelles-demo — VEROLIS × CVMH
+# 🌱 AGROSENTINELLES ADMIN V5.0
+## VÉROLIS SARL × Sentinel OS
 
-Démonstrateur FastAPI + HTML des 3 Sentinelles :
-- AGRI-ORIGINE
-- ENTROPIA AGRO
-- COMMUNION AGRO
+> **L'intelligence agricole ne remplace pas le terrain. Elle le rend lisible, traçable et pilotable.**
 
-Les données sont explicitement simulées.
+**AgroSentinelles** est une plateforme administrative et opérationnelle de démonstration dédiée au pilotage des activités agricoles, à la traçabilité des lots, au suivi environnemental et à l'aide à la décision.
 
-## Lancer localement
+Le projet associe :
 
-```bash
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
+- 🏛️ **VÉROLIS SARL** — architecture technologique, ingénierie et vision industrielle
+- 🧠 **Sentinel OS** — moteur d'intelligence, surveillance et recommandations
+- 🇨🇩 **RDC / Kinshasa** — terrain de démonstration et contexte d'usage
 
-Puis ouvrir `http://127.0.0.1:8000`.
+---
 
-## Déploiement Render
+## ✨ VISION
 
-- Build Command: `pip install -r requirements.txt`
-- Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+AgroSentinelles transforme un simple démonstrateur agricole en **poste de pilotage administratif et opérationnel**.
 
-## API
-
-- `GET /api/sentinelles`
-- `POST /api/simulate/optimal`
-- `POST /api/simulate/secheresse`
-- `POST /api/simulate/maladie`
-- `GET /api/qr?lot=GOMBE-452`
-
-Le QR contient un identifiant de démonstration, pas une preuve de certification.
+```text
+                 ┌──────────────────────────────┐
+                 │   AGROSENTINELLES ADMIN V5.0 │
+                 └──────────────┬───────────────┘
+                                │
+             ┌──────────────────┼──────────────────┐
+             │                  │                  │
+        🏛️ ADMIN           🌱 OPÉRATIONS      🔗 TRAÇABILITÉ
+             │                  │                  │
+       Producteurs         Parcelles            Lots
+       Exploitations       Cultures             Stocks
+       Registre            Production           QR
+       Journal             Environnement        Historique
+             │                  │                  │
+             └──────────────────┼──────────────────┘
+                                │
+                         🧠 SENTINEL OS
+                                │
+                  Analyse • Alertes • Décision
+                                │
+                         OFFLINE-FIRST
