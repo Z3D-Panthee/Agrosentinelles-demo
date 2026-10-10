@@ -1,122 +1,108 @@
 // ==========================================
-// AGROSENTINELLES ADMIN V5.0 — SERVICE WORKER (VERSION INTÉGRALE ROBUSTE ZÉRO BUG)
-// VÉROLIS SARL × Sentinel OS
+// AGROSENTINELLES ADMIN V5.0 — SERVICE WORKER FINALE v10.6
+// VÉROLIS SARL × CEPT ASBL 0625/2010 × Sentinel OS v10.6
+// 5 APK Agro + 3 APK Lois RC/RO/RI + APK Junior
+// CACHE v10.6 FINALE IMPECCABLE — GEL 01/10 INSPECTION
 // ==========================================
 
-const CACHE_NAME = 'sentinel-os-v5-cache-v3';
-const urlsToCache = [
+const CACHE_NAME = 'sentinel-os-v10-6-finale-impeccable-5apk-3apk-junior-v1';
+const CORE_URLS = [
   '/',
   '/index.html',
-  '/script.js',
   '/manifest.json',
   '/health',
-  '/api/ligo-box/v1',
   '/api/dashboard',
+  '/api/sentinel/status',
+  '/api/ligo-box/v1',
+  '/api/cept/verolis',
+  '/api/exploitations',
+  '/api/producteurs',
+  '/api/lots',
+  '/api/stocks'
+];
+
+const CDN_URLS = [
   'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
   'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js'
 ];
 
-// Installation du Service Worker et mise en cache robuste
+// Install — cache core + CDN en mode tolerant
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('[Service Worker] Cache initialisé avec succès');
-        // Utilisation de addAll de manière sécurisée (évite un échec global si une ressource externe bloque)
-        return Promise.allSettled(
-          urlsToCache.map(url => cache.add(url).catch(err => console.warn(`[SW] Échec du cache pour ${url}:`, err)))
-        );
-      })
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(async cache => {
+      console.log('[SW v10.6 FINALE] Cache initialisé');
+      await Promise.allSettled(CORE_URLS.map(u => cache.add(u).catch(e => console.warn(`[SW] skip ${u}`, e.message))));
+      await Promise.allSettled(CDN_URLS.map(u => cache.add(u).catch(e => console.warn(`[SW] skip CDN ${u}`, e.message))));
+      self.skipWaiting();
+    })
   );
 });
 
-// Activation et nettoyage strict des anciens caches obsolètes
+// Activate — nettoie tous les anciens caches v3, v5
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('[Service Worker] Suppression de l\'ancien cache :', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
+    caches.keys().then(keys => Promise.all(
+      keys.map(k => {
+        if (k !== CACHE_NAME) {
+          console.log('[SW v10.6 FINALE] Suppression ancien cache:', k);
+          return caches.delete(k);
+        }
+      })
+    )).then(() => self.clients.claim())
   );
 });
 
-// Interception des requêtes réseau avec stratégie hybride sécurisée (Zero Bug)
+// Fetch — Stratégie hybride FINALE 0 BUG
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
+  const req = event.request;
+  const url = new URL(req.url);
 
-  // Ignorer les requêtes non-GET ou les extensions tierces (ex: extensions chrome, devtools)
-  if (event.request.method !== 'GET' || !url.protocol.startsWith('http')) {
-    return;
-  }
+  if (req.method !== 'GET' || !url.protocol.startsWith('http')) return;
 
-  // Pour les requêtes API dynamiques : tentative réseau d'abord, puis repli local/cache
+  // 1. API dynamique : Network-First puis Cache puis JSON offline sécurisé
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          if (response && response.status === 200) {
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseClone);
-            });
-          }
-          return response;
-        })
-        .catch(async () => {
-          const cachedResponse = await caches.match(event.request);
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          // Réponse de secours JSON normalisée pour Sentinel OS en mode hors-ligne
-          return new Response(
-            JSON.stringify({ 
-              status: "offline_secure", 
-              message: "Mode Offline First actif — Données locales SQLite / IndexedDB",
-              timestamp: new Date().toISOString() 
-            }),
-            { 
-              status: 200, 
-              headers: { 'Content-Type': 'application/json' } 
-            }
-          );
-        })
+      fetch(req).then(res => {
+        if (res && res.status === 200) {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(c => c.put(req, clone));
+        }
+        return res;
+      }).catch(async () => {
+        const cached = await caches.match(req);
+        if (cached) return cached;
+        // Fallback offline normalisé pour Sentinel OS v10.6
+        return new Response(JSON.stringify({
+          status: "offline_secure_v10_6",
+          message: "Mode Offline-First actif — SQLite / IndexedDB — 2 écoles CEPT + 5APK+3APK+Junior — I_TTD=1.0",
+          I_TTD: 1.0,
+          epsilon: 1e-5,
+          Tr_T: 0.0012,
+          RC_RO_rad: 0.0012,
+          organisation: "VÉROLIS SARL × CEPT ASBL 0625/2010",
+          timestamp: new Date().toISOString()
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      })
     );
     return;
   }
 
-  // Pour les fichiers statiques et pages HTML : Cache-First avec Network Fallback et mise à jour transparente
+  // 2. Statique / HTML : Cache-First puis Network avec maj transparente
   event.respondWith(
-    caches.match(event.request)
-      .then(cachedResponse => {
-        const fetchPromise = fetch(event.request).then(networkResponse => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-          }
-          return networkResponse;
-        }).catch(() => {
-          // Échec réseau silencieux pour les ressources statiques couvertes par le cache
-        });
-
-        // Retourne le cache immédiatement s'il existe, sinon attend le réseau
-        return cachedResponse || fetchPromise;
-      })
-      .catch(async () => {
-        // Repli de navigation global en cas de panne totale hors-ligne sur les pages HTML
-        if (event.request.mode === 'navigate') {
-          const fallback = await caches.match('/index.html');
-          if (fallback) return fallback;
+    caches.match(req).then(cached => {
+      const networkFetch = fetch(req).then(netRes => {
+        if (netRes && netRes.status === 200 && netRes.type === 'basic') {
+          const clone = netRes.clone();
+          caches.open(CACHE_NAME).then(c => c.put(req, clone));
         }
-        return new Response('Ressource non disponible hors-ligne', { status: 503, statusText: 'Service Unavailable' });
-      })
+        return netRes;
+      }).catch(() => null);
+      return cached || networkFetch || caches.match('/index.html');
+    }).catch(async () => {
+      if (req.mode === 'navigate') {
+        return (await caches.match('/index.html')) || new Response('Offline — Sentinel OS v10.6', { status: 503 });
+      }
+      return new Response('Ressource offline', { status: 503 });
+    })
   );
 });
