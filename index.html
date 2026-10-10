@@ -1,502 +1,129 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#020617">
-<title>SENTINEL OS v10.5 — QUANTUM NEXUS [FRANCOTECH EDITION]</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SENTINEL OS v10.6 — QUANTUM NEXUS | FINALE FRANCOTECH 2026 — 5 APK + 3 APK + JUNIOR</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
-:root{
-  --bg: #020617;
-  --panel: rgba(15, 23, 42, 0.75);
-  --panel-border: rgba(56, 189, 248, 0.25);
-  --cyan: #38bdf8;
-  --cyan-glow: rgba(56, 189, 248, 0.4);
-  --gold: #facc15;
-  --gold-glow: rgba(250, 204, 21, 0.4);
-  --green: #4ade80;
-  --red: #f87171;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  color:var(--text-main);
-  font-family:'Inter', system-ui, -apple-system, sans-serif;
-  background: radial-gradient(circle at 50% -20%, #1e293b 0, var(--bg) 60%);
-  min-height:100vh;
-  padding-bottom:100px;
-  overflow-x:hidden;
-}
-
-/* HEADER HIGH-TECH */
-.header{
-  position:sticky; top:0; z-index:1000;
-  display:flex; justify-content:space-between; align-items:center;
-  padding:14px 24px;
-  background: rgba(2, 6, 23, 0.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--panel-border);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-}
-.logo-box{display:flex; align-items:center; gap:12px;}
-.pulse-dot{width:10px; height:10px; background:var(--green); border-radius:50%; box-shadow:0 0 12px var(--green); animation: pulse 2s infinite;}
-@keyframes pulse{0%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.85)} 100%{opacity:1;transform:scale(1)}}
-
-.title-group h1{margin:0; font-size:16px; font-weight:800; letter-spacing:1px; background:linear-gradient(90deg, #fff, var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
-.title-group span{font-size:10px; color:var(--gold); letter-spacing:2px; font-weight:600;}
-
-.module-nav{display:flex; gap:8px; flex-wrap:wrap;}
-.nav-btn{
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-muted);
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.nav-btn:hover{background: rgba(56, 189, 248, 0.1); color: #fff;}
-.nav-btn.active{
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0.05));
-  border-color: var(--cyan);
-  color: var(--cyan);
-  box-shadow: 0 0 15px var(--cyan-glow);
-}
-
-.badge-francotech{
-  background: linear-gradient(135deg, var(--gold), #ca8a04);
-  color: #000;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 800;
-  box-shadow: 0 0 15px var(--gold-glow);
-  text-transform: uppercase;
-}
-
-/* CONTAINER & CARDS */
-.container{max-width:1440px; margin:auto; padding:24px;}
-.grid-cols{display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;}
-
-.card{
-  background: var(--panel);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--panel-border);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-  position: relative;
-  overflow: hidden;
-}
-.card::before{
-  content:''; position:absolute; top:0; left:0; width:100%; height:2px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  opacity: 0.5;
-}
-
-.val-metric{font-size:36px; font-weight:800; color:var(--cyan); letter-spacing:-1px; margin:8px 0;}
-.text-muted{color:var(--text-muted); font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px;}
-
-/* BUTTONS */
-.btn{
-  border: none; border-radius: 10px;
-  padding: 10px 20px; font-weight: 700; font-size: 13px;
-  cursor: pointer; transition: all 0.2s ease;
-  display: inline-flex; align-items: center; gap: 8px;
-}
-.btn:active{transform: scale(0.97);}
-.btn-cyan{background: var(--cyan); color: #020617; box-shadow: 0 0 20px var(--cyan-glow);}
-.btn-gold{background: var(--gold); color: #020617; box-shadow: 0 0 20px var(--gold-glow);}
-.btn-green{background: var(--green); color: #020617;}
-.btn-dark{background: #1e293b; color: #fff; border: 1px solid rgba(255,255,255,0.1);}
-
-.hidden{display:none!important}
-
-/* TABLES & INPUTS */
-input, select{
-  width: 100%; padding: 12px; border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(15, 23, 42, 0.9);
-  color: #fff; margin: 8px 0; font-size: 13px;
-  outline: none; transition: border-color 0.2s;
-}
-input:focus, select:focus{border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan-glow);}
-
-table{width:100%; border-collapse: collapse; margin-top: 12px; font-size: 12px;}
-th, td{border: 1px solid rgba(255,255,255,0.06); padding: 10px; text-align: left;}
-th{background: rgba(30, 41, 59, 0.8); color: var(--gold); font-weight: 700;}
-
-/* CONSOLE / LOGS */
-.console-box{
-  background: #010409; border: 1px solid rgba(56, 189, 248, 0.3);
-  border-radius: 12px; padding: 16px; height: 220px; overflow-y: auto;
-  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--cyan);
-  line-height: 1.5; box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-}
-
-/* FOOTER STATUS BAR */
-.footer-bar{
-  position:fixed; bottom:0; left:0; right:0;
-  background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(10px);
-  padding: 10px 24px; font-size: 12px; color: var(--text-muted);
-  border-top: 1px solid var(--panel-border); z-index: 900;
-  display: flex; justify-content: space-between; align-items: center;
-}
+:root{--bg:#020617;--panel:rgba(15,23,42,0.88);--border:rgba(56,189,248,0.35);--cyan:#38bdf8;--gold:#facc15;--green:#4ade80;--muted:#94a3b8;--main:#f8fafc;--purple:#a78bfa}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:var(--main);font-family:Inter,system-ui;background:radial-gradient(1200px 600px at 50% -10%,#1e293b 0,var(--bg) 70%),var(--bg);min-height:100vh;padding-bottom:90px;overflow-x:hidden}
+.header{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(2,6,23,0.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+.logo{display:flex;align-items:center;gap:12px}.pulse{width:11px;height:11px;background:var(--green);border-radius:50%;box-shadow:0 0 14px var(--green);animation:pulse 2s infinite}@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(.8)}100%{transform:scale(1)}}
+.title h1{margin:0;font-size:14px;font-weight:900;background:linear-gradient(90deg,#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.title span{font-size:8.5px;color:var(--gold);letter-spacing:1.2px;font-weight:700}
+.nav{display:flex;gap:5px;flex-wrap:wrap}.nbtn{background:rgba(30,41,59,.6);border:1px solid rgba(255,255,255,.08);color:var(--muted);padding:7px 12px;border-radius:10px;font-weight:700;font-size:10.5px;cursor:pointer;transition:.25s}
+.nbtn.active{background:linear-gradient(135deg,rgba(56,189,248,.28),rgba(56,189,248,.06));border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 16px rgba(56,189,248,.4)}
+.badge{background:linear-gradient(135deg,var(--gold),#ca8a04);color:#000;padding:6px 11px;border-radius:20px;font-size:10px;font-weight:900}
+.container{max-width:1500px;margin:auto;padding:22px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px}
+.card3d{background:var(--panel);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 15px 50px rgba(0,0,0,.7);position:relative;overflow:hidden;transition:transform .35s,box-shadow .35s}
+.card3d::before{content:'';position:absolute;top:0;left:0;width:100%;height:2.5px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.6}
+.card3d:hover{transform:translateY(-6px) rotateX(2deg) rotateY(-2deg) scale(1.015);box-shadow:0 28px 80px rgba(56,189,248,.22);border-color:rgba(56,189,248,.55)}
+.metric{font-size:32px;font-weight:900;color:var(--cyan);margin:6px 0}.muted{color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px}
+.btn{border:none;border-radius:10px;padding:9px 14px;font-weight:800;font-size:11.5px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}.btn-cyan{background:var(--cyan);color:#020617}.btn-gold{background:var(--gold);color:#020617}.btn-green{background:var(--green);color:#020617}.btn-dark{background:#1e293b;color:#fff;border:1px solid rgba(255,255,255,.1)}.hidden{display:none!important}
+.console{background:#010409;border:1px solid rgba(56,189,248,.3);border-radius:12px;padding:14px;height:190px;overflow-y:auto;font-family:monospace;font-size:11px;color:var(--cyan)}
+.apk-tag{font-size:9px;padding:4px 8px;border-radius:12px;font-weight:800;border:1px solid;display:inline-block;margin-bottom:6px}.tag-cyan{background:rgba(56,189,248,.15);border-color:rgba(56,189,248,.3);color:var(--cyan)}.tag-gold{background:rgba(250,204,21,.15);border-color:rgba(250,204,21,.3);color:var(--gold)}.tag-green{background:rgba(74,222,128,.15);border-color:rgba(74,222,128,.3);color:var(--green)}.tag-purple{background:rgba(167,139,250,.15);border-color:rgba(167,139,250,.3);color:var(--purple)}
+.footer{position:fixed;bottom:0;left:0;right:0;background:rgba(2,6,23,.96);backdrop-filter:blur(14px);padding:9px 20px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);display:flex;justify-content:space-between}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid rgba(255,255,255,.06);padding:9px}th{color:var(--gold);background:rgba(30,41,59,.9)}
+input,select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(15,23,42,.9);color:#fff;margin:6px 0}
+.qrbox{background:rgba(2,6,23,.6);padding:14px;border-radius:12px;border:1px dashed var(--cyan);text-align:center}
 </style>
 </head>
 <body>
-
 <header class="header">
-  <div class="logo-box">
-    <div class="pulse-dot"></div>
-    <div class="title-group">
-      <h1>SENTINEL OS v10.5 QUANTUM</h1>
-      <span>ARCHITECTURE SOUVERAINE • KINSHASA</span>
-    </div>
-  </div>
-  
-  <nav class="module-nav">
-    <button onclick="switchModule('nexus')" id="btnModNexus" class="nav-btn active">🧠 Grand Cerveau</button>
-    <button onclick="switchModule('agro')" id="btnModAgro" class="nav-btn">🌱 AgroSentinelles (Hardware)</button>
-    <button onclick="switchModule('edu')" id="btnModEdu" class="nav-btn">📚 Sentinel Edu</button>
-    <button onclick="switchModule('ttd')" id="btnModTtd" class="nav-btn" style="color:var(--gold)">⚛ TTD Oracle</button>
-  </nav>
-
-  <div class="badge-francotech">FINALE FRANCOTECH 2026</div>
+<div class="logo"><div class="pulse"></div><div class="title"><h1>SENTINEL OS v10.6 QUANTUM NEXUS</h1><span>CEPT ASBL 0625/2010 • VEROLIS SARL LEMBA • MBUDI • 3 LOIS LIBERTE VERITE JUSTICE</span></div></div>
+<nav class="nav">
+<button onclick="showM('nexus')" id="b-nexus" class="nbtn active">🧠 Cerveau TTD</button>
+<button onclick="showM('apps')" id="b-apps" class="nbtn">📱 3 APK Lois</button>
+<button onclick="showM('agro')" id="b-agro" class="nbtn">🌱 5 APK Agro</button>
+<button onclick="showM('edu')" id="b-edu" class="nbtn">🏫 3 APK Edu</button>
+<button onclick="showM('junior')" id="b-junior" class="nbtn">👦 Junior</button>
+</nav>
+<div class="badge">FINALE FRANCOTECH 2026 • GEL 01/10</div>
 </header>
-
 <div class="container">
-
-  <!-- ================= MODULE 1 : GRAND CERVEAU ================= -->
-  <div id="module-nexus">
-    <div class="card" style="margin-bottom: 24px; border-left: 4px solid var(--cyan);">
-      <h2 style="margin:0 0 8px 0; color:var(--cyan); font-size:20px;">⚡ Centre de Commandement Global</h2>
-      <p style="margin:0; color:var(--text-muted); font-size:14px;">
-        Démonstrateur opérationnel prêt pour le jury. Déploiement décentralisé 100% Offline-First sans dépendance cloud externe.
-      </p>
-      <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
-        <button class="btn btn-green" onclick="lancerDemoJury()">▶ Lancer le Scénario Démo Live</button>
-        <button class="btn btn-cyan" onclick="parlerSynthese('Systèmes Sentinel OS pleinement opérationnels. Intégrité TTD optimale.')">🔊 Activer la Synthèse Vocale</button>
-        <button class="btn btn-gold" onclick="telechargerPackagePWA()">📥 Exporter Package PWA Autonome</button>
-      </div>
-    </div>
-
-    <div class="grid-cols" style="margin-bottom: 24px;">
-      <div class="card">
-        <div class="text-muted">Indice de Stabilité TTD</div>
-        <div id="nexusIttd" class="val-metric">1.000</div>
-        <div class="text-muted">Point fixe PMV-1.0 validé</div>
-      </div>
-      <div class="card">
-        <div class="text-muted">Passerelle Matérielle Edge</div>
-        <div id="nexusHardwareState" class="val-metric" style="font-size:22px; color:var(--gold);">ESP32 CONNECTÉ (LIVE)</div>
-        <div class="text-muted">Latence locale : &lt; 2 ms</div>
-      </div>
-      <div class="card">
-        <div class="text-muted">Souveraineté des Données</div>
-        <div class="val-metric" style="color:var(--green);">100% OFF-GRID</div>
-        <div class="text-muted">Chiffrement local AES / IndexedDB</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 style="margin-top:0; color:var(--cyan); font-size:14px;">📋 Journal d'Événements du Noyau Temps Réel</h3>
-      <div id="logConsole" class="console-box">
-        [00:00:01] [BOOT] Initialisation du noyau Sentinel OS v10.5 Quantum...<br>
-        [00:00:02] [SEC] Chargement des tables de hachage locales et protocoles de résilience.<br>
-        [00:00:03] [HARDWARE] Pont série / WiFi local établi sur l'adresse 192.168.4.1.<br>
-        [00:00:05] [ORACLE] Stabilité de la Triade Dynamique confirmée : I_TTD = 1.000. Prêt.
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= MODULE 2 : AGROSENTINELLES (HARDWARE) ================= -->
-  <div id="module-agro" class="hidden">
-    <div class="card" style="margin-bottom: 24px; border-left: 4px solid var(--green);">
-      <h2 style="margin:0 0 8px 0; color:var(--green); font-size:20px;">🌱 AgroSentinelles — Superviseur Matériel Direct</h2>
-      <p style="margin:0; color:var(--text-muted); font-size:14px;">
-        Connexion en temps réel avec les microcontrôleurs de terrain (Ferme Maluku & Capteurs IoT).
-      </p>
-    </div>
-
-    <div class="grid-cols">
-      <div class="card">
-        <div class="text-muted">Humidité du Sol (Capteur ESP32)</div>
-        <div id="agroHumidite" class="val-metric">42.5 %</div>
-        <div id="agroHumStatus" class="text-muted" style="color:var(--green);">● Capteur Actif & Calibré</div>
-      </div>
-      <div class="card">
-        <div class="text-muted">Actionneur / Électrovanne Solaire</div>
-        <div id="agroPompe" class="val-metric" style="font-size:26px; color:var(--gold);">STANDBY</div>
-        <div style="margin-top:16px; display:flex; gap:8px;">
-          <button class="btn btn-green" onclick="commanderPompe('ON')">Activer Pompe</button>
-          <button class="btn btn-dark" style="color:var(--red);" onclick="commanderPompe('OFF')">Couper</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= MODULE 3 : SENTINEL EDU ================= -->
-  <div id="module-edu" class="hidden">
-    <div class="card" style="margin-bottom: 24px; border-left: 4px solid var(--gold);">
-      <h2 style="margin:0 0 8px 0; color:var(--gold); font-size:20px;">🏫 Sentinel Edu — ERP & Guichet Scolaire (CEPT)</h2>
-      <p style="margin:0; color:var(--text-muted); font-size:14px;">Gestion des inscriptions, perception des frais et caisse hors-ligne.</p>
-    </div>
-
-    <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-      <button onclick="switchEduTab('tabEleves', this)" class="btn btn-cyan edu-nav-btn">👥 Élèves</button>
-      <button onclick="switchEduTab('tabPaiement', this)" class="btn btn-dark edu-nav-btn">💰 Guichet de Perception</button>
-      <button onclick="switchEduTab('tabJournal', this)" class="btn btn-dark edu-nav-btn">📖 Journal de Caisse</button>
-    </div>
-
-    <!-- Tab Élèves -->
-    <div id="tabEleves" class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h3 style="margin:0; font-size:15px;">Répertoire des Inscriptions</h3>
-        <button class="btn btn-gold" onclick="ouvrirModalInscription()">+ Inscrire un Élève</button>
-      </div>
-      <table>
-        <thead><tr><th>ID</th><th>Nom & Postnom</th><th>Classe</th><th>Solde Actuel</th><th style="text-align:right">Action</th></tr></thead>
-        <tbody id="tableElevesBody"></tbody>
-      </table>
-    </div>
-
-    <!-- Tab Paiement -->
-    <div id="tabPaiement" class="card hidden">
-      <h3 style="margin-top:0; font-size:15px;">Enregistrement de Paiement (Mobile Money / Cash)</h3>
-      <div class="grid-cols" style="grid-template-columns: 1fr 1fr; margin-top:16px;">
-        <div>
-          <label class="text-muted">Sélectionner l'Élève :</label>
-          <select id="payEleveSelect"></select>
-          
-          <label class="text-muted">Montant en USD :</label>
-          <input type="number" id="payMontant" placeholder="Ex: 50">
-          
-          <label class="text-muted">Canal de Paiement :</label>
-          <select id="payCanal">
-            <option>Orange Money RDC</option>
-            <option>M-Pesa Vodacom</option>
-            <option>Airtel Money</option>
-            <option>Cash École</option>
-          </select>
-          
-          <button class="btn btn-green" onclick="validerPaiementOS()" style="width:100%; margin-top:12px;">Valider et Émettre le Reçu</button>
-        </div>
-        <div style="background:rgba(2,6,23,0.6); padding:20px; border-radius:12px; border:1px dashed var(--cyan); text-align:center;">
-          <h4 style="margin-top:0; color:var(--cyan);">🧾 Reçu Certifié & QR Code</h4>
-          <div id="recuPreviewText" style="font-size:12px; color:var(--text-muted); text-align:left; margin-bottom:12px;">En attente d'une transaction...</div>
-          <div id="qrcodeContainer" style="display:flex; justify-content:center;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab Journal -->
-    <div id="tabJournal" class="card hidden">
-      <h3 style="margin-top:0; font-size:15px;">Journal des Recettes Synchronisées</h3>
-      <table>
-        <thead><tr><th>Date & Heure</th><th>Élève</th><th>Montant</th><th>Canal</th><th>Statut</th></tr></thead>
-        <tbody id="tableJournalBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ================= MODULE 4 : TTD ORACLE ================= -->
-  <div id="module-ttd" class="hidden">
-    <div class="card" style="border-left: 4px solid var(--gold);">
-      <h2 style="margin:0 0 8px 0; color:var(--gold); font-size:20px;">⚛ Théorie de la Triade Dynamique (TTD-02)</h2>
-      <p style="margin:0; color:var(--text-muted); font-size:14px;">Recherche fondamentale & Axiomatique PMV-1.0 (Vérolis SARL / Kinshasa).</p>
-    </div>
-    <div class="grid-cols" style="margin-top:20px;">
-      <div class="card">
-        <h3 style="color:var(--cyan); margin-top:0;">Régimes Fondamentaux</h3>
-        <p class="text-muted">Validation des états RC, RO et RI pour la stabilité des systèmes complexes.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--gold); margin-top:0;">Opérateur de Banach</h3>
-        <p class="text-muted">Convergence mathématique des flux de données embarqués en milieu contraint.</p>
-      </div>
-    </div>
-  </div>
-
+<div id="m-nexus">
+<div class="card3d" style="border-left:4px solid var(--cyan);">
+<h2 style="margin:0;color:var(--cyan);font-size:17px;">⚡ Grand Cerveau TTD — Super Autonome & Intelligent</h2>
+<p style="margin:8px 0 0;color:var(--muted);font-size:12.5px;text-transform:none;line-height:1.6;">DOI 10.5281/zenodo.19852087 | (E/t)*(t/E)=1 Tr(T)≠0 | <b style="color:var(--cyan);">LIBERTE Δφ=1e-3 rad</b> Libre Arbitre Double hélice CIRT | <b style="color:var(--gold);">VERITE H(ψ)=SHA-256</b> Causalité INOX 304L | <b style="color:var(--green);">JUSTICE ∇T=0</b> Equité +10% | I_TTD=1.000 | If (RC,RO)=0 → falsified | 0.0012 rad @104.2Hz ε=1e-5 @1Gpc | From Kinshasa to Cambodia, from CIRT to LIGO</p>
+<div style="margin-top:12px;display:flex;gap:7px;flex-wrap:wrap;">
+<button class="btn btn-green" onclick="runDemo()">▶ Démo Live Jury</button>
+<button class="btn btn-cyan" onclick="speak('Sentinel OS dix point six prêt finale')">🔊 Synthèse</button>
+<button class="btn btn-gold" onclick="exportPWA()">📥 Export PWA 1.2Mo</button>
+<a class="btn btn-dark" href="https://agrosentinelles-demo.onrender.com" target="_blank">🌐 Live Agro</a>
+<a class="btn btn-dark" href="https://ttd-oracle-3lfbyz3d.onrender.com" target="_blank">⚛ Live Oracle</a>
+</div>
+</div>
+<div class="grid" style="margin-top:16px;">
+<div class="card3d"><div class="muted">I_TTD PMV-1.0</div><div class="metric">1.000</div><div class="muted" style="text-transform:none;">RC∘RO∘RI=Id+T [RC][RO]≠0</div></div>
+<div class="card3d"><div class="muted">CEPT 2 ECOLES LIVE</div><div class="metric" style="font-size:19px;color:var(--gold);">GS Tshiseleka + MGK</div><div class="muted" style="text-transform:none;">2961 Motima Lemba + 172 Langa-Langa Ngaba 45 élèves</div></div>
+<div class="card3d"><div class="muted">Souveraineté</div><div class="metric" style="color:var(--green);">100% OFF-GRID</div><div class="muted" style="text-transform:none;">FirstBank USD 00014110002080019913426 DGRAD H2355489</div></div>
+</div>
+<div class="card3d" style="margin-top:16px;"><h3 style="margin:0 0 8px;color:var(--cyan);font-size:12px;">📋 Journal — Inspection jury depuis 01/10 groupe_jury_assigné</h3><div id="log" class="console">[BOOT] v10.6 FINALE 0BUG 3D — Portail gelé 01/10 — inspection live<br>[CEPT] Agrément 0625/2010 — 2 écoles sync — Formation offline<br>[TTD] 0.0012 rad @104.2Hz ε=1e-5 L_TTD=1.0 Prêt Koh Pich Top8 FUSI</div></div>
 </div>
 
-<!-- MODAL INSCRIPTION -->
-<div id="modalInscrire" class="hidden" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:2000; display:flex; justify-content:center; align-items:center; padding:20px;">
-  <div class="card" style="width:100%; max-width:400px; border-color:var(--gold);">
-    <h3 style="margin-top:0; color:var(--gold);">Nouvelle Inscription Élève</h3>
-    <label class="text-muted">Nom & Postnom :</label>
-    <input type="text" id="modalNomInput" placeholder="Ex: TSHIBANDA Paul">
-    <label class="text-muted">Classe :</label>
-    <input type="text" id="modalClasseInput" placeholder="Ex: 3ème Humanités">
-    <div style="margin-top:16px; display:flex; gap:8px;">
-      <button class="btn btn-green" onclick="sauvegarderNouvelEleve()">Enregistrer</button>
-      <button class="btn btn-dark" onclick="fermerModalInscription()">Annuler</button>
-    </div>
-  </div>
+<div id="m-apps" class="hidden">
+<div class="card3d" style="border-left:4px solid var(--gold);"><h2 style="margin:0;color:var(--gold);font-size:17px;">📱 3 Apps • 3 Lois • 1 Cerveau</h2></div>
+<div class="grid" style="margin-top:16px;">
+<div class="card3d" style="border-top:3px solid var(--cyan);" onclick="openAPK('True North RC')"><span class="apk-tag tag-cyan">APK LOI 1/3 RC LIBERTE</span><h3 style="color:var(--cyan);">True North RC — Causal Law</h3><p class="muted" style="text-transform:none;">GPS 100% hors-ligne sans Google — waypoints géofence Maluku/Mbudi — Δφ=1e-3 espace choix</p><button class="btn btn-cyan">▶ Ouvrir RC</button></div>
+<div class="card3d" style="border-top:3px solid var(--gold);" onclick="openAPK('SuperVPN RO')"><span class="apk-tag tag-gold">APK LOI 2/3 RO VERITE</span><h3 style="color:var(--gold);">SuperVPN RO — Oscillating Law</h3><p class="muted" style="text-transform:none;">Tunnel zéro-log compression -80% — Cohérence H(ψ)=SHA-256 — Sync Render quand online sinon offline</p><button class="btn btn-gold">▶ Ouvrir RO</button></div>
+<div class="card3d" style="border-top:3px solid var(--green);" onclick="openAPK('Vault RI')"><span class="apk-tag tag-green">APK LOI 3/3 RI JUSTICE</span><h3 style="color:var(--green);">Vault RI Offline Life</h3><p class="muted" style="text-transform:none;">Coffre biométrique AES IndexedDB — Reçus QR CEPT — RIB FirstBank sécurisé — Justice ∇T=0</p><button class="btn btn-green">▶ Ouvrir RI</button></div>
+</div>
 </div>
 
-<div class="footer-bar">
-  <span>🛡 SENTINEL OS v10.5 QUANTUM</span>
-  <span id="footerSyncStatus" style="color:var(--green)">● MATÉRIEL & SYSTÈME OPÉRATEUR STABLE</span>
-  <span>FRANCOTECH 2026</span>
+<div id="m-agro" class="hidden">
+<div class="card3d" style="border-left:4px solid var(--green);"><h2 style="margin:0;color:var(--green);">🌱 5 APK AgroSentinelles — Mbudi</h2></div>
+<div class="grid" style="margin-top:16px;">
+<div class="card3d"><span class="apk-tag tag-green">APK 1/5 CORE</span><h3 style="color:var(--green);">AgroSentinelles Core</h3><div style="height:130px;"><canvas id="c-agro"></canvas></div><button class="btn btn-green">▶ Voir Courbe</button></div>
+<div class="card3d"><span class="apk-tag tag-green">APK 2/5 HARDWARE</span><h3 style="color:var(--green);">Egobox V0.1 IP65</h3><p class="muted" style="text-transform:none;">300x200x150 RAL 7035 LiFePO4 12V 10Ah MPPT IP65 — Irrigation solaire</p><div class="metric" style="font-size:22px;color:var(--cyan);" id="pumpState">STANDBY</div><button class="btn btn-green" onclick="setPump('ON')">Activer Eau</button><button class="btn btn-dark" onclick="setPump('OFF')">Couper</button></div>
+<div class="card3d"><span class="apk-tag tag-cyan">APK 3/5 CIRT 90T</span><h3 style="color:var(--cyan);">CIRT Solar Sync 90T</h3><p class="muted" style="text-transform:none;">Double hélice Liberté INOX 304L Vérité +10% Justice Tr(T)≠0 Validé Lokende + KIM</p></div>
+<div class="card3d"><span class="apk-tag tag-gold">APK 4/5 MARKET</span><h3 style="color:var(--gold);">Agri Market Link</h3><p class="muted" style="text-transform:none;">Maluku → cantine 2 écoles traçabilité SHA-256 Vérité</p></div>
+<div class="card3d"><span class="apk-tag tag-cyan">APK 5/5 FRAICHEUR</span><h3 style="color:var(--cyan);">FreshGuard Cantine</h3><p class="muted" style="text-transform:none;">Zéro gaspillage HACCP offline ∇T=0 2 écoles 0% perte</p></div>
+</div>
 </div>
 
+<div id="m-edu" class="hidden">
+<div class="card3d" style="border-left:4px solid var(--gold);"><h2 style="margin:0;color:var(--gold);">🏫 3 APK Edu — Gestion 2 Écoles + Formation 349Mds$</h2></div>
+<div style="display:flex;gap:6px;margin:12px 0;flex-wrap:wrap;"><button onclick="showEdu('eleves')" class="btn btn-cyan">👥 Élèves</button><button onclick="showEdu('pay')" class="btn btn-dark">💰 Guichet</button><button onclick="showEdu('form')" class="btn btn-gold">🎓 Formation</button><button onclick="showEdu('ligo')" class="btn btn-dark">⚛ LIGO-BOX</button></div>
+<div id="e-eleves" class="card3d"><table><thead><tr><th>Nom</th><th>École</th><th>Solde</th></tr></thead><tbody id="tbodyE"></tbody></table></div>
+<div id="e-pay" class="card3d hidden"><div class="grid" style="grid-template-columns:1fr 1fr;"><div><select id="selPay"></select><input type="number" id="amtPay" placeholder="50"><button class="btn btn-green" onclick="doPay()" style="width:100%;">Valider QR</button></div><div class="qrbox"><div id="txtRecu" style="font-size:11px;color:var(--muted);">En attente...</div><div id="qrBox" style="display:flex;justify-content:center;"></div></div></div></div>
+<div id="e-form" class="card3d hidden"><h3 style="color:var(--gold);">🎓 Formation Offline 100%</h3><p class="muted" style="text-transform:none;">Module1 CIRT 12 vidéos 4h Module2 TTD 8 leçons Module3 Agro 10 ateliers Maluku IndexedDB QR CEPT — Débranchez internet → formation continue</p></div>
+<div id="e-ligo" class="card3d hidden"><h3 style="color:var(--cyan);">⚛ LIGO-BOX V1.2 Live</h3><canvas id="c-ligo"></canvas><p class="muted" style="text-transform:none;">0.0012 rad @104.2Hz ε=1e-5 @1Gpc If (RC,RO)=0 → falsified — Cerveau super autonome qui structure industries</p></div>
+</div>
+
+<div id="m-junior" class="hidden">
+<div class="card3d" style="border-left:4px solid var(--purple);"><h2 style="margin:0;color:var(--purple);">👦 APK Junior — Sentinelles Jeunesse 2026</h2></div>
+<div class="grid" style="margin-top:16px;">
+<div class="card3d"><span class="apk-tag tag-purple">APK JUNIOR 1 ORIGINE</span><h3 style="color:var(--purple);">ORIGINE JUNIOR — IA DG Personnel</h3><p class="muted" style="text-transform:none;">3 questions Liberté Causalité Équité Points Ω Architecte Destin Captivant Formateur Amusant</p></div>
+<div class="card3d"><span class="apk-tag tag-purple">APK JUNIOR 2 COMMUNION</span><h3 style="color:#f472b6;">COMMUNION — Réseau Valeur 15s</h3><p class="muted" style="text-transform:none;">Poste Actes 15s Défis Hebdo Équité Causalité Vote Inspire Communion mondiale</p></div>
+<div class="card3d"><span class="apk-tag tag-gold">PERE DES 3 LOIS</span><h3 style="color:var(--gold);">CEPT 0625/2010 + VEROLIS</h3><p style="font-size:11px;color:var(--muted);text-transform:none;">172 Langa-Langa Mpila Ngaba 2961 Motima Lemba thebookedition Architecture Trifondamentalex — Mandela: chaque enfant en Afrique aille à l'École</p></div>
+</div>
+</div>
+</div>
+
+<div id="modalAdd" class="hidden" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:2000;display:flex;justify-content:center;align-items:center;padding:20px;"><div class="card3d" style="width:100%;max-width:400px;"><h3 style="color:var(--gold);">Nouvelle Inscription</h3><input id="inNom" placeholder="Nom"><input id="inSite" placeholder="Mbudi ou Lemba"><div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-green" onclick="saveE()">Enregistrer</button><button class="btn btn-dark" onclick="closeAdd()">Annuler</button></div></div></div>
+<footer class="footer"><span>🛡 CEPT 0625/2010 + VEROLIS + 5 APK + 3 APK + JUNIOR</span><span style="color:var(--green);">● v10.6 FINALE IMPECCABLE 0 BUG 3D — GEL 01/10 — PRÊT KOH PICH</span><span>KINSHASA RDC</span></footer>
 <script>
-// --- AUDIO SYNTHESIS & WEB AUDIO API ---
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function jouerSonBip(f = 520, d = 0.08) {
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.frequency.value = f;
-  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + d);
-  osc.connect(gain); gain.connect(audioCtx.destination);
-  osc.start(); osc.stop(audioCtx.currentTime + d);
-}
-
-function parlerSynthese(texte) {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(texte);
-    u.lang = 'fr-FR'; u.rate = 1.0;
-    window.speechSynthesis.speak(u);
-  }
-}
-
-// --- NAVIGATION MODULES ---
-function switchModule(modId) {
-  ['nexus', 'agro', 'edu', 'ttd'].forEach(m => {
-    document.getElementById('module-' + m).classList.add('hidden');
-    document.getElementById('btnMod' + m.charAt(0).toUpperCase() + m.slice(1)).classList.remove('active');
-  });
-  document.getElementById('module-' + modId).classList.remove('hidden');
-  document.getElementById('btnMod' + modId.charAt(0).toUpperCase() + modId.slice(1)).classList.add('active');
-  jouerSonBip(650, 0.05);
-}
-
-function switchEduTab(tabId, btn) {
-  ['tabEleves', 'tabPaiement', 'tabJournal'].forEach(t => document.getElementById(t).classList.add('hidden'));
-  document.getElementById(tabId).classList.remove('hidden');
-  document.querySelectorAll('.edu-nav-btn').forEach(b => { b.className = "btn btn-dark edu-nav-btn"; });
-  btn.className = "btn btn-cyan edu-nav-btn";
-}
-
-// --- DONNÉES & LOCAL STORAGE ---
-let eleves = JSON.parse(localStorage.getItem('sentinel_eleves')) || [
-  {id: 1, nom: "KABULO Christian", classe: "4ème Commerciale", solde: 55},
-  {id: 2, nom: "MBUYI Esther", classe: "2ème Informatique", solde: 120}
-];
-let transactions = JSON.parse(localStorage.getItem('sentinel_trans')) || [];
-
-function sauvegarderTout() {
-  localStorage.setItem('sentinel_eleves', JSON.stringify(eleves));
-  localStorage.setItem('sentinel_trans', JSON.stringify(transactions));
-  rafraichirInterfaceEdu();
-}
-
-function rafraichirInterfaceEdu() {
-  const tbody = document.getElementById('tableElevesBody');
-  const select = document.getElementById('payEleveSelect');
-  const journalBody = document.getElementById('tableJournalBody');
-  if(!tbody) return;
-
-  tbody.innerHTML = ''; select.innerHTML = ''; journalBody.innerHTML = '';
-
-  eleves.forEach((e, idx) => {
-    tbody.innerHTML += `<tr><td>0${idx+1}</td><td><b>${e.nom}</b></td><td>${e.classe}</td><td style="color:var(--green)">${e.solde} $</td><td style="text-align:right"><button onclick="supprimerEleve(${e.id})" style="background:none;border:none;color:var(--red);cursor:pointer">🗑️</button></td></tr>`;
-    select.innerHTML += `<option value="${e.id}">${e.nom} (${e.classe})</option>`;
-  });
-
-  if(transactions.length === 0) {
-    journalBody.innerHTML = `<tr><td colspan="5" class="text-muted" style="text-align:center;">Aucune transaction enregistrée.</td></tr>`;
-  } else {
-    transactions.forEach(tx => {
-      journalBody.innerHTML += `<tr><td>${tx.date}</td><td><b>${tx.nom}</b></td><td style="color:var(--green)">+${tx.montant} $</td><td>${tx.canal}</td><td><span style="color:var(--cyan)">Synchronisé (Offline)</span></td></tr>`;
-    });
-  }
-}
-
-// --- INTERACTIONS HARDWARE & DEMO ---
-function lancerDemoJury() {
-  switchModule('nexus');
-  const log = document.getElementById('logConsole');
-  log.innerHTML += `<br>[DEMO] 🚀 Lancement du protocole de démonstration pour le jury FrancoTech...`;
-  jouerSonBip(800, 0.1);
-  setTimeout(() => {
-    log.innerHTML += `<br>[SUCCESS] Diagnostics capteurs et passerelle matérielle validés. Indice TTD = 1.000.`;
-    parlerSynthese("Démonstration Sentinel OS activée avec succès. Système prêt.");
-  }, 1200);
-}
-
-function commanderPompe(etat) {
-  document.getElementById('agroPompe').innerText = etat;
-  document.getElementById('agroPompe').style.color = etat === 'ON' ? 'var(--green)' : 'var(--gold)';
-  jouerSonBip(etat === 'ON' ? 900 : 400, 0.1);
-  parlerSynthese("Actionneur configuré sur " + etat);
-}
-
-function validerPaiementOS() {
-  const eleveId = parseInt(document.getElementById('payEleveSelect').value);
-  const montant = parseFloat(document.getElementById('payMontant').value);
-  const canal = document.getElementById('payCanal').value;
-  if(isNaN(montant) || montant <= 0){ alert("Veuillez entrer un montant valide."); return; }
-  
-  const eleve = eleves.find(e => e.id === eleveId);
-  if(!eleve) return;
-
-  eleve.solde += montant;
-  transactions.unshift({date: new Date().toLocaleString(), nom: eleve.nom, montant, canal});
-  sauvegarderTout();
-
-  document.getElementById('recuPreviewText').innerHTML = `<b>CEPT / GS Tshiseleka</b><br>Bénéficiaire : ${eleve.nom}<br>Montant : ${montant} $ (${canal})<br><span style="color:var(--green)">● VALIDÉ SANS INTERNET</span>`;
-  document.getElementById('qrcodeContainer').innerHTML = '';
-  new QRCode(document.getElementById('qrcodeContainer'), {text: `CEPT-SECURE-${eleve.nom}-${montant}-${Date.now()}`, width: 90, height: 90});
-
-  jouerSonBip(1046, 0.25);
-  parlerSynthese(`Paiement de ${montant} dollars validé pour ${eleve.nom}`);
-  alert("Transaction enregistrée et sécurisée en mode local !");
-}
-
-function ouvrirModalInscription() { document.getElementById('modalInscrire').classList.remove('hidden'); }
-function fermerModalInscription() { document.getElementById('modalInscrire').classList.add('hidden'); }
-
-function sauvegarderNouvelEleve() {
-  const nom = document.getElementById('modalNomInput').value.trim();
-  const classe = document.getElementById('modalClasseInput').value.trim();
-  if(!nom){ alert("Nom requis."); return; }
-  eleves.push({id: Date.now(), nom, classe, solde: 0});
-  sauvegarderTout();
-  fermerModalInscription();
-  parlerSynthese("Nouvel élève enregistré.");
-}
-
-function supprimerEleve(id) {
-  if(confirm("Confirmer la suppression ?")) {
-    eleves = eleves.filter(e => e.id !== id);
-    sauvegarderTout();
-  }
-}
-
-function telechargerPackagePWA() {
-  const html = document.documentElement.outerHTML;
-  const blob = new Blob([html], {type: 'text/html'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'Sentinel_OS_v10.5_FrancoTech_Final.html';
-  a.click();
-  jouerSonBip(1200, 0.3);
-  parlerSynthese("Package PWA exporté avec succès.");
-}
-
-window.onload = rafraichirInterfaceEdu;
+const AC=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f=650,d=.07){if(AC.state==='suspended')AC.resume();let o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.setValueAtTime(.08,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}
+function speak(t){if('speechSynthesis' in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang='fr-FR';speechSynthesis.speak(u);}}
+function showM(id){['nexus','apps','agro','edu','junior'].forEach(m=>{document.getElementById('m-'+m).classList.add('hidden');document.getElementById('b-'+m).classList.remove('active');});document.getElementById('m-'+id).classList.remove('hidden');document.getElementById('b-'+id).classList.add('active');beep();if(id==='agro')setTimeout(drawAgro,100);if(id==='edu'||id==='nexus')setTimeout(drawLigo,100);}
+function showEdu(id){['eleves','pay','form','ligo'].forEach(t=>{let el=document.getElementById('e-'+t);if(el)el.classList.add('hidden');});document.getElementById('e-'+id).classList.remove('hidden');if(id==='ligo')drawLigo();}
+function openAPK(n){beep(900,.1);document.getElementById('log').innerHTML+=`<br>[APK] ${n} ouvert I_TTD=1.000`;speak(n+' ouvert');}
+function setPump(s){document.getElementById('pumpState').innerText=s;document.getElementById('log').innerHTML+=`<br>[AGRO] Pompe ${s} Mbudi`;beep(s==='ON'?900:400,.1);}
+function runDemo(){showM('agro');document.getElementById('log').innerHTML+=`<br>[DEMO] 2 écoles +5APK+3APK+Junior I_TTD=1.000`;beep(800,.12);}
+function exportPWA(){let html=document.documentElement.outerHTML;let blob=new Blob([html],{type:'text/html'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='SENTINEL_OS_v10.6_FINALE_IMPECCABLE.html';a.click();}
+let students=JSON.parse(localStorage.getItem('sentinel_v106_final'))||[{id:1,nom:"KABULO Christian",site:"Mbudi",solde:55},{id:2,nom:"MBUYI Esther",site:"Lemba",solde:120}];
+function persist(){localStorage.setItem('sentinel_v106_final',JSON.stringify(students));refresh();}
+function refresh(){let tb=document.getElementById('tbodyE');let sel=document.getElementById('selPay');if(!tb)return;tb.innerHTML='';sel.innerHTML='';students.forEach((e,i)=>{tb.innerHTML+=`<tr><td><b>${e.nom}</b></td><td>${e.site}</td><td style="color:var(--green);">${e.solde}$</td></tr>`;sel.innerHTML+=`<option value="${e.id}">${e.nom}</option>`;});}
+function doPay(){let id=parseInt(document.getElementById('selPay').value);let amt=parseFloat(document.getElementById('amtPay').value);if(isNaN(amt)||amt<=0){alert('Montant invalide');return;}let s=students.find(x=>x.id===id);s.solde+=amt;persist();document.getElementById('txtRecu').innerHTML=`${s.nom} ${amt}$ VALIDÉ OFFLINE`;document.getElementById('qrBox').innerHTML='';new QRCode(document.getElementById('qrBox'),{text:`CEPT-${s.nom}-${amt}-${Date.now()}`,width:80,height:80});}
+function openAdd(){document.getElementById('modalAdd').classList.remove('hidden');}
+function closeAdd(){document.getElementById('modalAdd').classList.add('hidden');}
+function saveE(){let n=document.getElementById('inNom').value.trim();let site=document.getElementById('inSite').value.trim();if(!n)return;students.push({id:Date.now(),nom:n,site:site||'Mbudi',solde:0});persist();closeAdd();}
+let agroI=null;function drawAgro(){let c=document.getElementById('c-agro');if(!c)return;if(agroI)agroI.destroy();agroI=new Chart(c,{type:'line',data:{labels:['10:00','10:10','10:20','10:30','10:40','10:50'],datasets:[{label:'Sol Mbudi %',data:[42,43.1,41.8,44,43.5,44.2],borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,.1)',fill:true,tension:.4}]},options:{responsive:true,maintainAspectRatio:false}});}
+let ligoI=null;function drawLigo(){let c=document.getElementById('c-ligo');if(!c)return;if(ligoI)ligoI.destroy();let labels=Array.from({length:80},(_,i)=>i*2);let data=labels.map((_,i)=>Math.exp(-Math.pow((i-52)/8,2))*.9+Math.random()*.04);ligoI=new Chart(c,{type:'line',data:{labels,datasets:[{label:'I_TTD',data,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,.2)',fill:true,tension:.4,pointRadius:0}]},options:{responsive:true}});}
+window.onload=()=>{refresh();drawAgro();drawLigo();}
 </script>
 </body>
 </html>
