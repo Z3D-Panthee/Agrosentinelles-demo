@@ -1,13 +1,61 @@
 {
-  "name": "AgroSentinelles Admin V5.0 — Sentinel OS",
-  "short_name": "AgroSentinelles",
-  "description": "Administration agricole, traçabilité et intelligence Sentinel OS par Vérolis SARL",
-  "start_url": "/",
+  "name": "SENTINEL OS v10.6 QUANTUM NEXUS — AgroSentinelles Admin V5.0 FINALE",
+  "short_name": "SENTINEL v10.6",
+  "description": "VÉROLIS SARL × CEPT ASBL Agrément 0625/2010 — 2 écoles LIVE GS Tshiseleka + MGK — 5 APK AgroSentinelles (Core Mbudi ESP32 44.2%, Egobox V0.1 IP65, CIRT Solar Sync 90T, Market Link SHA-256, FreshGuard Cantine) + 3 APK Lois Fondamentales LIBERTE Δφ=1e-3 RC True North, VERITE SHA-256 RO SuperVPN, JUSTICE ∇T=0 RI Vault + APK Junior Origine & Communion — OS souverain 100% off-grid — TTD I_TTD=1.0 ε=1e-5 Tr(T)≠0 RC,RO=0.0012 rad @104.2Hz DOI 10.5281/zenodo.19852087 — From Kinshasa to Cambodia, from CIRT to LIGO",
+  "start_url": "/?source=pwa_final_v10_6",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#030b18",
-  "theme_color": "#2563eb",
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#38bdf8",
+  "categories": ["education", "business", "utilities", "agriculture"],
+  "lang": "fr",
+  "dir": "ltr",
+  "id": "sentinel-os-v10-6-finale-impeccable",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "shortcuts": [
+    {
+      "name": "🧠 Cerveau TTD I_TTD=1.0",
+      "short_name": "Cerveau TTD",
+      "description": "Point fixe PMV-1.0 — 3 Lois LIBERTE VERITE JUSTICE — DOI Zenodo",
+      "url": "/?tab=nexus",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "🌱 5 APK AgroSentinelles — Mbudi",
+      "short_name": "5 APK Agro",
+      "description": "Core 44.2% + Egobox IP65 + CIRT 90T + Market + FreshGuard",
+      "url": "/?tab=agro",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "📱 3 APK Lois RC/RO/RI",
+      "short_name": "3 APK Lois",
+      "description": "True North RC LIBERTE, SuperVPN RO VERITE, Vault RI JUSTICE",
+      "url": "/?tab=apps",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "🏫 3 APK Edu + Formation Offline",
+      "short_name": "CEPT Écoles",
+      "description": "GS Tshiseleka Lemba + MGK 172 Langa-Langa — Formation 100% offline",
+      "url": "/?tab=edu",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "👦 APK Junior — Origine & Communion",
+      "short_name": "Junior",
+      "description": "Sentinel Origine Junior IA DG + Communion Réseau Valeur 15s",
+      "url": "/?tab=junior",
+      "icons": [{ "src": "icon.png", "sizes": "192x192" }]
+    }
+  ],
   "icons": [
     {
       "src": "icon.png",
@@ -20,6 +68,23 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "monochrome"
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "SENTINEL OS v10.6 FINALE — 2 écoles CEPT + 5APK Agro + 3APK Lois + Junior — GEL 01/10 inspection"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }
