@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Query
-from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os, io, hashlib, time
 import pandas as pd
@@ -10,7 +9,7 @@ app = FastAPI(title="SENTINEL OS v10.6 QUANTUM NEXUS - LIVE")
 
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-# Mémoire LIVE 2 écoles
+# Mémoire LIVE 2 écoles CEPT 0625/2010
 DB = {
   1: {"nom": "GS Tshiseleka - 2961 Motima - Lemba", "eleves": [], "paiements": [], "caisse": 0},
   2: {"nom": "GS Maman Gina KUMBI - 172 Langa - Ngaba", "eleves": [], "paiements": [], "caisse": 0},
@@ -30,7 +29,7 @@ def health():
         "ecoles": 2,
         "mobile_money": ["M-Pesa","Orange Money","Airtel Money","Africell Money","Cash"],
         "apk": "5 APK Agro + 3 APK Lois + Junior",
-        "os": "SENTINEL OS v10.6 QUANTUM NEXUS FINALE IMPECCABLE"
+        "os": "SENTINEL OS v10.6 QUANTUM NEXUS FINALE IMPECCABLE - From Kinshasa to Cambodia"
     }
 
 @app.get("/api/eleves/{ecole_id}")
@@ -92,6 +91,34 @@ def export_pdf(ecole_id: int, lang: str = "fr"):
     buf.seek(0)
     return StreamingResponse(buf, media_type="application/pdf", headers={"Content-Disposition": f"attachment; filename=CEPT_Ecole_{ecole_id}_v10_6.pdf"})
 
-# Servir les fichiers statiques (index.html, icon.png, manifest, etc) en dernier
-if os.path.exists("index.html"):
-    app.mount("/", StaticFiles(directory=".", html=True), name="static")
+# --- FIX PORT TIMEOUT RENDER FREE - FileResponse au lieu de mount lourd ---
+@app.get("/")
+def serve_index():
+    if os.path.exists("index.html"):
+        return FileResponse("index.html")
+    return {"msg": "SENTINEL OS v10.6 LIVE - index.html manquant"}
+
+@app.get("/manifest.json")
+def serve_manifest():
+    return FileResponse("manifest.json") if os.path.exists("manifest.json") else {"msg": "manifest manquant"}
+
+@app.get("/service-worker.js")
+def serve_sw():
+    return FileResponse("service-worker.js") if os.path.exists("service-worker.js") else FileResponse("sw.js") if os.path.exists("sw.js") else {"msg": "sw manquant"}
+
+@app.get("/script.js")
+def serve_script():
+    return FileResponse("script.js") if os.path.exists("script.js") else {"msg": "script manquant"}
+
+@app.get("/icon.png")
+def serve_icon():
+    return FileResponse("icon.png") if os.path.exists("icon.png") else {"msg": "icon manquant"}
+
+# Fallback pour toutes autres routes statiques
+@app.get("/{path:path}")
+def serve_static_fallback(path: str):
+    if os.path.exists(path) and os.path.isfile(path):
+        return FileResponse(path)
+    if os.path.exists("index.html"):
+        return FileResponse("index.html")
+    return {"msg": f"SENTINEL OS v10.6 LIVE - {path} not found"}
