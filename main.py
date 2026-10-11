@@ -1,201 +1,109 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi import FastAPI, HTTPException, Response
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
-from typing import Optional, List, Dict, Any
-from datetime import datetime, timezone
-from contextlib import asynccontextmanager
-import sqlite3
-import os
-import json
+import sqlite3, time, io
+import pandas as pd
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
-# ============================================================
-# AGROSENTINELLES ADMIN V5.0 — FINALE & INTEGRALE — 0 BUG
-# VÉROLIS SARL × CEPT ASBL 0625/2010 × Sentinel OS v10.6
-# 5 APK Agro + 3 APK Lois (RC/RO/RI) + APK Junior
-# 3 Lois Fondamentales : LIBERTE / VERITE / JUSTICE
-# DOI 10.5281/zenodo.19852087 — Tr(T)≠0 — I_TTD=1.0
-# ============================================================
+app = FastAPI(title="SENTINEL OS v10.6 - CEPT 2 Ecoles (PDF, Excel & Multilingue)")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "agrosentinelles.db")
+DB = "cept_2_ecoles.db"
 
-def db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+# Dictionnaire des 4 langues nationales de la RDC pour l'interface et les rapports
+LANGUAGES = {
+    "fr": {"title": "Rapport Caisse CEPT", "eleves": "Élèves", "total": "Total Caisse", "ecole": "École"},
+    "ln": {"title": "Raporan ya Mbongo ya CEPT", "eleves": "Basani / Bana", "total": "Molungango ya Mbongo", "ecole": "Sikola"},
+    "kg": {"title": "Lapi ya Mbongo ya CEPT", "eleves": "Bandumba", "total": "Nzimbu Nionso", "ecole": "Nzo ya Nkanda"},
+    "sw": {"title": "Ripoti ya Fedha ya CEPT", "eleves": "Wanafunzi", "total": "Jumla ya Fedha", "ecole": "Shule"}
+}
 
 def init_db():
-    conn = db()
-    cur = conn.cursor()
-    cur.executescript("""
-    CREATE TABLE IF NOT EXISTS exploitations (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL UNIQUE, localisation TEXT DEFAULT '', superficie REAL DEFAULT 0, culture TEXT DEFAULT '', statut TEXT DEFAULT 'ACTIVE', created_at TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS producteurs (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL, telephone TEXT DEFAULT '', exploitation_id INTEGER, statut TEXT DEFAULT 'ACTIF', created_at TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS parcelles (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT NOT NULL UNIQUE, culture TEXT DEFAULT '', superficie REAL DEFAULT 0, exploitation_id INTEGER, statut TEXT DEFAULT 'ACTIVE', created_at TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS lots (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT NOT NULL UNIQUE, produit TEXT NOT NULL, quantite REAL DEFAULT 0, unite TEXT DEFAULT 'kg', origine TEXT DEFAULT '', statut TEXT DEFAULT 'EN_STOCK', created_at TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS stocks (id INTEGER PRIMARY KEY AUTOINCREMENT, produit TEXT NOT NULL UNIQUE, quantite REAL DEFAULT 0, unite TEXT DEFAULT 'kg', emplacement TEXT DEFAULT '', seuil REAL DEFAULT 0, updated_at TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS alertes (id INTEGER PRIMARY KEY AUTOINCREMENT, niveau TEXT DEFAULT 'INFO', titre TEXT NOT NULL, message TEXT DEFAULT '', statut TEXT DEFAULT 'OUVERTE', created_at TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS journal (id INTEGER PRIMARY KEY AUTOINCREMENT, action TEXT NOT NULL, module TEXT DEFAULT 'SYSTEM', details TEXT DEFAULT '', created_at TEXT NOT NULL);
-    """)
-    conn.commit()
-    conn.close()
+    con = sqlite3.connect(DB)
+    con.execute("CREATE TABLE IF NOT EXISTS ecoles (id INTEGER PRIMARY KEY, nom TEXT, adresse TEXT)")
+    con.execute("CREATE TABLE IF NOT EXISTS eleves (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, classe TEXT, ecole_id INTEGER, frais_total INTEGER DEFAULT 50000)")
+    con.execute("CREATE TABLE IF NOT EXISTS paiements (id INTEGER PRIMARY KEY AUTOINCREMENT, eleve_id INTEGER, montant INTEGER, date INTEGER, ecole_id INTEGER)")
+    
+    if not con.execute("SELECT * FROM ecoles").fetchall():
+        con.execute("INSERT INTO ecoles VALUES (1, 'GS Tshiseleka', '2961 Motima Gombele Lemba')")
+        con.execute("INSERT INTO ecoles VALUES (2, 'GS Maman Gina KUMBI-KUMBI', '172 Langa-Langa Ngaba')")
+    con.commit(); con.close()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    init_db()
-    log_action("Démarrage AGROSENTINELLES ADMIN V5.0 FINALE", "SYSTEM", "CEPT 0625/2010 + VEROLIS + 5APK+3APK+JUNIOR")
-    yield
+init_db()
 
-app = FastAPI(title="AGROSENTINELLES ADMIN V5.0 FINALE", description="VÉROLIS × CEPT × Sentinel OS v10.6 — 5 APK Agro + 3 APK Lois + Junior — TTD LIBERTE VERITE JUSTICE", version="5.0.0", lifespan=lifespan)
-
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=False, allow_methods=["*"], allow_headers=["*"])
-
-# --- MODELS ---
-class ExploitationIn(BaseModel): nom: str = Field(min_length=1); localisation: str=""; superficie: float=0; culture: str=""; statut: str="ACTIVE"
-class ProducteurIn(BaseModel): nom: str = Field(min_length=1); telephone: str=""; exploitation_id: Optional[int]=None; statut: str="ACTIF"
-class ParcelleIn(BaseModel): code: str = Field(min_length=1); culture: str=""; superficie: float=0; exploitation_id: Optional[int]=None; statut: str="ACTIVE"
-class LotIn(BaseModel): code: str = Field(min_length=1); produit: str = Field(min_length=1); quantite: float=0; unite: str="kg"; origine: str=""; statut: str="EN_STOCK"
-class StockIn(BaseModel): produit: str = Field(min_length=1); quantite: float=0; unite: str="kg"; emplacement: str=""; seuil: float=0
-class AlerteIn(BaseModel): niveau: str="INFO"; titre: str = Field(min_length=1); message: str=""; statut: str="OUVERTE"
-class SyncPayload(BaseModel): operations: List[Dict[str, Any]]=[]
-
-def now(): return datetime.now(timezone.utc).isoformat()
-def log_action(action, module="SYSTEM", details=""):
-    try:
-        conn=db(); conn.execute("INSERT INTO journal(action,module,details,created_at) VALUES(?,?,?,?)",(action,module,details,now())); conn.commit(); conn.close()
-    except: pass
-def rows(table, limit=200):
-    conn=db(); r=[dict(x) for x in conn.execute(f"SELECT * FROM {table} ORDER BY id DESC LIMIT?",(limit,)).fetchall()]; conn.close(); return r
-def insert_and_return(table,data):
-    keys=list(data.keys()); ph=",".join(["?"]*len(keys)); sql=f"INSERT INTO {table} ({','.join(keys)}) VALUES ({ph})"
-    conn=db(); cur=conn.execute(sql,[data[k] for k in keys]); conn.commit()
-    item=dict(conn.execute(f"SELECT * FROM {table} WHERE id=?",(cur.lastrowid,)).fetchone()); conn.close(); return item
-
-# --- FRONTEND ---
 @app.get("/")
-def home():
-    p=os.path.join(BASE_DIR,"index.html")
-    if os.path.exists(p): return FileResponse(p)
-    return JSONResponse({"status":"AGROSENTINELLES ADMIN V5.0 FINALE","frontend":"SENTINEL OS v10.6 5APK+3APK+JUNIOR","portail":"gelé 01/10 inspection en cours","live":"https://agrosentinelles-demo.onrender.com"})
+def root(): return FileResponse("index.html")
 
 @app.get("/health")
-def health(): return {"status":"ok","app":"AGROSENTINELLES ADMIN V5.0 FINALE","organisation":"VÉROLIS SARL × CEPT ASBL 0625/2010","moteur":"Sentinel OS v10.6","mode":"offline-first","database":"sqlite","I_TTD":1.0,"epsilon":1e-5,"timestamp":now()}
+def health(): return {"status": "LIVE", "I_TTD": 1.0, "L_TTD": 1.0, "ecoles": 2, "version": "10.6 Finale Multilingue & Docs"}
 
-# --- DASHBOARD ---
-@app.get("/api/dashboard")
-def dashboard():
-    conn=db()
-    def count(t):
-        try: return conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
-        except: return 0
-    stats={"exploitations":count("exploitations"),"producteurs":count("producteurs"),"parcelles":count("parcelles"),"lots":count("lots"),"stocks":count("stocks"),"alertes_ouvertes":conn.execute("SELECT COUNT(*) FROM alertes WHERE statut='OUVERTE'").fetchone()[0] if count("alertes")>0 else 0,"lots_en_stock":conn.execute("SELECT COALESCE(SUM(quantite),0) FROM lots WHERE statut='EN_STOCK'").fetchone()[0] if count("lots")>0 else 0}
-    conn.close()
-    return {"application":"AGROSENTINELLES ADMIN V5.0 FINALE","organisation":"VÉROLIS SARL × CEPT ASBL 0625/2010","moteur":"Sentinel OS v10.6 Quantum Nexus","status":"OPERATIONNEL","stats":stats,"5APK_Agro":["Core Mbudi","Egobox IP65","CIRT Sync 90T","Market Link","FreshGuard"],"3APK_Lois":["True North RC LIBERTE","SuperVPN RO VERITE","Vault RI JUSTICE"],"offline_first":True,"timestamp":now()}
+@app.get("/api/ecoles")
+def get_ecoles():
+    con = sqlite3.connect(DB); rows = con.execute("SELECT * FROM ecoles").fetchall(); con.close()
+    return [{"id": r[0], "nom": r[1], "adresse": r[2]} for r in rows]
 
-# --- CRUD ---
-@app.get("/api/exploitations")
-def get_exploitations(): return rows("exploitations")
-@app.post("/api/exploitations")
-def create_exploitation(item: ExploitationIn):
-    try: result=insert_and_return("exploitations",{**item.model_dump(),"created_at":now()})
-    except sqlite3.IntegrityError: raise HTTPException(409,"Cette exploitation existe déjà")
-    log_action("Création exploitation","EXPLOITATIONS",item.nom); return result
+@app.get("/api/eleves/{ecole_id}")
+def get_eleves(ecole_id: int):
+    con = sqlite3.connect(DB)
+    eleves = con.execute("SELECT * FROM eleves WHERE ecole_id=?", (ecole_id,)).fetchall()
+    caisse = con.execute("SELECT SUM(montant) FROM paiements WHERE ecole_id=?", (ecole_id,)).fetchone()[0] or 0
+    con.close()
+    return {"eleves": [{"id": e[0], "nom": e[1], "classe": e[2], "ecole_id": e[3]} for e in eleves], "caisse": caisse, "total": len(eleves)}
 
-@app.get("/api/producteurs")
-def get_producteurs(): return rows("producteurs")
-@app.post("/api/producteurs")
-def create_producteur(item: ProducteurIn): result=insert_and_return("producteurs",{**item.model_dump(),"created_at":now()}); log_action("Création producteur","PRODUCTEURS",item.nom); return result
+@app.post("/api/eleves/add")
+def add_eleve(nom: str, classe: str = "Primaire", ecole_id: int = 1):
+    con = sqlite3.connect(DB)
+    con.execute("INSERT INTO eleves (nom, classe, ecole_id) VALUES (?,?,?)", (nom, classe, ecole_id))
+    con.commit(); con.close()
+    return {"ok": True}
 
-@app.get("/api/parcelles")
-def get_parcelles(): return rows("parcelles")
-@app.post("/api/parcelles")
-def create_parcelle(item: ParcelleIn):
-    try: result=insert_and_return("parcelles",{**item.model_dump(),"created_at":now()})
-    except sqlite3.IntegrityError: raise HTTPException(409,"Code parcelle déjà existant")
-    log_action("Création parcelle","PARCELLES",item.code); return result
+@app.post("/api/paiement/add")
+def add_paiement(eleve_id: int, montant: int, ecole_id: int):
+    con = sqlite3.connect(DB)
+    con.execute("INSERT INTO paiements (eleve_id, montant, date, ecole_id) VALUES (?,?,?,?)", (eleve_id, montant, int(time.time()), ecole_id))
+    con.commit(); con.close()
+    return {"ok": True}
 
-@app.get("/api/lots")
-def get_lots(): return rows("lots")
-@app.post("/api/lots")
-def create_lot(item: LotIn):
-    try: result=insert_and_return("lots",{**item.model_dump(),"created_at":now()})
-    except sqlite3.IntegrityError: raise HTTPException(409,"Code lot déjà existant")
-    log_action("Création lot","TRAÇABILITE",item.code); return result
+# --- EXPORT EXCEL ---
+@app.get("/api/export/excel/{ecole_id}")
+def export_excel(ecole_id: int):
+    con = sqlite3.connect(DB)
+    df_eleves = pd.read_sql_query("SELECT id, nom, classe FROM eleves WHERE ecole_id = ?", con, params=(ecole_id,))
+    df_paiements = pd.read_sql_query("SELECT id, eleve_id, montant, date FROM paiements WHERE ecole_id = ?", con, params=(ecole_id,))
+    con.close()
 
-@app.get("/api/stocks")
-def get_stocks(): return rows("stocks")
-@app.post("/api/stocks")
-def create_stock(item: StockIn):
-    try: result=insert_and_return("stocks",{**item.model_dump(),"updated_at":now()})
-    except sqlite3.IntegrityError:
-        conn=db(); conn.execute("UPDATE stocks SET quantite=?, unite=?, emplacement=?, seuil=?, updated_at=? WHERE produit=?",(item.quantite,item.unite,item.emplacement,item.seuil,now(),item.produit)); conn.commit()
-        result=dict(conn.execute("SELECT * FROM stocks WHERE produit=?",(item.produit,)).fetchone()); conn.close()
-    log_action("Mise à jour stock","STOCK",item.produit); return result
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df_eleves.to_excel(writer, sheet_name='Eleves', index=False)
+        df_paiements.to_excel(writer, sheet_name='Paiements', index=False)
+    output.seek(0)
 
-@app.get("/api/alertes")
-def get_alertes(): return rows("alertes")
-@app.post("/api/alertes")
-def create_alerte(item: AlerteIn): result=insert_and_return("alertes",{**item.model_dump(),"created_at":now()}); log_action("Nouvelle alerte","ALERTES",item.titre); return result
+    headers = {'Content-Disposition': f'attachment; filename=rapport_ecole_{ecole_id}.xlsx'}
+    return Response(output.read(), headers=headers, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
-@app.get("/api/journal")
-def get_journal(): return rows("journal")
+# --- EXPORT PDF ---
+@app.get("/api/export/pdf/{ecole_id}")
+def export_pdf(ecole_id: int, lang: str = "fr"):
+    con = sqlite3.connect(DB)
+    ecole = con.execute("SELECT nom, adresse FROM ecoles WHERE id = ?", (ecole_id,)).fetchone()
+    eleves = con.execute("SELECT COUNT(*) FROM eleves WHERE ecole_id = ?", (ecole_id,)).fetchone()[0]
+    caisse = con.execute("SELECT SUM(montant) FROM paiements WHERE ecole_id = ?", (ecole_id,)).fetchone()[0] or 0
+    con.close()
 
-# --- SYNC OFFLINE BATCH ---
-@app.post("/api/sync")
-def sync(payload: SyncPayload):
-    ops=payload.operations; accepted=0; errors=[]; conn=db()
-    for op in ops:
-        table=op.get("table"); data=op.get("data",{})
-        try:
-            if table in ["exploitations","producteurs","parcelles","lots","stocks","alertes"]:
-                keys=list(data.keys())
-                if keys:
-                    cols=",".join(keys); ph=",".join(["?"]*len(keys)); vals=[data[k] for k in keys]
-                    conn.execute(f"INSERT OR IGNORE INTO {table} ({cols}) VALUES ({ph})",vals); conn.commit()
-            log_action("SYNC_BATCH",table or "UNKNOWN",json.dumps(data,ensure_ascii=False)); accepted+=1
-        except Exception as e: errors.append(f"{table}: {e}")
-    conn.close()
-    return {"status":"SYNC_COMPLETE","accepted":accepted,"errors":errors,"timestamp":now()}
-
-# --- SENTINEL OS / TTD / LIGO-BOX CORRIGÉ — VALEURS OFFICIELLES BnF ---
-@app.get("/api/sentinel/status")
-def sentinel_status():
-    return {"system":"Sentinel OS","version":"v10.6 Quantum Nexus FINALE","status":"OPERATIONNEL","mode":"OFFLINE-FIRST 100% AIR-GAPPED","organisation":"VÉROLIS SARL × CEPT ASBL Agrément 0625/2010","ecoles":["GS Tshiseleka Lemba","GS MGK Maman Gina 172 Langa-Langa Ngaba"],"5APK_Agro":["Core Mbudi ESP32 44.2%","Egobox V0.1 IP65","CIRT Solar Sync 90T Pi4+Mega+MPU6050","Agri Market Link SHA-256","FreshGuard Cantine 0% perte"],"3APK_Lois":{"RC":"True North LIBERTE Δφ=1e-3 rad","RO":"SuperVPN VERITE H(ψ)=SHA-256","RI":"Vault JUSTICE ∇T=0"},"APK_Junior":["Origine Junior IA DG Personnel","Communion Réseau Valeur 15s"],"intelligence":"ACTIVE","timestamp":now()}
-
-@app.get("/api/ligo-box/v1")
-def ligo_box_telemetry():
-    # VALEURS OFFICIELLES DOCX PMV-1.0 TRIADE by z3d — DOI 10.5281/zenodo.19852087
-    # Falsifiabilité : If [RC][RO]=0 ou Tr(T)=0 → theory falsified
-    return {
-        "module":"Ligo-Box V1.2 FINALE — Transposition LIGO O5 → détection chimique",
-        "statut":"Operationnel hors-ligne — 100% off-grid",
-        "theorie":"TTD Théorie Triade Dynamique — 3 Lois Fondamentales LIBERTE VERITE JUSTICE",
-        "equation_source":"(E/t)*(t/E)=1 avec Tr(T)≠0",
-        "parametres":{
-            "I_TTD":1.0,
-            "L_TTD":1.0,
-            "Tr_T":0.0012,
-            "RC_RO_rad":0.0012,
-            "RC_RO_freq_Hz":104.2,
-            "RO_RI_rad":0.0012,
-            "RI_RC_rad":0.0012,
-            "epsilon":1e-5,
-            "distance_Gpc":1,
-            "falsifiability":"If (RC,RO)=0 or Tr(T)=0 → M_=0 → falsified",
-            "prediction_LIGO_O5":"Δφ(f)≈ε(f/100Hz)(D/1Gpc) rad → 1e-3 rad @1kHz",
-            "DOI":"10.5281/zenodo.19852087",
-            "hardware":"RPi4 Main + Arduino Mega 2560 + ESP32 + MPU6050/HMC5883L + BME280 + SSR 40A + Solar 30W + Cuve INOX 304L 90 tours",
-            "slogan":"From Kinshasa to Cambodia, from CIRT to LIGO"
-        },
-        "5APK_Agro_live":True,
-        "3APK_Lois_live":True,
-        "timestamp":now()
-    }
-
-@app.get("/api/cept/verolis")
-def cept_verolis():
-    return {
-        "CEPT_ASBL":{"agrement":"MINEPSP/CABMIN/0625/2010","siege":"172 Langa-Langa Mpila Ngaba + 2961 Motima Gombele Lemba","ecoles":["Groupe Scolaire TSHISELEKA (GST)","Complexe Scolaire Maman Gina KUMBI-KUMBI (GS MGK)"],"mission":"Répondre aux besoins éducatifs fondamentaux — Apprendre tout au long de la vie — Mandela","email":"ceptongasblrdc2005@gmail.com","tel":"+243 971 279 381 / 840 308 812"},
-        "VEROLIS_SARL":{"adresse":"Avenue Mole n°2930 Lemba","DGRAD":"H2355489 du 08/05/2026 242.110 FC 4 actes","FirstBank_RIB":"00014110002080019913426 USD SWIFT BICDCDKI Code 8400 Agence 001","UBA":"4688","email":"verolis.sarl@gmail.com"},
-        "SENTINEL_OS":"v10.6 QUANTUM NEXUS FINALE — 5APK+3APK+JUNIOR — GEL 01/10 inspection jury en cours — Prêt finale Koh Pich 15 Nov"
-    }
+    t = LANGUAGES.get(lang, LANGUAGES["fr"])
+    
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    p.drawString(100, 750, f"SENTINEL OS v10.6 — {t['title']}")
+    p.drawString(100, 725, f"{t['ecole']}: {ecole[0]} ({ecole[1]})")
+    p.drawString(100, 700, f"--------------------------------------------------")
+    p.drawString(100, 675, f"Total {t['eleves']}: {eleves}")
+    p.drawString(100, 650, f"{t['total']}: {caisse} $")
+    p.drawString(100, 600, "Vérolis SARL x CEPT ASBL (Agrément 0625/2010)")
+    p.showPage()
+    p.save()
+    
+    buffer.seek(0)
+    headers = {'Content-Disposition': f'attachment; filename=rapport_ecole_{ecole_id}.pdf'}
+    return Response(buffer.read(), headers=headers, media_type='application/pdf')
