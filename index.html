@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SENTINEL OS v10.6 3D PRO MAX - CEPT 2 Ecoles du Futur</title>
 <link rel="manifest" href="/manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
-:root{--cyan:#38bdf8;--gold:#facc15;--green:#4ade80;--bg:#010409}
+:root{--cyan:#38bdf8;--gold:#facc15;--green:#4ade80;--red:#ef4444;--bg:#010409}
 *{box-sizing:border-box}
 body{margin:0;color:#fff;font-family:Inter,system-ui;background:var(--bg);overflow-x:hidden}
 #canvas3d{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.6}
@@ -31,25 +32,37 @@ body{margin:0;color:#fff;font-family:Inter,system-ui;background:var(--bg);overfl
 .momo{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;text-align:center;font-weight:800;font-size:11px;cursor:pointer;transition:.3s}
 .momo:hover{background:rgba(56,189,248,.2);border-color:var(--cyan);transform:translateZ(20px)}
 .momo.mpesa{border-left:3px solid #e30613}.momo.orange{border-left:3px solid #ff7900}.momo.airtel{border-left:3px solid #ff0000}.momo.africell{border-left:3px solid #0066ff}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
 <canvas id="canvas3d"></canvas>
 <div class="header">
-  <div><span class="holo">SENTINEL OS v10.6 QUANTUM NEXUS</span> <span class="badge-future">ECOLES DU FUTUR 3D PRO MAX</span><br><small style="color:var(--gold);font-size:9px">VÉROLIS SARL x CEPT ASBL 0625/2010 • GAGNANT #7 Dany Tshiseleka • From Kinshasa to Cambodia</small></div>
+  <div>
+    <span class="holo">SENTINEL OS v10.6 QUANTUM NEXUS</span> 
+    <span class="badge-future">ECOLES DU FUTUR 3D PRO MAX</span><br>
+    <small style="color:var(--gold);font-size:9px">VÉROLIS SARL x CEPT ASBL 0625/2010 • GAGNANT #7 Dany Tshiseleka • From Kinshasa to Cambodia</small>
+  </div>
   <div id="health" style="font-size:10px;color:var(--green)">● LIVE I_TTD=1.0</div>
 </div>
 <div class="grid">
   <div class="card3d">
-    <div style="display:flex;justify-content:space-between"><span class="school-chip active" id="chip1" onclick="setEcole(1)">🏫 GS TSHISELEKA<br><small>2961 Motima - Lemba</small></span><span class="school-chip" id="chip2" onclick="setEcole(2)">🏫 MAMAN GINA<br><small>172 Langa - Ngaba</small></span></div>
+    <div style="display:flex;justify-content:space-between">
+      <span class="school-chip active" id="chip1" onclick="setEcole(1)">🏫 GS TSHISELEKA<br><small>2961 Motima - Lemba</small></span>
+      <span class="school-chip" id="chip2" onclick="setEcole(2)">🏫 MAMAN GINA<br><small>172 Langa - Ngaba</small></span>
+    </div>
     <h2 id="titreEcole" style="margin:14px 0">GS Tshiseleka</h2>
     <div class="metric" id="caisse">0 CDF</div>
     <div id="stats" style="font-size:11px;color:#94a3b8">Eleves: 0 | M-Pesa: 0 | Orange: 0 | Airtel: 0 | Africell: 0</div>
-    <div style="margin-top:14px"><input id="nomEleve" placeholder="Nom élève futur..." style="padding:12px;width:68%;border-radius:12px;border:1px solid #333;background:#0f172a;color:#fff"><button class="btn btn-cyan" onclick="ajouterEleve()">+ AJOUTER</button></div>
+    <div style="margin-top:14px">
+      <input id="nomEleve" placeholder="Nom élève futur..." style="padding:12px;width:68%;border-radius:12px;border:1px solid #333;background:#0f172a;color:#fff">
+      <button class="btn btn-cyan" onclick="ajouterEleve()">+ AJOUTER</button>
+    </div>
     <div id="liste" style="margin-top:14px;max-height:300px;overflow:auto"></div>
   </div>
+
   <div class="card3d">
-    <h3>💸 Paiement Mobile Money RDC - Écoles du Futur</h3>
+    <h3>💸 Paiement Mobile Money RDC</h3>
     <select id="methodPaiement" style="width:100%;padding:12px;border-radius:12px;background:#0f172a;color:#fff;border:1px solid #333">
       <option value="M-Pesa">M-Pesa Vodacom - *1122#</option>
       <option value="Orange Money">Orange Money - *777#</option>
@@ -63,50 +76,27 @@ body{margin:0;color:#fff;font-family:Inter,system-ui;background:var(--bg);overfl
       <div class="momo airtel" onclick="selMomo('Airtel Money')">Airtel<br><small>Money</small></div>
       <div class="momo africell" onclick="selMomo('Africell Money')">Africell<br><small>Money</small></div>
     </div>
-    <div style="margin-top:14px"><input id="montant" type="number" value="5000" style="padding:12px;width:100%;border-radius:12px;background:#0f172a;color:#fff;border:1px solid #333"></div>
-    <p style="font-size:10px;color:#94a3b8">TXN SHA-256 RO VERITE • Reçu instantané • Offline-first • TTD ε=1e-5</p>
+    <div style="margin-top:14px">
+      <input id="montant" type="number" value="5000" style="padding:12px;width:100%;border-radius:12px;background:#0f172a;color:#fff;border:1px solid #333">
+    </div>
+    <p style="font-size:10px;color:#94a3b8">TXN SHA-256 • Reçu instantané • Offline-first • TTD ε=1e-5</p>
     <div style="display:flex;gap:8px;margin-top:10px">
       <button class="btn btn-cyan" onclick="exportExcel()">📊 EXCEL</button>
       <button class="btn btn-gold" onclick="exportPDF()">📄 PDF</button>
-      <select id="lang" style="padding:8px;border-radius:10px;background:#0f172a;color:#fff"><option value="fr">FR</option><option value="ln">LN</option><option value="kg">KG</option><option value="sw">SW</option></select>
+      <select id="lang" style="padding:8px;border-radius:10px;background:#0f172a;color:#fff">
+        <option value="fr">FR</option><option value="ln">LN</option><option value="kg">KG</option><option value="sw">SW</option>
+      </select>
     </div>
   </div>
+
   <div class="card3d">
     <h3>🌌 Hologramme 3D - Tr(T) ≠ 0</h3>
     <canvas id="chartCaisse" height="200"></canvas>
-    <p style="font-size:10px;color:#94a3b8">DOI 10.5281/zenodo.19852087 • RC,RO=0.0012 rad @104.2Hz • LIGO-BOX V1.2</p>
+    <div id="qrcode" style="margin-top:15px;display:flex;justify-content:center;"></div>
+    <p style="font-size:10px;color:#94a3b8;margin-top:10px">DOI 10.5281/zenodo.19852087 • RC,RO=0.0012 rad @104.2Hz • LIGO-BOX V1.2</p>
   </div>
 </div>
-<script>
-// 3D Background Three.js
-const scene=new THREE.Scene(); const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
-const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('canvas3d'),alpha:true}); renderer.setSize(innerWidth,innerHeight);
-const geo=new THREE.TorusGeometry(8,2,16,100); const mat=new THREE.MeshBasicMaterial({color:0x38bdf8,wireframe:true,transparent:true,opacity:0.25});
-const torus=new THREE.Mesh(geo,mat); scene.add(torus); camera.position.z=20;
-function anim(){requestAnimationFrame(anim); torus.rotation.x+=0.003; torus.rotation.y+=0.005; renderer.render(scene,camera);} anim();
-window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
-// App Logic
-let ecoleActive=1; let chart;
-function selMomo(m){document.getElementById('methodPaiement').value=m}
-async function setEcole(id){ ecoleActive=id; document.getElementById('chip1').classList.toggle('active',id==1); document.getElementById('chip2').classList.toggle('active',id==2); refresh(); }
-async function refresh(){
- let r=await fetch('/api/eleves/'+ecoleActive); let j=await r.json();
- document.getElementById('titreEcole').innerText = ecoleActive==1?'GS Tshiseleka - Futur Lemba':'GS Maman Gina KUMBI - Futur Ngaba';
- document.getElementById('caisse').innerText = j.caisse.toLocaleString()+' CDF';
- document.getElementById('stats').innerText = `Eleves: ${j.total} | ${Object.entries(j.by_method||{}).map(([k,v])=>k+': '+v).join(' | ')||'Aucun paiement'}`;
- document.getElementById('liste').innerHTML = j.eleves.map(e=>`<div style="display:flex;justify-content:space-between;padding:10px;background:rgba(255,255,255,.05);border-radius:12px;margin:6px 0"><span>${e.nom} - ${e.classe}</span><button class="btn btn-green" style="padding:6px 12px" onclick="payer(${e.id})">PAYER ${document.getElementById('montant').value} CDF</button></div>`).join('')||'<small>Aucun élève - Ajoute le premier du futur</small>';
- let ctx=document.getElementById('chartCaisse'); if(chart) chart.destroy();
- chart=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(j.by_method||{}),datasets:[{data:Object.values(j.by_method||{}),backgroundColor:['#e30613','#ff7900','#ff0000','#0066ff','#4ade80']}]},options:{plugins:{legend:{labels:{color:'#fff'}}}}});
-}
-async function ajouterEleve(){ let nom=document.getElementById('nomEleve').value.trim(); if(!nom)return; await fetch(`/api/eleves/add?nom=${encodeURIComponent(nom)}&ecole_id=${ecoleActive}`,{method:'POST'}); document.getElementById('nomEleve').value=''; refresh(); }
-async function payer(id){ let method=document.getElementById('methodPaiement').value; let montant=document.getElementById('montant').value; let res=await fetch(`/api/paiement/add?eleve_id=${id}&montant=${montant}&ecole_id=${ecoleActive}&method=${encodeURIComponent(method)}`,{method:'POST'}); let j=await res.json(); alert(`✅ ${j.method} - ${montant} CDF\nTXN: ${j.txn_id}\n${j.message}`); refresh(); }
-function exportExcel(){location='/api/export/excel/'+ecoleActive}
-function exportPDF(){let l=document.getElementById('lang').value; location='/api/export/pdf/'+ecoleActive+'?lang='+l}
-fetch('/health').then(r=>r.json()).then(h=>{document.getElementById('health').innerText=`● ${h.status} I_TTD=${h.I_TTD} Mobile:${h.mobile_money.length}`});
-refresh();
-// SW Register v10.6
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('/service-worker.js').then(r=>console.log('✔ SW v10.6',r.scope)); }
-</script>
+
 <script src="/script.js"></script>
 </body>
 </html>
