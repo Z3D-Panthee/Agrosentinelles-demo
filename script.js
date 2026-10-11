@@ -52,11 +52,9 @@ setInterval(updateClock,1000); updateClock();
 // Navigation FINALE compatible v10.6 3D
 function switchTab(tabId, btn){
   try {
-    // Support ancien + nouveau système
     const allMods = ['m-nexus','m-apps','m-agro','m-edu','m-junior','nexus','apps','agro','edu','junior'];
     allMods.forEach(id => { const el=$(id); if(el) el.classList.add('hidden'); });
-    // Essaye id direct puis m-id
-    let target = $(tabId) || $('m-'+tabId);
+    let target = $(tabId) \vert{}\vert{}$('m-'+tabId);
     if(target) target.classList.remove('hidden');
 
     document.querySelectorAll('.nav button,.nbtn,.nav-bar button,.tabs button').forEach(b => b.classList.remove('active'));
@@ -80,7 +78,7 @@ function showEdu(id){
 // Journal unifié v10.6
 function loguer(m){
   try {
-    const log = $('log') || $('logConsole');
+    const log = $('log') \vert{}\vert{}$('logConsole');
     if(!log) return;
     const d=document.createElement('div');
     let color='color:var(--cyan)';
@@ -189,7 +187,7 @@ async function refreshDashboard(){
     if($('stat-parcelles'))$('stat-parcelles').textContent=data.stats.parcelles;
     if($('stat-lots'))$('stat-lots').textContent=data.stats.lots;
     if($('stat-alertes'))$('stat-alertes').textContent=data.stats.alertes_ouvertes;
-    if($('stat-stocks')&&data.stats.stocks!==undefined) $('stat-stocks').textContent=data.stats.stocks;
+    if($('stat-stocks')&&data.stats.stocks!==undefined)$('stat-stocks').textContent=data.stats.stocks;
   }catch(e){ console.warn("Dashboard cache local"); }
 }
 
@@ -198,7 +196,7 @@ window.addEventListener('offline',()=>{ loguer("🔴 Hors-ligne — Sentinel OS 
 
 // Analyse complète — compatible v10.6 3D
 async function runSentinelAnalysis(){
-  const res=$('sentinelRes')||$('log');
+  const res=$('sentinelRes')\vert{}\vert{}$('log');
   if(res && res.id==='sentinelRes') res.innerText=`Interrogation Ligo-Box V1.2 ε=${TTD.epsilon} I_TTD=${TTD.I_TTD}...`;
   parler("Analyse capteurs cinq apk en cours");
   const sensorData=await HardwareBridge.fetchHardwareSensors();
@@ -224,20 +222,19 @@ function openAPK(name){
   loguer(`📱 APK CLICK FINALE v10.6 → ${name} — I_TTD=${TTD.I_TTD}`);
   parler(name+" ouvert");
   if(window.beep) beep(900,0.1);
-  // Routage intelligent
   if(name.toLowerCase().includes('core')||name.toLowerCase().includes('agro')) showM('agro');
   else if(name.toLowerCase().includes('rc')||name.toLowerCase().includes('ro')||name.toLowerCase().includes('ri')||name.toLowerCase().includes('loi')) showM('apps');
   else if(name.toLowerCase().includes('junior')||name.toLowerCase().includes('communion')) showM('junior');
   else if(name.toLowerCase().includes('egobox')||name.toLowerCase().includes('cirt')) showM('agro');
 }
 
-function setPump(s){ const el=$('pumpState')||$('agroPump'); if(el) el.innerText=s; loguer(`🌱 Electrovanne ${s} — Mbudi Mont Ngafula — Egobox IP65`); if(window.beep) beep(s==='ON'?900:400,0.1); }
+function setPump(s){ const el=$('pumpState')\vert{}\vert{}$('agroPump'); if(el) el.innerText=s; loguer(`🌱 Electrovanne ${s} — Mbudi Mont Ngafula — Egobox IP65`); if(window.beep) beep(s==='ON'?900:400,0.1); }
 function runDemo(){ showM('nexus'); setTimeout(()=>showM('agro'),600); loguer(`🚀 DEMO JURY FINALE v10.6 — 2 écoles +5APK+3APK+Junior — I_TTD=${TTD.I_TTD} — GEL 01/10`); }
 function exportPWA(){ if(window.exportPWA) window.exportPWA(); }
 
 // QR Traçabilité
 function genererQR(){
-  const c=$('qrcode')||$('qrBox');
+  const c=$('qrcode')\vert{}\vert{}$('qrBox');
   if(!c) return; c.innerHTML='';
   try{
     if(typeof QRCode!=='undefined'){
@@ -251,7 +248,7 @@ function genererQR(){
 document.addEventListener("DOMContentLoaded", async()=>{
   try{
     await initClientDB();
-    if($('qrcode')||$('qrBox')) genererQR();
+    if($('qrcode')\vert{}\vert{}$('qrBox')) genererQR();
     refreshDashboard();
     if(navigator.onLine) triggerBackgroundSync();
     loguer(`🌱 AGROSENTINELLES ADMIN V5.0 FINALE v10.6 — 5APK Agro +3APK Lois +Junior — CEPT 0625/2010 + VEROLIS — Prêt finale Koh Pich — I_TTD=${TTD.I_TTD}`);
